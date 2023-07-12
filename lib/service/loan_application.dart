@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:logger/logger.dart';
 import 'package:origination/models/applicant_dto.dart';
 import 'package:origination/models/entity_configuration.dart';
+import 'package:origination/models/namevalue_dto.dart';
 import 'package:origination/models/summaries/dashboard_summary.dart';
 import 'package:origination/screens/sign_in/auth_interceptor.dart';
 import 'package:http/http.dart' as http;
@@ -20,7 +21,7 @@ class LoanApplicationService {
     String apiUrl = 'http://10.0.2.2:8080/';
     String token = "4071d786-88db-4a38-ab5c-b19d22e4c547";
 
-    String endpoint = "api/application/loanApplication";
+    String endpoint = "api/application/loanApplication/lead";
 
     final fetchResponse = await http.post(Uri.parse(apiUrl + endpoint), headers: {
       'Content-type': 'application/json',
@@ -104,15 +105,54 @@ class LoanApplicationService {
     }
   }
 
-  Future<EntityConfigurationMetaData> getLeadApplication(int id) async {
+  Future<EntityConfigurationMetaData> getEntityLeadApplication() async {
     String endpoint = "api/application/entity/entityConfigurationByEntityTypeAndEntitySubType?entityType=Lead&entitySubType=Tractor";
-    // String endpoint = "api/application/loanApplication/data/$id";
     try {
       final response = await authInterceptor.get(Uri.parse(endpoint));
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         EntityConfigurationMetaData entity = EntityConfigurationMetaData.fromJson(data);
         return entity;
+      }
+      else {
+        throw Exception('Failed to get data. Error code: ${response.statusCode}');
+      }
+    }
+    catch (e) {
+      throw  Exception('An error occurred while getting the data: $e');
+    }
+  }
+
+  Future<EntityConfigurationMetaData> getLeadApplication(int id) async {
+    String endpoint = "api/application/loanApplication/lead/$id";
+    try {
+      final response = await authInterceptor.get(Uri.parse(endpoint));
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        EntityConfigurationMetaData entity = EntityConfigurationMetaData.fromJson(data);
+        return entity;
+      }
+      else {
+        throw Exception('Failed to get data. Error code: ${response.statusCode}');
+      }
+    }
+    catch (e) {
+      throw  Exception('An error occurred while getting the data: $e');
+    }
+  }
+
+  Future<List<NameValueDTO>> getReferenceCodes(String classifier) async {
+    String endpoint = "api/sjs-core/_refs/reference-codes/parentcodes/$classifier?status=1";
+    try {
+      final response = await authInterceptor.get(Uri.parse(endpoint));
+      if (response.statusCode == 200) {
+        final jsonResponse = json.decode(response.body);
+        List<NameValueDTO> list = [];
+        for (var data in jsonResponse) {
+          NameValueDTO app = NameValueDTO.fromJson(data);
+          list.add(app);
+        }
+        return list;
       }
       else {
         throw Exception('Failed to get data. Error code: ${response.statusCode}');

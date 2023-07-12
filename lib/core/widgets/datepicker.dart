@@ -4,17 +4,34 @@ import 'package:intl/intl.dart';
 class DatePickerInput extends StatefulWidget {
   final String label;
   final TextEditingController controller;
+  final ValueChanged<String> onChanged;
 
-  const DatePickerInput({super.key, 
+  const DatePickerInput({
+    Key? key,
     required this.label,
     required this.controller,
-  });
+    required this.onChanged,
+  }) : super(key: key);
   
   @override
   _DatePickerInputState createState() => _DatePickerInputState();
 }
 
 class _DatePickerInputState extends State<DatePickerInput> {
+
+  final TextEditingController _textEditingController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _textEditingController.text = widget.controller.text;
+  }
+
+  @override
+  void dispose() {
+    _textEditingController.dispose();
+    super.dispose();
+  }
 
   Future<void> _selectDate(BuildContext context) async {
     DateTime? picked = await showDatePicker(
@@ -26,10 +43,10 @@ class _DatePickerInputState extends State<DatePickerInput> {
     if (picked != null) {
         String formattedDate = DateFormat('yyyy-MM-dd').format(picked);
         setState(() {
-          widget.controller.text = formattedDate;
+          _textEditingController.text = formattedDate;
         });
+        widget.onChanged(formattedDate);
     }
-    else {}
   }
 
   @override
@@ -42,7 +59,7 @@ class _DatePickerInputState extends State<DatePickerInput> {
         },
         child: IgnorePointer(
           child: TextFormField(
-            controller: widget.controller,
+            controller: _textEditingController,
             decoration: InputDecoration(
               labelText: widget.label,
               border: const OutlineInputBorder(),

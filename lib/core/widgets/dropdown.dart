@@ -6,11 +6,13 @@ class DropDown extends StatelessWidget {
     required this.label,
     required this.options, 
     required this.controller,
+    required this.onChanged,
   });
 
   final String label;
   final List<String> options;
   final TextEditingController controller;
+  final void Function(String?) onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -33,9 +35,7 @@ class DropDown extends StatelessWidget {
                   child: Text(option),
                 );
               }).toList(),
-              onChanged: (value) {
-                controller.text = value ?? '';
-              },
+              onChanged: onChanged,
               decoration: const InputDecoration(
                 border: InputBorder.none,
               ),

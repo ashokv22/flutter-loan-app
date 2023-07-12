@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:origination/core/widgets/datepicker.dart';
 import 'package:origination/core/widgets/dropdown.dart';
-import 'package:origination/core/widgets/number_input.dart';
+import 'package:origination/core/widgets/mobile_input.dart';
+import 'package:origination/core/widgets/reference_code.dart';
 import 'package:origination/core/widgets/section_title.dart';
 import 'package:origination/core/widgets/text_input.dart';
 import 'package:origination/models/entity_configuration.dart';
@@ -19,10 +20,33 @@ class EditLead extends StatefulWidget {
 class _EditLeadState extends State<EditLead> {
   Logger logger = Logger();
   LoanApplicationService applicationService = LoanApplicationService();
+  late Future<EntityConfigurationMetaData> leadApplicationFuture;
+  late EntityConfigurationMetaData entity;
+
+  @override
+  void initState() {
+    super.initState();
+    leadApplicationFuture = applicationService.getLeadApplication(widget.id);
+  }
+
+  void save(EntityConfigurationMetaData entity) async {
+    try {
+      logger.i(entity);
+      await applicationService.saveLoanApplication(entity);
+    }
+    catch (e) {
+      logger.e('An error occurred while submitting Loan Application: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Failed to submit application. Please try again.'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    int id = widget.id;
     return Scaffold(
       appBar: AppBar(
         title: const Text("Edit Lead"),
@@ -41,7 +65,7 @@ class _EditLeadState extends State<EditLead> {
           children: [
             Expanded(
               child: FutureBuilder(
-                future: applicationService.getLeadApplication(id),
+                future: leadApplicationFuture,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const SizedBox(
@@ -97,6 +121,45 @@ class _EditLeadState extends State<EditLead> {
                                                   const SizedBox(height: 20.0)
                                               ],
                                             ),
+                                  // Bottom buttons
+                                  Align(
+                                    alignment: Alignment.bottomCenter,
+                                    child: SizedBox(
+                                      width: double.infinity,
+                                      height: 50,
+                                      child: MaterialButton(
+                                        onPressed: () {},
+                                        color: const Color.fromARGB(255, 3, 71, 244),
+                                        textColor: Colors.white,
+                                        padding: const EdgeInsets.symmetric(vertical: 16.0),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(30.0),
+                                        ),
+                                        child: const Text('Rework'),
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 15.0),
+                                  Align(
+                                    alignment: Alignment.bottomCenter,
+                                    child: SizedBox(
+                                      width: double.infinity,
+                                      height: 50,
+                                      child: MaterialButton(
+                                        onPressed: () {
+                                          save(entity);
+                                        },
+                                        color: const Color.fromARGB(255, 3, 71, 244),
+                                        textColor: Colors.white,
+                                        padding: const EdgeInsets.symmetric(vertical: 16.0),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(30.0),
+                                        ),
+                                        child: const Text('Continue to Bureau Check'),
+                                      ),
+                                    ),
+                                  )
+                                
                                 ],
                               ),
                             ),
@@ -118,27 +181,35 @@ class _EditLeadState extends State<EditLead> {
 
   Widget buildFieldWidget(Field field) {
     String fieldName = field.fieldMeta!.displayTitle!;
+    TextEditingController controller = TextEditingController(text: field.value);
     if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'TextBox') {
-      return TextInput(label: fieldName, controller: TextEditingController(text: field.value));
+      return TextInput(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field));
     } 
     else if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'TextArea') {
-      return TextInput(label: fieldName, controller: TextEditingController());
+      return TextInput(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field));
     } 
     else if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'Referencecode') {
-      return DropDown(label: fieldName, options: const ['Abcd', 'Def'], controller: TextEditingController());
+      return Referencecode(label: fieldName, referenceCode: field.fieldMeta!.referenceCodeClassifier!, controller: controller, onChanged: (newValue) => updateFieldValue(newValue!, field));
     } 
     else if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'DropDown') {
-      return DropDown(label: fieldName, options: const ['Abcd', 'Def'], controller: TextEditingController());
+      return DropDown(label: fieldName, options: const ['Abcd', 'Def'], controller: controller, onChanged: (newValue) => updateFieldValue(newValue!, field));
     } 
     else if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'DatePicker') {
-      return DatePickerInput(label: fieldName, controller: TextEditingController());
+      return DatePickerInput(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field),);
     } 
     else if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'TypeAhead') {
-      return TextInput(label: fieldName, controller: TextEditingController());
+      return TextInput(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field),);
     } 
     else if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'Phone') {
-      return NumberInput(label: fieldName, controller: TextEditingController());
+      return MobileInput(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field),);
     }
     return const SizedBox();
+  }
+
+  void updateFieldValue(String newValue, Field field) {
+    setState(() {
+      field.value = newValue; // Update the field value in the entity object
+      logger.d(field.value);
+    });
   }
 }

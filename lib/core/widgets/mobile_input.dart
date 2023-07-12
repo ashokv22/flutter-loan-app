@@ -1,14 +1,35 @@
 import 'package:flutter/material.dart';
 
-class MobileInput extends StatelessWidget {
+class MobileInput extends StatefulWidget {
   const MobileInput({
-    super.key,
+    Key? key,
     required this.label,
     required this.controller,
-  });
+    required this.onChanged,
+  }) : super(key: key);
 
   final String label;
   final TextEditingController controller;
+  final ValueChanged<String> onChanged;
+
+    @override
+  _MobileInputState createState() => _MobileInputState();
+}
+
+class _MobileInputState extends State<MobileInput> {
+    final TextEditingController _textEditingController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _textEditingController.text = widget.controller.text;
+  }
+
+  @override
+  void dispose() {
+    _textEditingController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -17,15 +38,13 @@ class MobileInput extends StatelessWidget {
     return SizedBox(
       height: 48,
       child: TextFormField(
-        controller: controller,
+        controller: _textEditingController,
         keyboardType: TextInputType.phone,
         decoration: InputDecoration(
-          labelText: label,
+          labelText: widget.label,
           border: const OutlineInputBorder(),
         ),
-        onChanged: (value) {
-          // Handle mobile input changes
-        },
+        onChanged: widget.onChanged,
       ),
     );
   }
