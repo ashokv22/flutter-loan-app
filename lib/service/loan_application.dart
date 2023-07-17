@@ -163,4 +163,22 @@ class LoanApplicationService {
     }
   }
 
+  Future<ApplicantDTO> updateStatus(int id, String stage) async {
+    String endpoint = "api/application/loanApplication/lead/updateStage/$id?status=$stage";
+    try {
+      final response = await authInterceptor.get(Uri.parse(endpoint));
+      if (response.statusCode == 200) {
+        final jsonResponse = json.decode(response.body);
+        ApplicantDTO applicant = ApplicantDTO.fromJson(jsonResponse);
+        return applicant;
+      }
+      else {
+        throw Exception('Failed to get data. Error code: ${response.statusCode}');
+      }
+    }
+    catch (e) {
+      throw  Exception('An error occurred while getting the data: $e');
+    }
+  }
+
 }

@@ -29,12 +29,19 @@ class DropDown extends StatelessWidget {
           child: DropdownButtonHideUnderline(
             child: DropdownButtonFormField<String>(
               // value: controller.text,
-              items: options.map((option) {
-                return DropdownMenuItem<String>(
-                  value: option,
-                  child: Text(option),
-                );
-              }).toList(),
+              items: [
+                const DropdownMenuItem<String>(
+                  value: 'choose_option', 
+                  enabled: false, // Set the value of the default option as null or any other suitable value
+                  child: Text("Choose option"),// Customize the text of the default option
+                ),
+                ...options.map((option) {
+                  return DropdownMenuItem<String>(
+                    value: option,
+                    child: Text(option),
+                  );
+                }).toList(),
+              ],
               onChanged: onChanged,
               decoration: const InputDecoration(
                 border: InputBorder.none,

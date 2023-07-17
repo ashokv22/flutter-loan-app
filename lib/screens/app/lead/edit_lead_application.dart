@@ -7,6 +7,7 @@ import 'package:origination/core/widgets/reference_code.dart';
 import 'package:origination/core/widgets/section_title.dart';
 import 'package:origination/core/widgets/text_input.dart';
 import 'package:origination/models/entity_configuration.dart';
+import 'package:origination/screens/app/bureau/otp_validation/bureau_declration.dart';
 import 'package:origination/service/loan_application.dart';
 
 class EditLead extends StatefulWidget {
@@ -36,6 +37,20 @@ class _EditLeadState extends State<EditLead> {
     }
     catch (e) {
       logger.e('An error occurred while submitting Loan Application: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Failed to submit application. Please try again.'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+    }
+  }
+
+  void updateStage(EntityConfigurationMetaData entity) async {
+    try {
+      await applicationService.updateStatus(widget.id, "REWORK");
+    }
+    catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Failed to submit application. Please try again.'),
@@ -77,10 +92,8 @@ class _EditLeadState extends State<EditLead> {
                     return Center(
                       child: Text('Error: ${snapshot.error}'),
                     );
-                  } else if (snapshot.hasData) {
-                    EntityConfigurationMetaData entity = snapshot.data!;
-                    if (entity == null) {
-                      return const SizedBox(
+                  } else if (!snapshot.hasData) {
+                    return const SizedBox(
                           width: double.infinity,
                           height: double.infinity,
                           child: Center(
@@ -90,7 +103,8 @@ class _EditLeadState extends State<EditLead> {
                               fontSize: 20,
                             ),
                           )));
-                    }
+                  } else if (snapshot.hasData) {
+                    EntityConfigurationMetaData entity = snapshot.data!;
                     return Flex(
                       direction: Axis.vertical,
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -121,44 +135,44 @@ class _EditLeadState extends State<EditLead> {
                                                   const SizedBox(height: 20.0)
                                               ],
                                             ),
-                                  // Bottom buttons
-                                  Align(
-                                    alignment: Alignment.bottomCenter,
-                                    child: SizedBox(
-                                      width: double.infinity,
-                                      height: 50,
-                                      child: MaterialButton(
-                                        onPressed: () {},
-                                        color: const Color.fromARGB(255, 3, 71, 244),
-                                        textColor: Colors.white,
-                                        padding: const EdgeInsets.symmetric(vertical: 16.0),
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(30.0),
+                                    // Bottom buttons
+                                    Align(
+                                      alignment: Alignment.bottomCenter,
+                                      child: SizedBox(
+                                        width: double.infinity,
+                                        height: 50,
+                                        child: MaterialButton(
+                                          onPressed: () => updateStage(entity),
+                                          color: const Color.fromARGB(255, 3, 71, 244),
+                                          textColor: Colors.white,
+                                          padding: const EdgeInsets.symmetric(vertical: 16.0),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(30.0),
+                                          ),
+                                          child: const Text('Rework'),
                                         ),
-                                        child: const Text('Rework'),
                                       ),
                                     ),
-                                  ),
-                                  const SizedBox(height: 15.0),
-                                  Align(
-                                    alignment: Alignment.bottomCenter,
-                                    child: SizedBox(
-                                      width: double.infinity,
-                                      height: 50,
-                                      child: MaterialButton(
-                                        onPressed: () {
-                                          save(entity);
-                                        },
-                                        color: const Color.fromARGB(255, 3, 71, 244),
-                                        textColor: Colors.white,
-                                        padding: const EdgeInsets.symmetric(vertical: 16.0),
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(30.0),
+                                    const SizedBox(height: 15.0),
+                                    Align(
+                                      alignment: Alignment.bottomCenter,
+                                      child: SizedBox(
+                                        width: double.infinity,
+                                        height: 50,
+                                        child: MaterialButton(
+                                          onPressed: () {
+                                            Navigator.push(context, MaterialPageRoute(builder: (context) => const BureauCheckDeclaration(name: "Ashok", id: 1, mobile: "9916315365",)));
+                                          },
+                                          color: const Color.fromARGB(255, 3, 71, 244),
+                                          textColor: Colors.white,
+                                          padding: const EdgeInsets.symmetric(vertical: 16.0),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(30.0),
+                                          ),
+                                          child: const Text('Continue to Bureau Check'),
                                         ),
-                                        child: const Text('Continue to Bureau Check'),
                                       ),
-                                    ),
-                                  )
+                                    )
                                 
                                 ],
                               ),

@@ -7,16 +7,16 @@ import 'package:origination/core/widgets/mobile_input.dart';
 import 'package:origination/core/widgets/datepicker.dart';
 import 'package:origination/core/widgets/section_title.dart';
 import 'package:origination/models/entity_configuration.dart';
-import 'package:origination/service/loan_application.dart';
+import 'package:origination/service/loan_application.dart';import 'package:toggle_switch/toggle_switch.dart';
 
-class NewLead extends StatefulWidget {
-  const NewLead({super.key});
+class ApplicantForm extends StatefulWidget {
+  const ApplicantForm({super.key});
 
   @override
-  _NewLeadState createState() => _NewLeadState();
+  _ApplicantFormState createState() => _ApplicantFormState();
 }
 
-class _NewLeadState extends State<NewLead> {
+class _ApplicantFormState extends State<ApplicantForm> {
 
   Logger logger = Logger();
   final applicationService = LoanApplicationService();
@@ -34,33 +34,13 @@ class _NewLeadState extends State<NewLead> {
     setState(() {
       isLoading = true;
     });
-
-    try {
-      await applicationService.saveLoanApplication(entity);
-      final currentContext = context;
-      Navigator.pushReplacementNamed(currentContext, '/');
-    }
-    catch (e) {
-      logger.e('An error occurred while submitting Loan Application: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Failed to submit application. Please try again.'),
-        duration: Duration(seconds: 2),
-      ),
-    );
-    }
-
-    setState(() {
-      isLoading = false;
-    });
-
   }
 
+  
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
-      appBar: AppBar(title: const Text("New Lead")),
+      appBar: AppBar(title: const Text('Bureau'),),
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
@@ -173,7 +153,7 @@ class _NewLeadState extends State<NewLead> {
             )
         ],
       ),
-      ),
+      )
     );
   }
 
@@ -209,4 +189,5 @@ class _NewLeadState extends State<NewLead> {
       field.value = newValue;
     });
   }
+
 }

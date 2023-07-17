@@ -22,25 +22,33 @@ class Referencecode extends StatefulWidget {
 }
 
 class _ReferencecodeState extends State<Referencecode> {
+  String? selectedValue;
   Logger logger = Logger();
   LoanApplicationService applicationService = LoanApplicationService();
-  late List<NameValueDTO> refernceCodes = [];
+  List<NameValueDTO>? refernceCodes = [];
+  bool isLoading = true;
 
   Future<void> fetchData() async {
     try {
       final options = await applicationService.getReferenceCodes(widget.referenceCode);
+      final filteredOptions = options.where((option) => option.code != null && option.code!.isNotEmpty).toList();
       setState(() {
-        refernceCodes = options;
-        logger.i(widget.referenceCode, refernceCodes.map((e) => e.toJson()));
+        refernceCodes = filteredOptions.isEmpty ? null : filteredOptions; // Set referenceCodes to null if the filteredOptions is empty
+        isLoading = false;
+        logger.i(widget.referenceCode, refernceCodes?.map((e) => e.toJson()));
       });
     } catch(e) {
       logger.e(e);
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 
   @override
   void initState() {
     super.initState();
+    selectedValue = widget.controller.text;
     fetchData();
   }
 
@@ -49,29 +57,44 @@ class _ReferencecodeState extends State<Referencecode> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        InputDecorator(
-          decoration: InputDecoration(
-            labelText: widget.label,
-            border: const OutlineInputBorder(),
-            isDense: true, // Reduce the height of the input
-            contentPadding: const EdgeInsets.symmetric(horizontal: 12.0),
-          ),
-          child: DropdownButtonHideUnderline(
-            child: DropdownButtonFormField<String>(
-              value: widget.controller.text,
-              items: refernceCodes.map((option) {
-                return DropdownMenuItem<String>(
-                  value: option.code,
-                  child: Text(option.name!),
-                );
-              }).toList(),
-              onChanged: widget.onChanged,
-              decoration: const InputDecoration(
-                border: InputBorder.none,
+        if (isLoading)
+          const LinearProgressIndicator(),
+        if (!isLoading)
+          InputDecorator(
+            decoration: InputDecoration(
+              labelText: widget.label,
+              border: const OutlineInputBorder(),
+              isDense: true, // Reduce the height of the input
+              contentPadding: const EdgeInsets.symmetric(horizontal: 12.0),
+            ),
+            child: DropdownButtonHideUnderline(
+              child: DropdownButtonFormField<String>(
+                value: selectedValue ?? "" ,
+                items: [
+                  const DropdownMenuItem<String>(
+                    value: "", 
+                    enabled: false,
+                    child: Text("Select"), 
+                  ),
+                  ...refernceCodes!.map((option) {
+                    return DropdownMenuItem<String>(
+                      value: option.code,
+                      child: Text(option.name!),
+                    );
+                  }).toList(),
+                ],
+                onChanged: (newValue) {
+                  setState(() {
+                    selectedValue = newValue;
+                    widget.onChanged(newValue);
+                  });
+                },
+                decoration: const InputDecoration(
+                  border: InputBorder.none,
+                ),
               ),
             ),
           ),
-        ),
       ],
     );
   }
