@@ -72,7 +72,7 @@ class LoanApplicationService {
     }
   }
 
-  Future<List<ApplicantDTO>> getLeads(String stage) async {
+  Future<List<ApplicantDTO>> getLeadsByStage(String stage) async {
     String endpoint = "api/application/applicant/stage";
     int page = 0;
     int size = 10;
@@ -80,6 +80,38 @@ class LoanApplicationService {
       final response = await authInterceptor.get(Uri.parse(endpoint).replace(
         queryParameters: {
           'stage': stage,
+          'page': page.toString(),
+          'size': size.toString(),
+          'sort': "ASC"
+        }
+      ));
+      if (response.statusCode == 200) {
+        final List<dynamic> jsonResponse = jsonDecode(response.body);
+        List<ApplicantDTO> list = [];
+        for (var data in jsonResponse) {
+          ApplicantDTO app = ApplicantDTO.fromJson(data);
+          list.add(app);
+        }
+        return list;
+      }
+      else {
+        logger.i('Failed to get data. Error code: ${response.statusCode}');
+          return [];
+      }
+    }
+    catch (e) {
+      logger.e('An error occurred while getting the data: $e');
+      return [];
+    }
+  }
+
+  Future<List<ApplicantDTO>> getLeads() async {
+    String endpoint = "api/application/applicant";
+    int page = 0;
+    int size = 10;
+    try {
+      final response = await authInterceptor.get(Uri.parse(endpoint).replace(
+        queryParameters: {
           'page': page.toString(),
           'size': size.toString(),
           'sort': "ASC"
@@ -171,6 +203,29 @@ class LoanApplicationService {
         final jsonResponse = json.decode(response.body);
         ApplicantDTO applicant = ApplicantDTO.fromJson(jsonResponse);
         return applicant;
+      }
+      else {
+        throw Exception('Failed to get data. Error code: ${response.statusCode}');
+      }
+    }
+    catch (e) {
+      throw  Exception('An error occurred while getting the data: $e');
+    }
+  }
+
+  Future<Section> getSection(String sectionName) async {
+    String endpoint = "https://ironaman.loca.lt/api/application/entitySection/sectionName?sectionName=$sectionName";
+    try {
+      final response = await http.get(
+        Uri.parse(endpoint),
+        headers: {
+          'X-Auth-Token': "d32033cd-4717-458f-95a9-ca77f43fff67",
+        }
+      );
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        Section section = Section.fromJson(data);
+        return section;
       }
       else {
         throw Exception('Failed to get data. Error code: ${response.statusCode}');

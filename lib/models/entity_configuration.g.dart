@@ -141,6 +141,9 @@ Section _$SectionFromJson(Map<String, dynamic> json) => Section(
       displayTitle: json['displayTitle'] as String?,
       cssClassName: json['cssClassName'] as String?,
       order: json['order'] as int?,
+      metaData: json['metaData'] == null
+          ? null
+          : MetaData.fromJson(json['metaData'] as Map<String, dynamic>),
       subSections: (json['subSections'] as List<dynamic>?)
           ?.map((e) => SubSection.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -152,6 +155,7 @@ Map<String, dynamic> _$SectionToJson(Section instance) => <String, dynamic>{
       'displayTitle': instance.displayTitle,
       'cssClassName': instance.cssClassName,
       'order': instance.order,
+      'metaData': instance.metaData,
       'subSections': instance.subSections,
     };
 
@@ -179,4 +183,16 @@ Map<String, dynamic> _$SubSectionToJson(SubSection instance) =>
       'maxNumberOfRepeatableSections': instance.maxNumberOfRepeatableSections,
       'order': instance.order,
       'fields': instance.fields,
+    };
+
+MetaData _$MetaDataFromJson(Map<String, dynamic> json) => MetaData(
+      noOfFields: json['noOfFields'] as int?,
+      mandatory: json['mandatory'] as int?,
+      dataCaptured: json['dataCaptured'] as int?,
+    );
+
+Map<String, dynamic> _$MetaDataToJson(MetaData instance) => <String, dynamic>{
+      'noOfFields': instance.noOfFields,
+      'mandatory': instance.mandatory,
+      'dataCaptured': instance.dataCaptured,
     };

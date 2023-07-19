@@ -30,38 +30,6 @@ class EntityConfigurationMetaData {
       _$EntityConfigurationMetaDataFromJson(json);
 
   Map<String, dynamic> toJson() => _$EntityConfigurationMetaDataToJson(this);
-
-
-  // factory EntityConfigurationMetaData.fromJson(Map<String, dynamic> json) {
-  //   return EntityConfigurationMetaData(
-  //     id: json['id'],
-  //     entityType: json['entityType'],
-  //     entitySubType: json['entitySubType'],
-  //     displayTitle: json['displayTitle'],
-  //     entityName: json['entityName'],
-  //     entityIdGeneration: json['entityIdGeneration'],
-  //     entitySequence: json['entitySequence'],
-  //     cssClassName: json['cssClassName'],
-  //     sections: (json['sections'] as List<dynamic>?)
-  //         ?.map((sectionJson) =>
-  //             Section.fromJson(sectionJson as Map<String, dynamic>))
-  //         .toList(),
-  //   );
-  // }
-
-  // Map<String, dynamic> toJson() {
-  //   return {
-  //     'id': id,
-  //     'entityType': entityType,
-  //     'entitySubType': entitySubType,
-  //     'displayTitle': displayTitle,
-  //     'entityName': entityName,
-  //     'entityIdGeneration': entityIdGeneration,
-  //     'entitySequence': entitySequence,
-  //     'cssClassName': cssClassName,
-  //     'sections': sections?.map((section) => section.toJson()).toList(),
-  //   };
-  // }
 }
 
 @JsonSerializable()
@@ -80,22 +48,6 @@ class UiComponentMasterDTO {
       _$UiComponentMasterDTOFromJson(json);
 
   Map<String, dynamic> toJson() => _$UiComponentMasterDTOToJson(this);
-
-  // factory UiComponentMasterDTO.fromJson(Map<String, dynamic> json) {
-  //   return UiComponentMasterDTO(
-  //     id: json['id'],
-  //     name: json['name'],
-  //     fieldDataTypes: json['fieldDataTypes'],
-  //   );
-  // }
-
-  // Map<String, dynamic> toJson() {
-  //   return {
-  //     'id': id,
-  //     'name': name,
-  //     'fieldDataTypes': fieldDataTypes,
-  //   };
-  // }
 }
 
 @JsonSerializable()
@@ -122,30 +74,6 @@ class FieldUiProperties {
       _$FieldUiPropertiesFromJson(json);
 
   Map<String, dynamic> toJson() => _$FieldUiPropertiesToJson(this);
-
-  // factory FieldUiProperties.fromJson(Map<String, dynamic> json) {
-  //   return FieldUiProperties(
-  //     id: json['id'],
-  //     uiComponentName: json['uiComponentName'],
-  //     isMultiselect: json['isMultiselect'],
-  //     displayKey: json['displayKey'],
-  //     valueKey: json['valueKey'],
-  //     cssClassName: json['cssClassName'],
-  //     patternForValidation: json['patternForValidation'],
-  //   );
-  // }
-
-  // Map<String, dynamic> toJson() {
-  //   return {
-  //     'id': id,
-  //     'uiComponentName': uiComponentName,
-  //     'isMultiselect': isMultiselect,
-  //     'displayKey': displayKey,
-  //     'valueKey': valueKey,
-  //     'cssClassName': cssClassName,
-  //     'patternForValidation': patternForValidation,
-  //   };
-  // }
 }
 
 @JsonSerializable()
@@ -173,33 +101,6 @@ class FieldMeta {
   factory FieldMeta.fromJson(Map<String, dynamic> json) => _$FieldMetaFromJson(json);
 
   Map<String, dynamic> toJson() => _$FieldMetaToJson(this);
-
-  // factory FieldMeta.fromJson(Map<String, dynamic> json) {
-  //   return FieldMeta(
-  //     fieldName: json['fieldName'],
-  //     displayTitle: json['displayTitle'],
-  //     dataType: json['dataType'],
-  //     referenceCodeClassifier: json['referenceCodeClassifier'],
-  //     apiForOptions: json['apiForOptions'],
-  //     variable: json['variable'],
-  //     noOfDecimalDigits: json['noOfDecimalDigits'],
-  //     fieldUiProperties: FieldUiProperties.fromJson(
-  //         json['fieldUiProperties'] as Map<String, dynamic>),
-  //   );
-  // }
-
-  // Map<String, dynamic> toJson() {
-  //   return {
-  //     'fieldName': fieldName,
-  //     'displayTitle': displayTitle,
-  //     'dataType': dataType,
-  //     'referenceCodeClassifier': referenceCodeClassifier,
-  //     'apiForOptions': apiForOptions,
-  //     'variable': variable,
-  //     'noOfDecimalDigits': noOfDecimalDigits,
-  //     'fieldUiProperties': fieldUiProperties?.toJson(),
-  //   };
-  // }
 }
 
 @JsonSerializable()
@@ -239,45 +140,6 @@ class Field {
   factory Field.fromJson(Map<String, dynamic> json) => _$FieldFromJson(json);
 
   Map<String, dynamic> toJson() => _$FieldToJson(this);
-
-  // factory Field.fromJson(Map<String, dynamic> json) {
-  //   return Field(
-  //     id: json['id'],
-  //     order: json['order'],
-  //     isRequired: json['isRequired'],
-  //     isReadOnly: json['isReadOnly'],
-  //     isEditable: json['isEditable'],
-  //     conditionalMandatory: json['conditionalMandatory'],
-  //     conditionOnField: json['conditionOnField'],
-  //     businessValidation: json['businessValidation'],
-  //     businessValidationNotation: json['businessValidationNotation'],
-  //     baseCssClassName: json['baseCssClassName'],
-  //     fieldMeta:
-  //         FieldMeta.fromJson(json['fieldMeta'] as Map<String, dynamic>),
-  //     value: json['value'],
-  //     prepopulateVariable: json['prepopulateVariable'],
-  //     prepopulateKey: json['prepopulateKey'],
-  //   );
-  // }
-
-  // Map<String, dynamic> toJson() {
-  //   return {
-  //     'id': id,
-  //     'order': order,
-  //     'isRequired': isRequired,
-  //     'isReadOnly': isReadOnly,
-  //     'isEditable': isEditable,
-  //     'conditionalMandatory': conditionalMandatory,
-  //     'conditionOnField': conditionOnField,
-  //     'businessValidation': businessValidation,
-  //     'businessValidationNotation': businessValidationNotation,
-  //     'baseCssClassName': baseCssClassName,
-  //     'fieldMeta': fieldMeta?.toJson(),
-  //     'value': value,
-  //     'prepopulateVariable': prepopulateVariable,
-  //     'prepopulateKey': prepopulateKey,
-  //   };
-  // }
 }
 
 @JsonSerializable()
@@ -287,6 +149,7 @@ class Section {
   String? displayTitle;
   String? cssClassName;
   int? order;
+  MetaData? metaData;
   List<SubSection>? subSections;
 
   Section({
@@ -295,37 +158,13 @@ class Section {
     this.displayTitle,
     this.cssClassName,
     this.order,
+    this.metaData,
     this.subSections,
   });
 
   factory Section.fromJson(Map<String, dynamic> json) => _$SectionFromJson(json);
 
   Map<String, dynamic> toJson() => _$SectionToJson(this);
-
-  // factory Section.fromJson(Map<String, dynamic> json) {
-  //   return Section(
-  //     id: json['id'],
-  //     sectionName: json['sectionName'],
-  //     displayTitle: json['displayTitle'],
-  //     cssClassName: json['cssClassName'],
-  //     order: json['order'],
-  //     subSections: (json['subSections'] as List<dynamic>?)
-  //         ?.map(
-  //             (subSectionJson) => SubSection.fromJson(subSectionJson as Map<String, dynamic>))
-  //         .toList(),
-  //   );
-  // }
-
-  // Map<String, dynamic> toJson() {
-  //   return {
-  //     'id': id,
-  //     'sectionName': sectionName,
-  //     'displayTitle': displayTitle,
-  //     'cssClassName': cssClassName,
-  //     'order': order,
-  //     'subSections': subSections?.map((subSection) => subSection.toJson()).toList(),
-  //   };
-  // }
 }
 
 @JsonSerializable()
@@ -354,32 +193,22 @@ class SubSection {
       _$SubSectionFromJson(json);
 
   Map<String, dynamic> toJson() => _$SubSectionToJson(this);
+}
 
-  // factory SubSection.fromJson(Map<String, dynamic> json) {
-  //   return SubSection(
-  //     id: json['id'],
-  //     subSectionName: json['subSectionName'],
-  //     displayTitle: json['displayTitle'],
-  //     cssClassName: json['cssClassName'],
-  //     isRepeatable: json['isRepeatable'],
-  //     maxNumberOfRepeatableSections: json['maxNumberOfRepeatableSections'],
-  //     order: json['order'],
-  //     fields: (json['fields'] as List<dynamic>?)
-  //         ?.map((fieldJson) => Field.fromJson(fieldJson as Map<String, dynamic>))
-  //         .toList(),
-  //   );
-  // }
+@JsonSerializable()
+class MetaData {
+  int? noOfFields;
+  int? mandatory;
+  int? dataCaptured;
 
-  // Map<String, dynamic> toJson() {
-  //   return {
-  //     'id': id,
-  //     'subSectionName': subSectionName,
-  //     'displayTitle': displayTitle,
-  //     'cssClassName': cssClassName,
-  //     'isRepeatable': isRepeatable,
-  //     'maxNumberOfRepeatableSections': maxNumberOfRepeatableSections,
-  //     'order': order,
-  //     'fields': fields?.map((field) => field.toJson()).toList(),
-  //   };
-  // }
+  MetaData({
+    this.noOfFields,
+    this.mandatory,
+    this.dataCaptured,
+  });
+
+  factory MetaData.fromJson(Map<String, dynamic> json) =>
+    _$MetaDataFromJson(json);
+
+  Map<String, dynamic> toJson() => _$MetaDataToJson(this);
 }

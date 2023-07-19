@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:origination/core/utils/loan_amount_formatter.dart';
 import 'package:origination/models/summaries/dashboard_summary.dart';
-import 'package:origination/screens/app/lead/leads_list.dart';
+import 'package:origination/screens/app/lead/stage_leads_list.dart';
 import 'package:origination/screens/widgets/products.dart';
 import 'package:origination/service/loan_application.dart';
 
@@ -115,7 +115,7 @@ class _LeadDashboardState extends State<LeadDashboard> {
                               DashBoardSummaryDTO summary = summaries[index];
                               return GestureDetector(
                                 onTap: () {
-                                  Navigator.push(context, MaterialPageRoute(builder: (context) => LeadsList(stage: summary.stage)));
+                                  Navigator.push(context, MaterialPageRoute(builder: (context) => StageLeadList(stage: summary.stage)));
                                 },
                                 child: Container(
                                   margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),

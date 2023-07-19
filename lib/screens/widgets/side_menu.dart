@@ -56,37 +56,37 @@ class SideMenu extends StatelessWidget {
               title: const Text('Leads',),
               selected: selectedItemIndex == 1,
               onTap: () {
-                onItemClicked(0);
-              },
-            ),
-            ListTile(
-              title: const Text('Application',),
-              selected: selectedItemIndex == 2,
-              onTap: () {
-                onItemClicked(0);
-              },
-            ),
-            ListTile(
-              title: const Text('Branch Manager'),
-              selected: selectedItemIndex == 3,
-              onTap: () {
                 onItemClicked(1);
               },
             ),
-            ListTile(
-              title: const Text('Supervisor'),
-              selected: selectedItemIndex == 4,
-              onTap: () {
-                onItemClicked(2);
-              },
-            ),
-            ListTile(
-              title: const Text('Claimed'),
-              selected: selectedItemIndex == 5,
-              onTap: () {
-                onItemClicked(3);
-              },
-            ),
+            // ListTile(
+            //   title: const Text('Application',),
+            //   selected: selectedItemIndex == 2,
+            //   onTap: () {
+            //     onItemClicked(0);
+            //   },
+            // ),
+            // ListTile(
+            //   title: const Text('Branch Manager'),
+            //   selected: selectedItemIndex == 3,
+            //   onTap: () {
+            //     onItemClicked(1);
+            //   },
+            // ),
+            // ListTile(
+            //   title: const Text('Supervisor'),
+            //   selected: selectedItemIndex == 4,
+            //   onTap: () {
+            //     onItemClicked(2);
+            //   },
+            // ),
+            // ListTile(
+            //   title: const Text('Claimed'),
+            //   selected: selectedItemIndex == 5,
+            //   onTap: () {
+            //     onItemClicked(3);
+            //   },
+            // ),
             // ListTile(
             //   title: const Text('Completed'),
             //   selected: selectedItemIndex == 6,

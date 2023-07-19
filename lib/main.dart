@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:origination/screens/app/lead/leads_list.dart';
 import 'package:origination/screens/app/lead_dashbaord.dart';
 import 'package:origination/screens/sign_in/forgot_password.dart';
 import 'package:origination/screens/sign_in/reset_password.dart';
@@ -103,13 +104,15 @@ class _Home extends State<Home> {
       case 0:
         return const LeadDashboard();
       case 1:
-        return const BranchManagerTable();
-      case 2:
-        return const SupervisorTable();
-      case 3:
-        return const ClaimedTasks();
-      case 4:
-        return CompletedTasks();
+        return const LeadsList();
+      // case 1:
+      //   return const BranchManagerTable();
+      // case 2:
+      //   return const SupervisorTable();
+      // case 3:
+      //   return const ClaimedTasks();
+      // case 4:
+      //   return CompletedTasks();
       default:
         return Container();
     }

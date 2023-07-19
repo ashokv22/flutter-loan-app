@@ -1,17 +1,23 @@
+
+
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:origination/models/applicant_dto.dart';
 import 'package:origination/screens/app/lead/edit_lead_application.dart';
 import 'package:origination/service/loan_application.dart';
 
-class LeadsList extends StatefulWidget {
-  const LeadsList({super.key});
+class StageLeadList extends StatefulWidget {
+  final String stage;
+  const StageLeadList({
+    super.key,
+    required this.stage
+  });
 
   @override
-  State<LeadsList> createState() => _LeadsListState();
+  State<StageLeadList> createState() => _StageLeadListState();
 }
 
-class _LeadsListState extends State<LeadsList> {
+class _StageLeadListState extends State<StageLeadList> {
 
   Logger logger = Logger();
 
@@ -19,6 +25,8 @@ class _LeadsListState extends State<LeadsList> {
   
   @override
   Widget build(BuildContext context) {
+    String stage = widget.stage;
+    logger.d(stage);
     return Scaffold(
       appBar: AppBar(
         title: const Text("Lead List"),
@@ -40,7 +48,7 @@ class _LeadsListState extends State<LeadsList> {
           children: [
             Expanded(
               child: FutureBuilder<List<ApplicantDTO>>(
-                future: applicationService.getLeads(),
+                future: applicationService.getLeadsByStage(stage),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const SizedBox(
