@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
-import 'package:origination/core/widgets/number_input.dart';
-import 'package:origination/core/widgets/text_input.dart';
+import 'package:origination/core/widgets/buttons/primary_button.dart';
+import 'package:origination/core/widgets/datepicker.dart';
 import 'package:origination/core/widgets/dropdown.dart';
 import 'package:origination/core/widgets/mobile_input.dart';
-import 'package:origination/core/widgets/datepicker.dart';
+import 'package:origination/core/widgets/number_input.dart';
 import 'package:origination/core/widgets/section_title.dart';
+import 'package:origination/core/widgets/text_input.dart';
 import 'package:origination/models/entity_configuration.dart';
-import 'package:origination/screens/app/bureau/screens/bureau_check_list.dart';
 import 'package:origination/service/loan_application.dart';
+import 'package:toggle_switch/toggle_switch.dart';
 
-class ApplicantForm extends StatefulWidget {
-  const ApplicantForm({
+class CoApplicantGuarantor extends StatefulWidget {
+  const CoApplicantGuarantor({
     super.key,
     required this.id,
   });
@@ -19,22 +20,21 @@ class ApplicantForm extends StatefulWidget {
   final int id;
 
   @override
-  _ApplicantFormState createState() => _ApplicantFormState();
+  State<CoApplicantGuarantor> createState() => _CoApplicantGuarantorState();
 }
 
-class _ApplicantFormState extends State<ApplicantForm> {
+class _CoApplicantGuarantorState extends State<CoApplicantGuarantor> {
 
   Logger logger = Logger();
   final applicationService = LoanApplicationService();
   bool isLoading = false;
 
-  void onSave(Section entity) async {
+  void onSave(Section section) async {
     setState(() {
       isLoading = true;
     });
   }
 
-  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -58,7 +58,25 @@ class _ApplicantFormState extends State<ApplicantForm> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const SectionTitle(title: 'Appliacant'),
+                    
+                    const SectionTitle(title: 'Co Appliacant / Guarantor'),
+                    Center(
+                      child: ToggleSwitch(
+                        minWidth: 110.0,
+                        cornerRadius: 20.0,
+                        activeBgColors: [[Colors.green[800]!], [Colors.green[800]!]],
+                        activeFgColor: Colors.white,
+                        inactiveBgColor: Colors.black,
+                        inactiveFgColor: Colors.white,
+                        initialLabelIndex: 0,
+                        totalSwitches: 2,
+                        labels: const ['Co Applicant', 'Guarantor'],
+                        radiusStyle: true,
+                        onToggle: (index) {
+                          print('switched to: $index');
+                        },
+                      ),
+                    ),
                     const SizedBox(height: 20),
                     Row(
                       children: [
@@ -123,37 +141,17 @@ class _ApplicantFormState extends State<ApplicantForm> {
                       child: SizedBox(
                         width: double.infinity,
                         height: 50,
-                        child: MaterialButton(
-                          onPressed: () {
-                            // onSave(section);
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => BureauCheckList(id: widget.id)));
-                          },
-                          color: const Color.fromARGB(255, 3, 71, 244),
-                          textColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(vertical: 16.0),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30.0),
-                          ),
-                          child: isLoading ? const SizedBox(
-                            width: 20.0,
-                            height: 20.0,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2.0,
-                              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                            ),
-                          )
-                          : const Text('Save'),
-                        ),
+                        child: PrimaryButton(isLoading: isLoading),
                       ),
                     )
                   ],
                 ),
               ),
-            )
-            )
+            ),
+          )
         ],
       ),
       )
     );
-  }
+  } 
 }

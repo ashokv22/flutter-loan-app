@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
+import 'package:origination/models/bureau_check/otp_request_dto.dart';
+import 'package:origination/models/bureau_check/otp_response_dto.dart';
+import 'package:origination/service/bureau_check_service.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:origination/screens/app/bureau/screens/applicant_form.dart';
 
 class OtpValidation extends StatefulWidget {
-  const OtpValidation({
+  OtpValidation({
     super.key, 
-    required  this.mobile,
+    required this.id,
+    required this.mobile,
   });
+  final int id;
   final String mobile;
 
   @override
@@ -14,51 +20,44 @@ class OtpValidation extends StatefulWidget {
 }
 
 class _OtpValidationState extends State<OtpValidation> {
+  Logger logger = Logger();
+  BureauCheckService bureauService = BureauCheckService();
 
   bool isLoading = false;
   String verificationCode = '';
-  String otp = "7678";
   bool otpValidated = false;
 
-  void validateOtp(String verificationCode) {
+  void validateOtp(String verificationCode) async {
     setState(() {
       isLoading = true;
     });
     
-    if (otp == verificationCode) {
-      setState(() {
-        otpValidated = true; // Set OTP validation flag to true
-      });
-      // Navigator.push(context, MaterialPageRoute(builder: (context) => const ApplicantForm()));
+    try {
+      OtpResponseDTO dto = OtpResponseDTO(otp: verificationCode, secret_key: "");
+      OtpRequestDTO response = await bureauService.validateBureauCheckOtp(1, dto);
+      logger.i(response.toJson());
+      otpValidated = true;
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const ApplicantForm()),
+        MaterialPageRoute(builder: (context) => ApplicantForm(id: widget.id,)),
       );
-      // showModalBottomSheet(
-      //   context: context,
-      //   builder: (context) {
-      //     return Column(
-      //       mainAxisSize: MainAxisSize.min,
-      //       children: <Widget>[
-      //         ListTile(
-      //           title: const Text('OTP Successful', textAlign: TextAlign.center, style: TextStyle(fontSize: 20),),
-      //           onTap: () {
-      //             Navigator.pop(context);
-      //           },
-      //         ),
-      //         const SizedBox(height: 100,),
-      //       ],
-      //     );
-      //   }
-      // );
-    }
-    else {
+    } catch(e) {
       setState(() {
         isLoading = false;
       });
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Wrong OTP, Please check again!')));
+      logger.e('An error occurred while submitting Otp: $e');
+      showSnackBar('Invalid OTP or expired. Please try again!');
     }
   }
+
+  void showSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+            content: Text(message),
+            duration: const Duration(seconds: 2),
+        ),
+    );
+}
 
   @override
   Widget build(BuildContext context) {

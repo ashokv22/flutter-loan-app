@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:origination/models/applicant_dto.dart';
@@ -15,14 +17,18 @@ class _LeadsListState extends State<LeadsList> {
 
   Logger logger = Logger();
 
+  int getRandomNumber() {
+    int min = 0;
+    int max = 20;
+    final Random random = Random();
+    return min + random.nextInt(max - min + 1);
+  }
+
   LoanApplicationService applicationService = LoanApplicationService();
   
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Lead List"),
-      ),
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
@@ -38,6 +44,41 @@ class _LeadsListState extends State<LeadsList> {
         ),
         child: Column(
           children: [
+            // Container(
+            //   color: Colors.black,
+            //   child: Padding(
+            //     padding: const EdgeInsets.only(top: 30.0, bottom: 15, left: 5, right: 10),
+            //     child: Row(
+            //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //       children: [
+            //         Row(
+            //           children: [
+            //             IconButton(
+            //               onPressed: () {
+            //                 Scaffold.of(context).openDrawer();
+            //               },
+            //               icon: const Icon(Icons.menu, color: Colors.white),
+            //             ),
+            //             const Text(
+            //               'Hello Ashok\nDCB00123',
+            //               style: TextStyle(
+            //                 color: Colors.white, 
+            //                 fontSize: 20),
+            //             ),
+            //           ],
+            //         ),
+            //         const Text(
+            //           textAlign: TextAlign.right,
+            //           'Jayanagar Branch\nKarnataka',
+            //           style: TextStyle(
+            //             color: Colors.white,
+            //             fontSize: 20,
+            //           ),
+            //         ),
+            //       ],
+            //     ),
+            //   ),
+            // ),
             Expanded(
               child: FutureBuilder<List<ApplicantDTO>>(
                 future: applicationService.getLeads(),
@@ -73,13 +114,14 @@ class _LeadsListState extends State<LeadsList> {
                     itemBuilder: (context, index) {
                       ApplicantDTO applicant = summaries[index];
                       String name = "${applicant.firstName!} ${applicant.lastName!}";
+                      int randomNumber = getRandomNumber();
                       return GestureDetector(
                         onTap: () {
                                 Navigator.push(context, MaterialPageRoute(builder: (context) => EditLead(id: applicant.id!)));
                               },
                         child: Container(
                           margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                          padding: const EdgeInsets.all(16.0),
+                          padding: const EdgeInsets.all(10.0),
                           decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(8.0),
@@ -102,7 +144,7 @@ class _LeadsListState extends State<LeadsList> {
                                     height: 80,
                                     child: ClipRRect(
                                       borderRadius: BorderRadius.circular(10),
-                                      child: Image.asset('assets/images/female-04.jpg', fit: BoxFit.cover,)),
+                                      child: Image.asset('assets/images/female-${randomNumber.toString().padLeft(2, '0')}.jpg', fit: BoxFit.cover,)),
                                   ),
                                   const SizedBox(width: 10),
                                   Column(

@@ -20,6 +20,8 @@ class ApplicantDTO {
   String? applicantId;
   String? custStatus;
   double? loanAmount;
+  ApplicantDeclarationStatus? declaration;
+
 
   ApplicantDTO({
     this.id,
@@ -38,6 +40,7 @@ class ApplicantDTO {
     this.applicantId,
     this.custStatus,
     this.loanAmount,
+    this.declaration,
   });
 
   factory ApplicantDTO.fromJson(Map<String, dynamic> json) => _$ApplicantDTOFromJson(json);
@@ -84,4 +87,10 @@ class ApplicantDTO {
   //     'loanAmount': loanAmount,
   //   };
   // }
+}
+
+enum ApplicantDeclarationStatus {
+  PENDING,
+  INITIATED,
+  COMPLETED,
 }

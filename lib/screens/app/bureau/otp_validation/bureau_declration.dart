@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:origination/screens/app/bureau/otp_validation/otp_validation.dart';
+import 'package:origination/service/bureau_check_service.dart';
 
 class BureauCheckDeclaration extends StatefulWidget {
   const BureauCheckDeclaration({
@@ -18,10 +20,12 @@ class BureauCheckDeclaration extends StatefulWidget {
 }
 
 class _BureauCheckDeclarationState extends State<BureauCheckDeclaration> {
+  Logger logger = Logger();
   final TextEditingController _mobileController = TextEditingController();
+  BureauCheckService bureauService = BureauCheckService();
   bool isLoading = false;
 
-    @override
+  @override
   void initState() {
     super.initState();
     _mobileController.text = widget.mobile;
@@ -37,11 +41,26 @@ class _BureauCheckDeclarationState extends State<BureauCheckDeclaration> {
     setState(() {
       isLoading = true;
     });
-    await Future.delayed(const Duration(seconds: 2));
-    setState(() {
-      isLoading = false;
-      Navigator.push(context, MaterialPageRoute(builder: (context) => const OtpValidation(mobile: "9916315365",)));
-    });
+    try {
+      bureauService.initBureauCheck(widget.id);
+      setState(() {
+        isLoading = false;
+        Navigator.push(context, MaterialPageRoute(builder: (context) => OtpValidation(id: widget.id, mobile: widget.mobile)));
+      });
+      // await Future.delayed(const Duration(seconds: 2));
+    }
+    catch (e) {
+      setState(() {
+        isLoading = true;
+      });
+      logger.e('An error occurred while submitting Loan Application: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Failed to submit application. Please try again.'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+    }
   }
 
 

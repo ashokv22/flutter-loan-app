@@ -173,6 +173,24 @@ class LoanApplicationService {
     }
   }
 
+  Future<ApplicantDTO> getApplicant(int id) async {
+    String endpoint = "api/application/applicant/$id";
+    try {
+      final response = await authInterceptor.get(Uri.parse(endpoint));
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        ApplicantDTO applicant = ApplicantDTO.fromJson(data);
+        return applicant;
+      }
+      else {
+        throw Exception('Failed to get data. Error code: ${response.statusCode}');
+      }
+    }
+    catch (e) {
+      throw  Exception('An error occurred while getting the data: $e');
+    }
+  }
+
   Future<List<NameValueDTO>> getReferenceCodes(String classifier) async {
     String endpoint = "api/sjs-core/_refs/reference-codes/parentcodes/$classifier?status=1";
     try {

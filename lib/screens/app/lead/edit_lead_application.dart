@@ -6,8 +6,11 @@ import 'package:origination/core/widgets/mobile_input.dart';
 import 'package:origination/core/widgets/reference_code.dart';
 import 'package:origination/core/widgets/section_title.dart';
 import 'package:origination/core/widgets/text_input.dart';
+import 'package:origination/models/applicant_dto.dart';
 import 'package:origination/models/entity_configuration.dart';
 import 'package:origination/screens/app/bureau/otp_validation/bureau_declration.dart';
+import 'package:origination/screens/app/bureau/screens/applicant_form.dart';
+import 'package:origination/screens/app/bureau/screens/bureau_check_list.dart';
 import 'package:origination/service/loan_application.dart';
 
 class EditLead extends StatefulWidget {
@@ -23,11 +26,19 @@ class _EditLeadState extends State<EditLead> {
   LoanApplicationService applicationService = LoanApplicationService();
   late Future<EntityConfigurationMetaData> leadApplicationFuture;
   late EntityConfigurationMetaData entity;
+  late ApplicantDTO? applicant;
 
   @override
   void initState() {
     super.initState();
     leadApplicationFuture = applicationService.getLeadApplication(widget.id);
+    applicationService.getApplicant(widget.id).then((value) => {
+      setState(() {
+        applicant = value;
+      })
+    }).catchError((error) {
+      logger.e(error);
+    });
   }
 
   void save(EntityConfigurationMetaData entity) async {
@@ -161,7 +172,12 @@ class _EditLeadState extends State<EditLead> {
                                         height: 50,
                                         child: MaterialButton(
                                           onPressed: () {
-                                            Navigator.push(context, MaterialPageRoute(builder: (context) => const BureauCheckDeclaration(name: "Ashok", id: 1, mobile: "9916315365",)));
+                                            if(applicant?.declaration == ApplicantDeclarationStatus.PENDING || applicant?.declaration == null) {
+                                              Navigator.push(context, MaterialPageRoute(builder: (context) => const BureauCheckDeclaration(name: "Ashok", id: 1, mobile: "9916315365",)));
+                                            }
+                                            else {
+                                              Navigator.push(context, MaterialPageRoute(builder: (context) => ApplicantForm(id: applicant!.id!)));
+                                            }
                                           },
                                           color: const Color.fromARGB(255, 3, 71, 244),
                                           textColor: Colors.white,

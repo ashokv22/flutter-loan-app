@@ -25,6 +25,8 @@ ApplicantDTO _$ApplicantDTOFromJson(Map<String, dynamic> json) => ApplicantDTO(
       applicantId: json['applicantId'] as String?,
       custStatus: json['custStatus'] as String?,
       loanAmount: (json['loanAmount'] as num?)?.toDouble(),
+      declaration: $enumDecodeNullable(
+          _$ApplicantDeclarationStatusEnumMap, json['declaration']),
     );
 
 Map<String, dynamic> _$ApplicantDTOToJson(ApplicantDTO instance) =>
@@ -45,4 +47,11 @@ Map<String, dynamic> _$ApplicantDTOToJson(ApplicantDTO instance) =>
       'applicantId': instance.applicantId,
       'custStatus': instance.custStatus,
       'loanAmount': instance.loanAmount,
+      'declaration': _$ApplicantDeclarationStatusEnumMap[instance.declaration],
     };
+
+const _$ApplicantDeclarationStatusEnumMap = {
+  ApplicantDeclarationStatus.PENDING: 'PENDING',
+  ApplicantDeclarationStatus.INITIATED: 'INITIATED',
+  ApplicantDeclarationStatus.COMPLETED: 'COMPLETED',
+};

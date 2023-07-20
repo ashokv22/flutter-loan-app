@@ -1,5 +1,7 @@
 
 
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:origination/models/applicant_dto.dart';
@@ -22,6 +24,13 @@ class _StageLeadListState extends State<StageLeadList> {
   Logger logger = Logger();
 
   LoanApplicationService applicationService = LoanApplicationService();
+  
+  int getRandomNumber() {
+    int min = 0;
+    int max = 20;
+    final Random random = Random();
+    return min + random.nextInt(max - min + 1);
+  }
   
   @override
   Widget build(BuildContext context) {
@@ -81,6 +90,7 @@ class _StageLeadListState extends State<StageLeadList> {
                     itemBuilder: (context, index) {
                       ApplicantDTO applicant = summaries[index];
                       String name = "${applicant.firstName!} ${applicant.lastName!}";
+                      int randomNumber = getRandomNumber();
                       return GestureDetector(
                         onTap: () {
                                 Navigator.push(context, MaterialPageRoute(builder: (context) => EditLead(id: applicant.id!)));
@@ -110,7 +120,7 @@ class _StageLeadListState extends State<StageLeadList> {
                                     height: 80,
                                     child: ClipRRect(
                                       borderRadius: BorderRadius.circular(10),
-                                      child: Image.asset('assets/images/female-04.jpg', fit: BoxFit.cover,)),
+                                      child: Image.asset('assets/images/female-${randomNumber.toString().padLeft(2, '0')}.jpg', fit: BoxFit.cover,)),
                                   ),
                                   const SizedBox(width: 10),
                                   Column(
