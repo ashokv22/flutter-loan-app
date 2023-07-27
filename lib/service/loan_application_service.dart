@@ -36,6 +36,21 @@ class LoanApplicationService {
     }
   }
 
+  Future<void> updateLead(EntityConfigurationMetaData metaData) async {
+    String endpoint = "api/application/loanApplication/lead";
+    final payload = jsonEncode(metaData.toJson());
+    final fetchResponse = await http.put(Uri.parse(apiUrl + endpoint), headers: {
+      'Content-type': 'application/json',
+      'X-AUTH-TOKEN': await authService.getAccessToken()
+      }, 
+      body: payload);
+    if (fetchResponse.statusCode == 201 || fetchResponse.statusCode == 200) {
+      logger.i('Application updated successfully');
+    } else {
+      logger.e('Failed to update Loan Application. Error code: ${fetchResponse.statusCode}');
+    }
+  }
+
   Future<Map<String, dynamic>> getLead() async {
     final response = await http.get(Uri.parse('http://10.0.2.2:5000/get-lead'));
     try {

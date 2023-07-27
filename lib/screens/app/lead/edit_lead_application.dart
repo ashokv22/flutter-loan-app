@@ -16,7 +16,12 @@ import 'package:origination/service/loan_application_service.dart';
 
 class EditLead extends StatefulWidget {
   final int id;
-  const EditLead({super.key, required this.id});
+  final int applicantId;
+  const EditLead({
+    super.key,
+    required this.id,
+    required this.applicantId,
+  });
 
   @override
   State<EditLead> createState() => _EditLeadState();
@@ -27,12 +32,13 @@ class _EditLeadState extends State<EditLead> {
   LoanApplicationService applicationService = LoanApplicationService();
   late Future<EntityConfigurationMetaData> leadApplicationFuture;
   late EntityConfigurationMetaData entity;
-  late ApplicantDTO? applicant;
+  late ApplicantDTO applicant;
 
   @override
   void initState() {
     super.initState();
-    leadApplicationFuture = applicationService.getLeadApplication(widget.id);
+    applicant = ApplicantDTO(); 
+    leadApplicationFuture = applicationService.getLeadApplication(widget.applicantId);
     applicationService.getApplicant(widget.id).then((value) => {
       setState(() {
         applicant = value;
@@ -42,10 +48,15 @@ class _EditLeadState extends State<EditLead> {
     });
   }
 
-  void save(EntityConfigurationMetaData entity) async {
+  void saveAndContinueToBureauCheck(EntityConfigurationMetaData entity) async {
     try {
-      logger.i(entity);
-      await applicationService.saveLoanApplication(entity);
+      await applicationService.updateLead(entity);
+      if(applicant?.declaration == ApplicantDeclarationStatus.PENDING || applicant == null) {
+        Navigator.push(context, MaterialPageRoute(builder: (context) => BureauCheckDeclaration(name: applicant!.firstName!, id: applicant!.id!, mobile: applicant!.mobile ?? '1234')));
+      }
+      else {
+        Navigator.push(context, MaterialPageRoute(builder: (context) => ApplicantForm(id: applicant!.id!)));
+      }
     }
     catch (e) {
       logger.e('An error occurred while submitting Loan Application: $e');
@@ -186,12 +197,7 @@ class _EditLeadState extends State<EditLead> {
                                         height: 50,
                                         child: MaterialButton(
                                           onPressed: () {
-                                            if(applicant?.declaration == ApplicantDeclarationStatus.PENDING || applicant?.declaration == null) {
-                                              Navigator.push(context, MaterialPageRoute(builder: (context) => BureauCheckDeclaration(name: applicant!.firstName!, id: applicant!.id!, mobile: applicant!.mobile ?? '1234')));
-                                            }
-                                            else {
-                                              Navigator.push(context, MaterialPageRoute(builder: (context) => ApplicantForm(id: applicant!.id!)));
-                                            }
+                                            saveAndContinueToBureauCheck(entity);
                                           },
                                           color: const Color.fromARGB(255, 3, 71, 244),
                                           textColor: Colors.white,

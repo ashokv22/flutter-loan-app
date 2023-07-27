@@ -93,7 +93,7 @@ class _StageLeadListState extends State<StageLeadList> {
                       int randomNumber = getRandomNumber();
                       return GestureDetector(
                         onTap: () {
-                                Navigator.push(context, MaterialPageRoute(builder: (context) => EditLead(id: int.parse(applicant.applicantId!))));
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => EditLead(id: applicant.id!, applicantId: int.parse(applicant.applicantId!))));
                               },
                         child: Container(
                           margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
