@@ -4,12 +4,12 @@ part 'otp_request_dto.g.dart';
 
 @JsonSerializable()
 class OtpRequestDTO {
-  String? message;
-  String? statusCode;
+  String? otp;
+  String? secret_key;
 
   OtpRequestDTO({
-    this.message,
-    this.statusCode,
+    this.otp,
+    this.secret_key,
   });
 
   factory OtpRequestDTO.fromJson(Map<String, dynamic> json) => _$OtpRequestDTOFromJson(json);

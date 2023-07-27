@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:origination/models/bureau_check/declaration.dart';
+import 'package:origination/models/bureau_check/otp_verification/otp_request_dto.dart';
 import 'package:origination/screens/app/bureau/otp_validation/otp_validation.dart';
 import 'package:origination/service/bureau_check_service.dart';
 
@@ -26,6 +27,7 @@ class _BureauCheckDeclarationState extends State<BureauCheckDeclaration> {
   final TextEditingController _mobileController = TextEditingController();
   BureauCheckService bureauService = BureauCheckService();
   late Future<DeclarationMasterDTO> declarationFuture;
+  late OtpRequestDTO requestDTO;
   bool isLoading = false;
   final String declarationType = "bureau";
 
@@ -35,6 +37,7 @@ class _BureauCheckDeclarationState extends State<BureauCheckDeclaration> {
 
   @override
   void initState() {
+    logger.d("Id: ${widget.id} name: ${widget.name}");
     super.initState();
     _mobileController.text = widget.mobile;
     fetchDeclaration();
@@ -51,10 +54,10 @@ class _BureauCheckDeclarationState extends State<BureauCheckDeclaration> {
       isLoading = true;
     });
     try {
-      bureauService.initBureauCheck(widget.id);
+      requestDTO = await bureauService.initBureauCheck(widget.id);
       setState(() {
         isLoading = false;
-        Navigator.push(context, MaterialPageRoute(builder: (context) => OtpValidation(id: widget.id, declaration: declaration,  mobile: widget.mobile)));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => OtpValidation(id: widget.id, declaration: declaration,  mobile: widget.mobile, secretKey: requestDTO.secret_key!,)));
       });
       // await Future.delayed(const Duration(seconds: 2));
     }

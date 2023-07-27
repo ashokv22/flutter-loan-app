@@ -1,18 +1,18 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'otp_request_dto.dart';
+part of 'otp_response_dto.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-OtpRequestDTO _$OtpRequestDTOFromJson(Map<String, dynamic> json) =>
-    OtpRequestDTO(
+OtpResponseDTO _$OtpResponseDTOFromJson(Map<String, dynamic> json) =>
+    OtpResponseDTO(
       message: json['message'] as String?,
       statusCode: json['statusCode'] as String?,
     );
 
-Map<String, dynamic> _$OtpRequestDTOToJson(OtpRequestDTO instance) =>
+Map<String, dynamic> _$OtpResponseDTOToJson(OtpResponseDTO instance) =>
     <String, dynamic>{
       'message': instance.message,
       'statusCode': instance.statusCode,

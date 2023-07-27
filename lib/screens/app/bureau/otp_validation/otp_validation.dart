@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:origination/models/bureau_check/declaration.dart';
-import 'package:origination/models/bureau_check/otp_request_dto.dart';
-import 'package:origination/models/bureau_check/otp_response_dto.dart';
+import 'package:origination/models/bureau_check/otp_verification/otp_request_dto.dart';
+import 'package:origination/models/bureau_check/otp_verification/otp_validation_dto.dart';
+import 'package:origination/models/bureau_check/save_declaration_dto.dart';
 import 'package:origination/service/bureau_check_service.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:origination/screens/app/bureau/screens/applicant_form.dart';
@@ -13,10 +14,12 @@ class OtpValidation extends StatefulWidget {
     required this.id,
     required this.mobile, 
     required this.declaration,
+    required this.secretKey,
   });
   final int id;
   final String mobile;
   final DeclarationMasterDTO declaration;
+  final String secretKey;
 
   @override
   State<OtpValidation> createState() => _OtpValidationState();
@@ -36,9 +39,18 @@ class _OtpValidationState extends State<OtpValidation> {
     });
     
     try {
-      OtpResponseDTO dto = OtpResponseDTO(otp: verificationCode, secret_key: "");
-      OtpRequestDTO response = await bureauService.validateBureauCheckOtp(1, dto);
-      logger.i(response.toJson());
+      OtpRequestDTO dto = OtpRequestDTO(otp: verificationCode, secret_key: widget.secretKey);
+      SaveDeclarationDTO saveDeclaration = SaveDeclarationDTO(
+        entityType: "Lead",
+        entityId: widget.id,
+        modeOfAcceptance: "OTP",
+        dateOfAcceptance: DateTime.now(),
+        status: "ACCEPTED",
+        declarationMasterId: widget.declaration.id
+      );
+      OtpValidationDTO validation = OtpValidationDTO(requestDTO: dto, declarationDTO: saveDeclaration);
+      OtpRequestDTO response = await bureauService.validateBureauCheckOtp(widget.id, validation);
+      logger.d(response.toJson());
       otpValidated = true;
       Navigator.pushReplacement(
         context,

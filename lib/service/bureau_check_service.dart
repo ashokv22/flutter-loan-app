@@ -2,8 +2,8 @@ import 'dart:convert';
 
 import 'package:logger/logger.dart';
 import 'package:origination/models/bureau_check/declaration.dart';
-import 'package:origination/models/bureau_check/otp_request_dto.dart';
-import 'package:origination/models/bureau_check/otp_response_dto.dart';
+import 'package:origination/models/bureau_check/otp_verification/otp_request_dto.dart';
+import 'package:origination/models/bureau_check/otp_verification/otp_validation_dto.dart';
 import 'package:origination/screens/sign_in/auth_interceptor.dart';
 import 'package:http/http.dart' as http;
 import 'package:origination/service/auth_service.dart';
@@ -38,7 +38,7 @@ class BureauCheckService {
   }
 
   // Validate OTP
-  Future<OtpRequestDTO> validateBureauCheckOtp(int id, OtpResponseDTO request) async {
+  Future<OtpRequestDTO> validateBureauCheckOtp(int id, OtpValidationDTO request) async {
     // String endpoint = "api/application/bureauCheck/validate?applicantId=$id";
     final response = await http.post(
       Uri.parse('${apiUrl}api/application/bureauCheck/validate?applicantId=$id'),

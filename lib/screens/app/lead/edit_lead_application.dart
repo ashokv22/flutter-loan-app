@@ -51,11 +51,12 @@ class _EditLeadState extends State<EditLead> {
   void saveAndContinueToBureauCheck(EntityConfigurationMetaData entity) async {
     try {
       await applicationService.updateLead(entity);
-      if(applicant?.declaration == ApplicantDeclarationStatus.PENDING || applicant == null) {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => BureauCheckDeclaration(name: applicant!.firstName!, id: applicant!.id!, mobile: applicant!.mobile ?? '1234')));
+      logger.d(applicant.declaration);
+      if (applicant.declaration == ApplicantDeclarationStatus.COMPLETED) {
+        Navigator.push(context, MaterialPageRoute(builder: (context) => ApplicantForm(id: applicant!.id!)));
       }
       else {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => ApplicantForm(id: applicant!.id!)));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => BureauCheckDeclaration(name: applicant!.firstName!, id: applicant!.id!, mobile: applicant!.mobile ?? '1234')));
       }
     }
     catch (e) {
