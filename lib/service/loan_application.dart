@@ -214,9 +214,10 @@ class LoanApplicationService {
   }
 
   Future<ApplicantDTO> updateStatus(int id, String stage) async {
-    String endpoint = "api/application/loanApplication/lead/updateStage/$id?status=$stage";
+    // String endpoint = "api/application/loanApplication/lead/updateStage/$id?status=$stage";
+    String endpoint = "api/application/loanApplication/lead/$id";
     try {
-      final response = await authInterceptor.get(Uri.parse(endpoint));
+      final response = await authInterceptor.put(Uri.parse(endpoint));
       if (response.statusCode == 200) {
         final jsonResponse = json.decode(response.body);
         ApplicantDTO applicant = ApplicantDTO.fromJson(jsonResponse);

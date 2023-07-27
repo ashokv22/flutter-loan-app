@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:logger/logger.dart';
+import 'package:origination/models/bureau_check/declaration.dart';
 import 'package:origination/models/bureau_check/otp_request_dto.dart';
 import 'package:origination/models/bureau_check/otp_response_dto.dart';
 import 'package:origination/screens/sign_in/auth_interceptor.dart';
@@ -58,6 +59,23 @@ class BureauCheckService {
       throw Exception('Failed to init bureau check. Error code: ${response.statusCode}');
     }
     
+  }
+
+  Future<DeclarationMasterDTO> getDeclarationByType(String type) async {
+    String endpoint = "api/application/declarationMaster/entityType?type=$type";
+    try {
+      final response = await authInterceptor.get(Uri.parse(endpoint));
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        DeclarationMasterDTO request = DeclarationMasterDTO.fromJson(data);
+        return request;
+      }
+      else {
+        throw Exception('Failed to init bureau check. Error code: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception("An error occurred while fetching data!: $e");
+    }
   }
 
 }

@@ -35,7 +35,6 @@ class _ReferencecodeState extends State<Referencecode> {
       setState(() {
         refernceCodes = filteredOptions.isEmpty ? null : filteredOptions; // Set referenceCodes to null if the filteredOptions is empty
         isLoading = false;
-        logger.i(widget.referenceCode, refernceCodes?.map((e) => e.toJson()));
       });
     } catch(e) {
       logger.e(e);

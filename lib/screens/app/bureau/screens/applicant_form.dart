@@ -117,32 +117,35 @@ class _ApplicantFormState extends State<ApplicantForm> {
                         Expanded(child: TextInput(label: "State", controller: TextEditingController(), onChanged: (newValue) {})),
                       ],
                     ),
-                    const SizedBox(height: 15.0),
-                    Align(
-                      alignment: Alignment.bottomCenter,
-                      child: SizedBox(
-                        width: double.infinity,
-                        height: 50,
-                        child: MaterialButton(
-                          onPressed: () {
-                            // onSave(section);
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => BureauCheckList(id: widget.id)));
-                          },
-                          color: const Color.fromARGB(255, 3, 71, 244),
-                          textColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(vertical: 16.0),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30.0),
-                          ),
-                          child: isLoading ? const SizedBox(
-                            width: 20.0,
-                            height: 20.0,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2.0,
-                              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                    const SizedBox(height: 20.0),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 1.0),
+                      child: Align(
+                        alignment: Alignment.bottomCenter,
+                        child: SizedBox(
+                          width: double.infinity,
+                          height: 55,
+                          child: MaterialButton(
+                            onPressed: () {
+                              // onSave(section);
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => BureauCheckList(id: widget.id)));
+                            },
+                            color: const Color.fromARGB(255, 3, 71, 244),
+                            textColor: Colors.white,
+                            padding: const EdgeInsets.symmetric(vertical: 16.0),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30.0),
                             ),
-                          )
-                          : const Text('Save'),
+                            child: isLoading ? const SizedBox(
+                              width: 20.0,
+                              height: 20.0,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2.0,
+                                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                              ),
+                            )
+                            : const Text('Save', style: TextStyle(fontSize: 18),),
+                          ),
                         ),
                       ),
                     )

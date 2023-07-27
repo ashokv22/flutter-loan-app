@@ -1,5 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
+import 'package:origination/models/bureau_check/declaration.dart';
 import 'package:origination/screens/app/bureau/otp_validation/otp_validation.dart';
 import 'package:origination/service/bureau_check_service.dart';
 
@@ -23,12 +25,19 @@ class _BureauCheckDeclarationState extends State<BureauCheckDeclaration> {
   Logger logger = Logger();
   final TextEditingController _mobileController = TextEditingController();
   BureauCheckService bureauService = BureauCheckService();
+  late Future<DeclarationMasterDTO> declarationFuture;
   bool isLoading = false;
+  final String declarationType = "bureau";
+
+  void fetchDeclaration() {
+    declarationFuture = bureauService.getDeclarationByType(declarationType);
+  }
 
   @override
   void initState() {
     super.initState();
     _mobileController.text = widget.mobile;
+    fetchDeclaration();
   }
 
   @override
@@ -37,7 +46,7 @@ class _BureauCheckDeclarationState extends State<BureauCheckDeclaration> {
     super.dispose();
   }
 
-  void generateOTP(BuildContext context) async {
+  void generateOTP(BuildContext context, DeclarationMasterDTO declaration) async {
     setState(() {
       isLoading = true;
     });
@@ -45,7 +54,7 @@ class _BureauCheckDeclarationState extends State<BureauCheckDeclaration> {
       bureauService.initBureauCheck(widget.id);
       setState(() {
         isLoading = false;
-        Navigator.push(context, MaterialPageRoute(builder: (context) => OtpValidation(id: widget.id, mobile: widget.mobile)));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => OtpValidation(id: widget.id, declaration: declaration,  mobile: widget.mobile)));
       });
       // await Future.delayed(const Duration(seconds: 2));
     }
@@ -67,7 +76,10 @@ class _BureauCheckDeclarationState extends State<BureauCheckDeclaration> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Bureau Check")),
+      appBar: AppBar(
+        leading: IconButton(onPressed: () {Navigator.pop(context);}, icon: const Icon(CupertinoIcons.arrow_left)),
+        title: const Text("Bureau Check")
+      ),
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
@@ -80,59 +92,99 @@ class _BureauCheckDeclarationState extends State<BureauCheckDeclaration> {
         ),
         child: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: Column(
-            children: [
-              const Align(
-                alignment: Alignment.centerLeft,
-                child: Text("Declaration", textAlign: TextAlign.left, style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),)
-              ),
-              const SizedBox(height: 20),
-              const Text(
-                "I here by authorize DCB bank to check my credit score. I do so by sharing OTP recieved on my mobile number mentioned below.",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 18
-                ),
-              ),
-              const SizedBox(height: 60.0),
-              TextField(
-                decoration: const InputDecoration(
-                  labelText: 'Mobile',
-                  border: OutlineInputBorder(),
-                ),
-                style: const TextStyle(fontSize: 18),
-                controller: _mobileController,
-              ),
-              const SizedBox(height: 30.0),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 10),
-                child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: SizedBox(
-                    width: double.infinity,
-                    height: 60,
-                    child: MaterialButton(
-                      onPressed: () => generateOTP(context),
-                      color: const Color.fromARGB(255, 3, 71, 244),
-                      textColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(vertical: 16.0),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      child: isLoading ? const SizedBox(
-                        width: 20.0,
-                        height: 20.0,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2.0,
-                          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                        ),
-                      )
-                      : const Text('Send OTP', style: TextStyle(fontSize: 20),),
-                    ),
+          child: FutureBuilder(
+            future: declarationFuture,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const SizedBox(
+                  width: double.infinity,
+                  height: double.infinity,
+                  child: Center(child: CircularProgressIndicator()),
+                );
+              } else if (snapshot.hasError) {
+                return Center(
+                  child: Text('Error: ${snapshot.error}'),
+                );
+              } else if (!snapshot.hasData) {
+                return const SizedBox(
+                  width: double.infinity,
+                  height: double.infinity,
+                  child: Center(
+                    child: Text("No data found", style: TextStyle(fontSize: 20),),
                   ),
-                ),
-              ),
-            ],
+                );
+              } else if (snapshot.hasData) {
+                DeclarationMasterDTO declaration = snapshot.data!;
+                return Column(
+                  children: [
+                    const Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        "Declaration", 
+                        textAlign: TextAlign.left, 
+                        style: TextStyle(
+                          fontSize: 30, 
+                          fontWeight: FontWeight.bold,
+                          color: Color.fromARGB(255, 3, 71, 244)
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    Text(
+                      declaration.declarationContent,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        fontSize: 18
+                      ),
+                    ),
+                    const SizedBox(height: 60.0),
+                    TextField(
+                      decoration: const InputDecoration(
+                        labelText: 'Mobile',
+                        border: OutlineInputBorder(),
+                        counter: Offstage()
+                      ),
+                      style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      controller: _mobileController,
+                      keyboardType: TextInputType.phone,
+                      maxLength: 10,
+                    ),
+                    const SizedBox(height: 30.0),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 10),
+                      child: Align(
+                        alignment: Alignment.bottomCenter,
+                        child: SizedBox(
+                          width: double.infinity,
+                          height: 60,
+                          child: MaterialButton(
+                            onPressed: () => generateOTP(context, declaration),
+                            color: const Color.fromARGB(255, 3, 71, 244),
+                            textColor: Colors.white,
+                            padding: const EdgeInsets.symmetric(vertical: 16.0),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            child: isLoading ? const SizedBox(
+                              width: 20.0,
+                              height: 20.0,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2.0,
+                                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                              ),
+                            )
+                            : const Text('Send OTP', style: TextStyle(fontSize: 20),),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+              }
+              else {
+                return Container();
+              }
+            }
           ),
         ),
       )

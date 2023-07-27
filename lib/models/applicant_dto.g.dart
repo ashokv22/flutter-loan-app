@@ -17,6 +17,7 @@ ApplicantDTO _$ApplicantDTOFromJson(Map<String, dynamic> json) => ApplicantDTO(
       lastName: json['lastName'] as String?,
       dob: json['dob'] == null ? null : DateTime.parse(json['dob'] as String),
       gender: json['gender'] as String?,
+      mobile: json['mobile'] as String?,
       nationality: json['nationality'] as String?,
       kycDate: json['kycDate'] == null
           ? null
@@ -41,6 +42,7 @@ Map<String, dynamic> _$ApplicantDTOToJson(ApplicantDTO instance) =>
       'lastName': instance.lastName,
       'dob': instance.dob?.toIso8601String(),
       'gender': instance.gender,
+      'mobile': instance.mobile,
       'nationality': instance.nationality,
       'kycDate': instance.kycDate?.toIso8601String(),
       'kycDoneStatus': instance.kycDoneStatus,

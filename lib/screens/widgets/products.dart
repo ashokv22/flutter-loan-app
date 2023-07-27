@@ -31,7 +31,7 @@ class _ProductsState extends State<Products> {
             ],
           ),
           Container(
-            color: Colors.white,
+            // color: Colors.white,
             child: Expanded(
               child: SingleChildScrollView(
                 child: Padding(
@@ -61,7 +61,7 @@ class _ProductsState extends State<Products> {
                     builder: (context) => const NewLead(),
                   ),
                 );
-            },
+              },
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color.fromARGB(255, 3, 71, 244),
                 shape: RoundedRectangleBorder(

@@ -14,6 +14,7 @@ class ApplicantDTO {
   String? lastName;
   DateTime? dob;
   String? gender;
+  String? mobile;
   String? nationality;
   DateTime? kycDate;
   String? kycDoneStatus;
@@ -34,6 +35,7 @@ class ApplicantDTO {
     this.lastName,
     this.dob,
     this.gender,
+    this.mobile,
     this.nationality,
     this.kycDate,
     this.kycDoneStatus,

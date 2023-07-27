@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:origination/core/widgets/datepicker.dart';
@@ -75,6 +76,7 @@ class _EditLeadState extends State<EditLead> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(onPressed: () {Navigator.pop(context);}, icon: const Icon(CupertinoIcons.arrow_left)),
         title: const Text("Edit Lead"),
       ),
       body: Container(
@@ -150,19 +152,30 @@ class _EditLeadState extends State<EditLead> {
                                     Align(
                                       alignment: Alignment.bottomCenter,
                                       child: SizedBox(
-                                        width: double.infinity,
-                                        height: 50,
-                                        child: MaterialButton(
-                                          onPressed: () => updateStage(entity),
-                                          color: const Color.fromARGB(255, 3, 71, 244),
-                                          textColor: Colors.white,
-                                          padding: const EdgeInsets.symmetric(vertical: 16.0),
+                                      width: double.infinity,
+                                      height: 50,
+                                      child: OutlinedButton(
+                                        style: OutlinedButton.styleFrom(
                                           shape: RoundedRectangleBorder(
                                             borderRadius: BorderRadius.circular(30.0),
                                           ),
-                                          child: const Text('Rework'),
+                                          side: const BorderSide(
+                                            color: Color.fromARGB(255, 3, 71, 244), // Border color same as the solid button color
+                                          ),
+                                          padding: const EdgeInsets.symmetric(vertical: 16.0),
+                                        ),
+                                        onPressed: () {
+                                          updateStage(entity);
+                                        },
+                                        child: const Text(
+                                          "Rework",
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            color: Color.fromARGB(255, 3, 71, 244), // Text color same as the solid button color
+                                          ),
                                         ),
                                       ),
+                                    ),
                                     ),
                                     const SizedBox(height: 15.0),
                                     Align(
@@ -173,7 +186,7 @@ class _EditLeadState extends State<EditLead> {
                                         child: MaterialButton(
                                           onPressed: () {
                                             if(applicant?.declaration == ApplicantDeclarationStatus.PENDING || applicant?.declaration == null) {
-                                              Navigator.push(context, MaterialPageRoute(builder: (context) => const BureauCheckDeclaration(name: "Ashok", id: 1, mobile: "9916315365",)));
+                                              Navigator.push(context, MaterialPageRoute(builder: (context) => BureauCheckDeclaration(name: applicant!.firstName!, id: applicant!.id!, mobile: applicant!.mobile ?? '1234')));
                                             }
                                             else {
                                               Navigator.push(context, MaterialPageRoute(builder: (context) => ApplicantForm(id: applicant!.id!)));

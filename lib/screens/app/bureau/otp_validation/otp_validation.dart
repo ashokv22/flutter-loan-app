@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
+import 'package:origination/models/bureau_check/declaration.dart';
 import 'package:origination/models/bureau_check/otp_request_dto.dart';
 import 'package:origination/models/bureau_check/otp_response_dto.dart';
 import 'package:origination/service/bureau_check_service.dart';
@@ -7,13 +8,15 @@ import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:origination/screens/app/bureau/screens/applicant_form.dart';
 
 class OtpValidation extends StatefulWidget {
-  OtpValidation({
+  const OtpValidation({
     super.key, 
     required this.id,
-    required this.mobile,
+    required this.mobile, 
+    required this.declaration,
   });
   final int id;
   final String mobile;
+  final DeclarationMasterDTO declaration;
 
   @override
   State<OtpValidation> createState() => _OtpValidationState();
