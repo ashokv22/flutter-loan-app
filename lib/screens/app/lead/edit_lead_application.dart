@@ -12,7 +12,7 @@ import 'package:origination/models/entity_configuration.dart';
 import 'package:origination/screens/app/bureau/otp_validation/bureau_declration.dart';
 import 'package:origination/screens/app/bureau/screens/applicant_form.dart';
 import 'package:origination/screens/app/bureau/screens/bureau_check_list.dart';
-import 'package:origination/service/loan_application.dart';
+import 'package:origination/service/loan_application_service.dart';
 
 class EditLead extends StatefulWidget {
   final int id;
@@ -60,7 +60,8 @@ class _EditLeadState extends State<EditLead> {
 
   void updateStage(EntityConfigurationMetaData entity) async {
     try {
-      await applicationService.updateStatus(widget.id, "REWORK");
+      await applicationService.updateToRework(widget.id, entity);
+      Navigator.pop(context);
     }
     catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(

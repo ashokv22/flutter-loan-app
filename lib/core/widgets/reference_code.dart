@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:origination/models/namevalue_dto.dart';
-import 'package:origination/service/loan_application.dart';
+import 'package:origination/service/loan_application_service.dart';
 
 class Referencecode extends StatefulWidget {
   const Referencecode({

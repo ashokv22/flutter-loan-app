@@ -8,7 +8,7 @@ import 'package:origination/core/widgets/datepicker.dart';
 import 'package:origination/core/widgets/section_title.dart';
 import 'package:origination/models/entity_configuration.dart';
 import 'package:origination/screens/app/bureau/screens/bureau_check_list.dart';
-import 'package:origination/service/loan_application.dart';
+import 'package:origination/service/loan_application_service.dart';
 
 class ApplicantForm extends StatefulWidget {
   const ApplicantForm({

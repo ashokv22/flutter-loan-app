@@ -15,11 +15,12 @@ class LoanApplicationService {
   
   final authInterceptor = AuthInterceptor(http.Client(), authService);
   Logger logger = Logger();
+  final apiUrl = 'http://10.0.2.2:8080/';
 
   Future<void> saveLoanApplication(EntityConfigurationMetaData metaData) async {
     final payload = jsonEncode(metaData.toJson());
-    String apiUrl = 'http://10.0.2.2:8080/';
-    String token = "4071d786-88db-4a38-ab5c-b19d22e4c547";
+    String token = await authService.getAccessToken();
+    logger.d(token);
 
     String endpoint = "api/application/loanApplication/lead";
 
@@ -138,9 +139,10 @@ class LoanApplicationService {
   }
 
   Future<EntityConfigurationMetaData> getEntityLeadApplication() async {
-    String endpoint = "api/application/entity/entityConfigurationByEntityTypeAndEntitySubType?entityType=Lead&entitySubType=Tractor";
+    String endpoint = "api/application/entityConfigurationByEntityTypeAndEntitySubType?entityType=Lead&entitySubType=Tractor";
     try {
       final response = await authInterceptor.get(Uri.parse(endpoint));
+      print(response.body);
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         EntityConfigurationMetaData entity = EntityConfigurationMetaData.fromJson(data);
@@ -159,6 +161,7 @@ class LoanApplicationService {
     String endpoint = "api/application/loanApplication/lead/$id";
     try {
       final response = await authInterceptor.get(Uri.parse(endpoint));
+      logger.d(id, response.statusCode);
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         EntityConfigurationMetaData entity = EntityConfigurationMetaData.fromJson(data);
@@ -214,8 +217,7 @@ class LoanApplicationService {
   }
 
   Future<ApplicantDTO> updateStatus(int id, String stage) async {
-    // String endpoint = "api/application/loanApplication/lead/updateStage/$id?status=$stage";
-    String endpoint = "api/application/loanApplication/lead/$id";
+    String endpoint = "api/application/loanApplication/lead/updateStage/$id?status=$stage";
     try {
       final response = await authInterceptor.put(Uri.parse(endpoint));
       if (response.statusCode == 200) {
@@ -238,13 +240,35 @@ class LoanApplicationService {
       final response = await http.get(
         Uri.parse(endpoint),
         headers: {
-          'X-Auth-Token': "d32033cd-4717-458f-95a9-ca77f43fff67",
+          'X-Auth-Token': await authService.getAccessToken(),
         }
       );
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         Section section = Section.fromJson(data);
         return section;
+      }
+      else {
+        throw Exception('Failed to get data. Error code: ${response.statusCode}');
+      }
+    }
+    catch (e) {
+      throw  Exception('An error occurred while getting the data: $e');
+    }
+  }
+
+  Future<ApplicantDTO> updateToRework(int id, EntityConfigurationMetaData data) async {
+    String endpoint = "api/application/loanApplication/lead/rework/$id";
+    try {
+      final response = await http.put(Uri.parse(apiUrl + endpoint), headers: {
+      'Content-type': 'application/json',
+      'X-AUTH-TOKEN': await authService.getAccessToken()
+      }, 
+      body: data);
+      if (response.statusCode == 200) {
+        final jsonResponse = json.decode(response.body);
+        ApplicantDTO applicant = ApplicantDTO.fromJson(jsonResponse);
+        return applicant;
       }
       else {
         throw Exception('Failed to get data. Error code: ${response.statusCode}');

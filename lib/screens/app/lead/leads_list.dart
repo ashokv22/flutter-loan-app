@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:origination/models/applicant_dto.dart';
 import 'package:origination/screens/app/lead/edit_lead_application.dart';
-import 'package:origination/service/loan_application.dart';
+import 'package:origination/service/loan_application_service.dart';
 
 class LeadsList extends StatefulWidget {
   const LeadsList({super.key});
@@ -117,7 +117,7 @@ class _LeadsListState extends State<LeadsList> {
                       int randomNumber = getRandomNumber();
                       return GestureDetector(
                         onTap: () {
-                                Navigator.push(context, MaterialPageRoute(builder: (context) => EditLead(id: applicant.id!)));
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => EditLead(id: int.parse(applicant.applicantId!))));
                               },
                         child: Container(
                           margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),

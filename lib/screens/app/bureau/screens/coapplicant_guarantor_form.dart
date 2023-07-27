@@ -8,7 +8,7 @@ import 'package:origination/core/widgets/number_input.dart';
 import 'package:origination/core/widgets/section_title.dart';
 import 'package:origination/core/widgets/text_input.dart';
 import 'package:origination/models/entity_configuration.dart';
-import 'package:origination/service/loan_application.dart';
+import 'package:origination/service/loan_application_service.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 
 class CoApplicantGuarantor extends StatefulWidget {

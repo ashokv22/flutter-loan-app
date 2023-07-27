@@ -7,7 +7,7 @@ import 'package:origination/core/widgets/mobile_input.dart';
 import 'package:origination/core/widgets/datepicker.dart';
 import 'package:origination/core/widgets/section_title.dart';
 import 'package:origination/models/entity_configuration.dart';
-import 'package:origination/service/loan_application.dart';
+import 'package:origination/service/loan_application_service.dart';
 
 class NewLead extends StatefulWidget {
   const NewLead({super.key});

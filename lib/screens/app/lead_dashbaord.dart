@@ -4,7 +4,7 @@ import 'package:origination/core/utils/loan_amount_formatter.dart';
 import 'package:origination/models/summaries/dashboard_summary.dart';
 import 'package:origination/screens/app/lead/stage_leads_list.dart';
 import 'package:origination/screens/widgets/products.dart';
-import 'package:origination/service/loan_application.dart';
+import 'package:origination/service/loan_application_service.dart';
 
 class LeadDashboard extends StatefulWidget {
   const LeadDashboard({super.key});
