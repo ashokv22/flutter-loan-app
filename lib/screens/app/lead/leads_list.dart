@@ -144,7 +144,7 @@ class _LeadsListState extends State<LeadsList> {
                                     height: 80,
                                     child: ClipRRect(
                                       borderRadius: BorderRadius.circular(10),
-                                      child: Image.asset('assets/images/female-${randomNumber.toString().padLeft(2, '0')}.jpg', fit: BoxFit.cover,)),
+                                      child: Image.asset('assets/images/${applicant.gender!.toLowerCase()}-${randomNumber.toString().padLeft(2, '0')}.jpg', fit: BoxFit.cover,)),
                                   ),
                                   const SizedBox(width: 10),
                                   Column(

@@ -14,6 +14,7 @@ import 'screens/widgets/side_menu.dart';
 // import 'screens/widgets/bottom_bar.dart';
 import 'service/task_data_provider.dart';
 import 'package:provider/provider.dart';
+import 'themes.dart';
 
 void main() {
   
@@ -31,6 +32,7 @@ class SideMenuApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AuthService authService = AuthService();
+    final Brightness brightness = MediaQuery.of(context).platformBrightness;
 
     return MaterialApp(
       title: 'Origination',
@@ -44,6 +46,7 @@ class SideMenuApp extends StatelessWidget {
         useMaterial3: true,
         brightness: Brightness.dark,
       ),
+      // theme: getSystemDefaultTheme(brightness),
       home: const Home(),
       debugShowCheckedModeBanner: false,
       routes: {
@@ -75,6 +78,8 @@ class SideMenuApp extends StatelessWidget {
         '/supervisor': (context) => const SupervisorTable(),
         '/claimed': (context) => const ClaimedTasks(),
         '/completed': (context) => CompletedTasks(),
+        // DCB
+        '/leads/home': (context) => const LeadDashboard(),
       }
     );
   }
@@ -131,12 +136,13 @@ class _Home extends State<Home> {
                   onPressed: () {
                     Scaffold.of(context).openDrawer();
                   },
-                  icon: const Icon(Icons.menu),
+                  icon: Icon(Icons.menu, color: Theme.of(context).iconTheme.color),
                 );
               }
             ),
-            title: const Text('DCB', style: TextStyle(
-              fontSize: 26
+            title:  Text('DCB', style: TextStyle(
+              fontSize: 26,
+              color: Theme.of(context).textTheme.bodyLarge!.color
             ),),
             backgroundColor: Colors.transparent,
             elevation: 0,

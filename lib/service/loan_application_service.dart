@@ -157,7 +157,6 @@ class LoanApplicationService {
     String endpoint = "api/application/entityConfigurationByEntityTypeAndEntitySubType?entityType=Lead&entitySubType=Tractor";
     try {
       final response = await authInterceptor.get(Uri.parse(endpoint));
-      print(response.body);
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         EntityConfigurationMetaData entity = EntityConfigurationMetaData.fromJson(data);
@@ -274,13 +273,15 @@ class LoanApplicationService {
 
   Future<ApplicantDTO> updateToRework(int id, EntityConfigurationMetaData data) async {
     String endpoint = "api/application/loanApplication/lead/rework/$id";
+    final payload = jsonEncode(data.toJson());
     try {
       final response = await http.put(Uri.parse(apiUrl + endpoint), headers: {
       'Content-type': 'application/json',
       'X-AUTH-TOKEN': await authService.getAccessToken()
       }, 
-      body: data);
-      if (response.statusCode == 200) {
+      body: payload);
+      logger.d(response.statusCode);
+      if (response.statusCode == 200 || response.statusCode == 201) {
         final jsonResponse = json.decode(response.body);
         ApplicantDTO applicant = ApplicantDTO.fromJson(jsonResponse);
         return applicant;

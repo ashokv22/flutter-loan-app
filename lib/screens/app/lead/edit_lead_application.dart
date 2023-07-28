@@ -70,10 +70,11 @@ class _EditLeadState extends State<EditLead> {
     }
   }
 
-  void updateStage(EntityConfigurationMetaData entity) async {
+  void updateStage(EntityConfigurationMetaData entity) {
+    logger.d("Updating the stage to Rework");
     try {
-      await applicationService.updateToRework(widget.id, entity);
-      Navigator.pop(context);
+      applicationService.updateToRework(entity.id!, entity);
+      Navigator.pushNamed(context, '/');
     }
     catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
