@@ -148,15 +148,27 @@ class _Home extends State<Home> {
             elevation: 0,
             actions: [
               // IconButton(onPressed: () {}, icon: const Icon(Icons.account_circle_outlined, size: 35,))
+                // IconButton(
+                //     onPressed: () {},
+                //     icon: ClipOval(
+                //       child: Image.asset(
+                //           'assets/images/female-04.jpg',
+                //           height: 50,
+                //           width: 50,
+                //         ),
+                //     ),
+                // ),
                 IconButton(
-                    onPressed: () {},
-                    icon: ClipOval(
-                      child: Image.asset(
-                          'assets/images/female-04.jpg',
-                          height: 50,
-                          width: 50,
-                        ),
+                  onPressed: () {},
+                  icon: ClipOval(
+                    child: Padding(
+                      padding: const EdgeInsets.all(0),
+                      child: Image(
+                        image: Image.asset('assets/images/female-04.jpg').image, 
+                        fit: BoxFit.cover,
+                      ),
                     ),
+                  ),
                 ),
             ],
           ),

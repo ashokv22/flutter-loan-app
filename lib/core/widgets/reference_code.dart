@@ -25,7 +25,7 @@ class _ReferencecodeState extends State<Referencecode> {
   String? selectedValue;
   Logger logger = Logger();
   LoanApplicationService applicationService = LoanApplicationService();
-  List<NameValueDTO>? refernceCodes = [];
+  List<NameValueDTO>? refernceCodes;
   bool isLoading = true;
 
   Future<void> fetchData() async {
@@ -75,12 +75,13 @@ class _ReferencecodeState extends State<Referencecode> {
                     enabled: false,
                     child: Text("Select"), 
                   ),
-                  ...refernceCodes!.map((option) {
-                    return DropdownMenuItem<String>(
-                      value: option.code,
-                      child: Text(option.name!),
-                    );
-                  }).toList(),
+                  if (refernceCodes != null)
+                    ...refernceCodes!.map((option) {
+                      return DropdownMenuItem<String>(
+                        value: option.code,
+                        child: Text(option.name!),
+                      );
+                    }).toList(),
                 ],
                 onChanged: (newValue) {
                   setState(() {

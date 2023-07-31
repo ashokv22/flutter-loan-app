@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:origination/screens/widgets/reject_reason.dart';
 
 import 'coapplicant_guarantor_form.dart';
@@ -16,6 +17,8 @@ class BureauCheckList extends StatefulWidget {
 }
 
 class _BureauCheckListState extends State<BureauCheckList> {
+
+  ValueNotifier<bool> isDialOpen = ValueNotifier(false);
 
   Future<void> refreshLeadsSummary() async {
   setState(() {
@@ -294,28 +297,28 @@ class _BureauCheckListState extends State<BureauCheckList> {
                 padding: const EdgeInsets.all(10.0),
                 child: Column(
                   children: [
-                    SizedBox(
-                      width: double.infinity,
-                      height: 50,
-                      child: MaterialButton(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30.0),
-                        ),
-                        color: const Color.fromARGB(255, 3, 71, 244),
-                        textColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(vertical: 16.0),
-                        onPressed: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => CoApplicantGuarantor(id: widget.id)));
-                        },
-                        height: 50,
-                        child: const Text(
-                          "Add Co Applicant/Guarantor",
-                          style: TextStyle(
-                            fontSize: 16
-                          ),
-                          ),
-                        ),
-                    ),
+                    // SizedBox(
+                    //   width: double.infinity,
+                    //   height: 50,
+                    //   child: MaterialButton(
+                    //     shape: RoundedRectangleBorder(
+                    //       borderRadius: BorderRadius.circular(30.0),
+                    //     ),
+                    //     color: const Color.fromARGB(255, 3, 71, 244),
+                    //     textColor: Colors.white,
+                    //     padding: const EdgeInsets.symmetric(vertical: 16.0),
+                    //     onPressed: () {
+                    //       Navigator.push(context, MaterialPageRoute(builder: (context) => CoApplicantGuarantor(id: widget.id)));
+                    //     },
+                    //     height: 50,
+                    //     child: const Text(
+                    //       "Add Co Applicant/Guarantor",
+                    //       style: TextStyle(
+                    //         fontSize: 16
+                    //       ),
+                    //       ),
+                    //     ),
+                    // ),
                     const SizedBox(height: 10,),
                     SizedBox(
                       width: double.infinity,
@@ -349,7 +352,58 @@ class _BureauCheckListState extends State<BureauCheckList> {
           ),
         ),
       ),
-      
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: 60.0),
+        child: SpeedDial(
+          buttonSize: const Size(56, 56),
+          icon: Icons.add,
+          activeIcon: Icons.close,
+          backgroundColor: const Color.fromARGB(255, 3, 71, 244),
+          foregroundColor: Colors.white,
+          activeBackgroundColor: Colors.black,
+          activeForegroundColor: Colors.white,
+          visible: true,
+          closeManually: false,
+          curve: Curves.bounceIn,
+          overlayColor: Colors.black,
+          overlayOpacity: 0.5,
+          onOpen: () => {},
+          onClose: () => {},
+          elevation: 8.0,
+          shape: const CircleBorder(),
+          children: [
+            SpeedDialChild(
+              child: const Icon(Icons.group_add),
+              backgroundColor: const Color.fromARGB(255, 3, 71, 244),
+              foregroundColor: Colors.white,
+              label: 'Commercial',
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(50)
+              ),
+              labelBackgroundColor: Colors.black,
+              labelStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: Colors.white),
+              onTap: () => {},
+              onLongPress: () {},
+            ),
+            SpeedDialChild( //speed dial child
+              child: const Icon(Icons.person_add),
+              backgroundColor: const Color.fromARGB(255, 3, 71, 244),
+              foregroundColor: Colors.white,
+              label: 'Co Applicant / Guarantor',
+              labelBackgroundColor: Colors.black,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(50)
+              ),
+              labelStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: Colors.white),
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => CoApplicantGuarantor(id: widget.id)));
+              },
+              onLongPress: () {},
+            ),
+            //add more menu item childs here
+          ],
+        ),
+      ),
     );
   }
 }

@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:origination/core/widgets/number_input.dart';
+import 'package:origination/core/widgets/reference_code.dart';
 import 'package:origination/core/widgets/text_input.dart';
-import 'package:origination/core/widgets/dropdown.dart';
 import 'package:origination/core/widgets/mobile_input.dart';
 import 'package:origination/core/widgets/datepicker.dart';
 import 'package:origination/core/widgets/section_title.dart';
+import 'package:origination/models/bureau_check/individual.dart';
 import 'package:origination/models/entity_configuration.dart';
 import 'package:origination/screens/app/bureau/screens/bureau_check_list.dart';
-import 'package:origination/service/loan_application_service.dart';
+import 'package:origination/service/bureau_check_service.dart';
 
 class ApplicantForm extends StatefulWidget {
   const ApplicantForm({
@@ -25,8 +26,30 @@ class ApplicantForm extends StatefulWidget {
 class _ApplicantFormState extends State<ApplicantForm> {
 
   Logger logger = Logger();
-  final applicationService = LoanApplicationService();
+  final bureauService = BureauCheckService();
   bool isLoading = false;
+  late Individual individual;
+
+  // Controllers
+  final TextEditingController product = TextEditingController();
+  final TextEditingController enquiry = TextEditingController();
+  final TextEditingController internalRefNo = TextEditingController();
+  final TextEditingController loanAMount = TextEditingController();
+  final TextEditingController firstName = TextEditingController();
+  final TextEditingController middleName = TextEditingController();
+  final TextEditingController lastName = TextEditingController();
+  final TextEditingController fathersFn = TextEditingController();
+  final TextEditingController fathersMn = TextEditingController();
+  final TextEditingController fathersLn = TextEditingController();
+  final TextEditingController mobile = TextEditingController();
+  final TextEditingController dob = TextEditingController();
+  final TextEditingController alternateMobile = TextEditingController();
+  final TextEditingController address1 = TextEditingController();
+  final TextEditingController address2 = TextEditingController();
+  final TextEditingController pincode = TextEditingController();
+  final TextEditingController landMark = TextEditingController();
+  final TextEditingController city = TextEditingController();
+  final TextEditingController state = TextEditingController();
 
   void onSave(Section entity) async {
     setState(() {
@@ -37,17 +60,21 @@ class _ApplicantFormState extends State<ApplicantForm> {
   
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDarkTheme = theme.brightness == Brightness.dark;
+
+    final gradientColors = isDarkTheme
+        ? [theme.primaryColor, theme.primaryColor] // Use the same color for dark theme
+        : [Colors.white, Color.fromRGBO(193, 248, 245, 1)];
     return Scaffold(
       appBar: AppBar(title: const Text('Bureau'),),
       body: Container(
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                Colors.white,
-                Color.fromRGBO(193, 248, 245, 1),
-              ]),
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: gradientColors,
+          ),
         ),
         child: Column(
         children: [
@@ -58,63 +85,63 @@ class _ApplicantFormState extends State<ApplicantForm> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const SectionTitle(title: 'Appliacant'),
+                    const SectionTitle(title: 'Applicant'),
                     const SizedBox(height: 20),
                     Row(
                       children: [
-                        Expanded(child: DropDown(label: "Product", options: ["Abc"], controller: TextEditingController(), onChanged: (newValue) {})),
+                        Expanded(child: Referencecode(label: "Product", referenceCode: "product", controller: product, onChanged: (newValue) {})),
                         const SizedBox(width: 10,),
-                        Expanded(child: DropDown(label: "Enquiry Purpose", options: ["Abc"], controller: TextEditingController(), onChanged: (newValue) {})),
+                        Expanded(child: Referencecode(label: "Enquiry", referenceCode: "enquiry", controller: enquiry, onChanged: (newValue) {})),
                       ],
                     ),
                     const SizedBox(height: 20),
                     Row(
                       children: [
-                        Expanded(child: TextInput(label: "Internal Ref No", controller: TextEditingController(), onChanged: (newValue) {})),
+                        Expanded(child: TextInput(label: "Internal Ref No", controller: internalRefNo, onChanged: (newValue) {})),
                         const SizedBox(width: 10,),
-                        Expanded(child: NumberInput(label: "Loan Amount", controller: TextEditingController())),
+                        Expanded(child: NumberInput(label: "Loan Amount", controller: loanAMount)),
                       ],
                     ),
                     const SizedBox(height: 20),
-                    TextInput(label: "First Name", controller: TextEditingController(), onChanged: (newValue) {}),
+                    TextInput(label: "First Name", controller: firstName, onChanged: (newValue) {}),
                     const SizedBox(height: 20),
-                    TextInput(label: "Middle Name", controller: TextEditingController(), onChanged: (newValue) {}),
+                    TextInput(label: "Middle Name", controller: middleName, onChanged: (newValue) {}),
                     const SizedBox(height: 20),
-                    TextInput(label: "Last Name", controller: TextEditingController(), onChanged: (newValue) {}),
+                    TextInput(label: "Last Name", controller: lastName, onChanged: (newValue) {}),
                     const SizedBox(height: 20),
-                    TextInput(label: "Father's First Name", controller: TextEditingController(), onChanged: (newValue) {}),
+                    TextInput(label: "Father's First Name", controller: fathersFn, onChanged: (newValue) {}),
                     const SizedBox(height: 20),
-                    TextInput(label: "Father's Middle Name", controller: TextEditingController(), onChanged: (newValue) {}),
+                    TextInput(label: "Father's Middle Name", controller: fathersMn, onChanged: (newValue) {}),
                     const SizedBox(height: 20),
-                    TextInput(label: "Father's Last Name", controller: TextEditingController(), onChanged: (newValue) {}),
+                    TextInput(label: "Father's Last Name", controller: fathersLn, onChanged: (newValue) {}),
                     const SizedBox(height: 20),
                     Row(
                       children: [
-                        Expanded(child: MobileInput(label: "Mobile No", controller: TextEditingController(), onChanged: (newValue) {})),
+                        Expanded(child: MobileInput(label: "Mobile No", controller: mobile, onChanged: (newValue) {})),
                         const SizedBox(width: 10,),
-                        Expanded(child: DatePickerInput(label: "Date of Birth", controller: TextEditingController(), onChanged: (newValue) {})),
+                        Expanded(child: DatePickerInput(label: "Date of Birth", controller: dob, onChanged: (newValue) {})),
                       ],
                     ),
                     const SizedBox(height: 20),
-                    MobileInput(label: "Alternate Mobile No", controller: TextEditingController(), onChanged: (newValue) {}),
+                    MobileInput(label: "Alternate Mobile No", controller: alternateMobile, onChanged: (newValue) {}),
                     const SizedBox(height: 20),
-                    TextInput(label: "Address Line 1", controller: TextEditingController(), onChanged: (newValue) {}),
+                    TextInput(label: "Address Line 1", controller: address1, onChanged: (newValue) {}),
                     const SizedBox(height: 20),
-                    TextInput(label: "Address Line 2", controller: TextEditingController(), onChanged: (newValue) {}),
+                    TextInput(label: "Address Line 2", controller: address2, onChanged: (newValue) {}),
                     const SizedBox(height: 20),
                     Row(
                       children: [
-                        Expanded(child: NumberInput(label: "Pincode", controller: TextEditingController())),
+                        Expanded(child: NumberInput(label: "Pincode", controller: pincode)),
                         const SizedBox(width: 10,),
-                        Expanded(child: TextInput(label: "Landmark", controller: TextEditingController(), onChanged: (newValue) {})),
+                        Expanded(child: TextInput(label: "Landmark", controller: landMark, onChanged: (newValue) {})),
                       ],
                     ),
                     const SizedBox(height: 20),
                     Row(
                       children: [
-                        Expanded(child: TextInput(label: "City", controller: TextEditingController(), onChanged: (newValue) {})),
+                        Expanded(child: TextInput(label: "City", controller: city, onChanged: (newValue) {})),
                         const SizedBox(width: 10,),
-                        Expanded(child: TextInput(label: "State", controller: TextEditingController(), onChanged: (newValue) {})),
+                        Expanded(child: TextInput(label: "State", controller: state, onChanged: (newValue) {})),
                       ],
                     ),
                     const SizedBox(height: 20.0),

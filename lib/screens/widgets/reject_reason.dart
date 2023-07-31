@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:origination/core/widgets/reference_code.dart';
 
 class RejectReason extends StatefulWidget {
   const RejectReason({super.key});
@@ -36,35 +37,7 @@ class _RejectReasonState extends State<RejectReason> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    InputDecorator(
-                      decoration: const InputDecoration(
-                        labelText: "Reject",
-                        border: OutlineInputBorder(),
-                        isDense: true, // Reduce the height of the input
-                        contentPadding: EdgeInsets.symmetric(horizontal: 12.0),
-                      ),
-                      child: DropdownButtonHideUnderline(
-                        child: DropdownButtonFormField<String>(
-                          // value: controller.text,
-                            items: const [
-                              DropdownMenuItem<String>(
-                                value: '', 
-                                enabled: false, // Set the value of the default option as null or any other suitable value
-                                child: Text("Select"),// Customize the text of the default option
-                              )
-                            ],
-                          value: selectedOption,
-                          onChanged: (String? value) {
-                            setState(() {
-                              selectedOption = value!;
-                            });
-                          },
-                          decoration: const InputDecoration(
-                            border: InputBorder.none,
-                          ),
-                        ),
-                      ),
-                    ),
+                    Referencecode(label: "Reason", controller: TextEditingController(), referenceCode: "reject_reason", onChanged: (newValue){}),
                   ],
                 ),
               ),
