@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:logger/logger.dart';
 import 'package:origination/models/bureau_check/declaration.dart';
+import 'package:origination/models/bureau_check/individual.dart';
 import 'package:origination/models/bureau_check/otp_verification/otp_request_dto.dart';
 import 'package:origination/models/bureau_check/otp_verification/otp_validation_dto.dart';
 import 'package:origination/screens/sign_in/auth_interceptor.dart';
@@ -68,6 +69,31 @@ class BureauCheckService {
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         DeclarationMasterDTO request = DeclarationMasterDTO.fromJson(data);
+        return request;
+      }
+      else {
+        throw Exception('Failed to init bureau check. Error code: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception("An error occurred while fetching data!: $e");
+    }
+  }
+
+  Future<Individual> saveIndividual(Individual individual) async {
+    String endpoint = "api/application/individualCibil";
+    try {
+      final response = await http.post(
+      Uri.parse(apiUrl + endpoint),
+        headers: {
+          'X-Auth-Token': token,
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode(individual),
+      );
+      if (response.statusCode == 201) {
+        final data = json.decode(response.body);
+        Individual request = Individual.fromJson(data);
+        logger.wtf(request.toJson());
         return request;
       }
       else {

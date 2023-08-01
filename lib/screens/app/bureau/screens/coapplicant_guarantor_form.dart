@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:origination/core/widgets/buttons/primary_button.dart';
 import 'package:origination/core/widgets/datepicker.dart';
-import 'package:origination/core/widgets/dropdown.dart';
 import 'package:origination/core/widgets/mobile_input.dart';
 import 'package:origination/core/widgets/number_input.dart';
 import 'package:origination/core/widgets/reference_code.dart';

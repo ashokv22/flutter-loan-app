@@ -17,17 +17,17 @@ class TextInput extends StatefulWidget {
 }
 
 class _TextInputState extends State<TextInput> {
-  final TextEditingController _textEditingController = TextEditingController();
+  // final TextEditingController _textEditingController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    _textEditingController.text = widget.controller.text;
+    widget.controller.text = widget.controller.text;
   }
 
   @override
   void dispose() {
-    _textEditingController.dispose();
+    widget.controller.dispose();
     super.dispose();
   }
 
@@ -36,7 +36,7 @@ class _TextInputState extends State<TextInput> {
     return SizedBox(
       height: 48,
       child: TextFormField(
-        controller: _textEditingController,
+        controller: widget.controller,
         decoration: InputDecoration(
           labelText: widget.label,
           border: const OutlineInputBorder(),

@@ -47,48 +47,6 @@ class ApplicantDTO {
 
   factory ApplicantDTO.fromJson(Map<String, dynamic> json) => _$ApplicantDTOFromJson(json);
   Map<String, dynamic> toJson() => _$ApplicantDTOToJson(this);
-
-  // factory ApplicantDTO.fromJson(Map<String, dynamic> json) {
-  //   return ApplicantDTO(
-  //     id: json['id'],
-  //     cifId: json['cifId'],
-  //     cifSubType: json['cifSubType'],
-  //     title: json['title'],
-  //     applicantType: json['applicantType'],
-  //     firstName: json['firstName'],
-  //     middleName: json['middleName'],
-  //     lastName: json['lastName'],
-  //     dob: DateTime.parse(json['dob']),
-  //     gender: json['gender'],
-  //     nationality: json['nationality'],
-  //     kycDate: DateTime.parse(json['kycDate']),
-  //     kycDoneStatus: json['kycDoneStatus'],
-  //     applicantId: json['applicantId'],
-  //     custStatus: json['custStatus'],
-  //     loanAmount: json['loanAmount'].toDouble(),
-  //   );
-  // }
-
-  // Map<String, dynamic> toJson() {
-  //   return {
-  //     'id': id,
-  //     'cifId': cifId,
-  //     'cifSubType': cifSubType,
-  //     'title': title,
-  //     'applicantType': applicantType,
-  //     'firstName': firstName,
-  //     'middleName': middleName,
-  //     'lastName': lastName,
-  //     'dob': dob!.toIso8601String(),
-  //     'gender': gender,
-  //     'nationality': nationality,
-  //     'kycDate': kycDate!.toIso8601String(),
-  //     'kycDoneStatus': kycDoneStatus,
-  //     'applicantId': applicantId,
-  //     'custStatus': custStatus,
-  //     'loanAmount': loanAmount,
-  //   };
-  // }
 }
 
 enum ApplicantDeclarationStatus {

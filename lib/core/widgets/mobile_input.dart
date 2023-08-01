@@ -17,17 +17,17 @@ class MobileInput extends StatefulWidget {
 }
 
 class _MobileInputState extends State<MobileInput> {
-    final TextEditingController _textEditingController = TextEditingController();
+    // final TextEditingController _textEditingController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    _textEditingController.text = widget.controller.text;
+    widget.controller.text = widget.controller.text;
   }
 
   @override
   void dispose() {
-    _textEditingController.dispose();
+    widget.controller.dispose();
     super.dispose();
   }
 
@@ -38,7 +38,7 @@ class _MobileInputState extends State<MobileInput> {
     return SizedBox(
       height: 48,
       child: TextFormField(
-        controller: _textEditingController,
+        controller: widget.controller,
         keyboardType: TextInputType.phone,
         decoration: InputDecoration(
           labelText: widget.label,
