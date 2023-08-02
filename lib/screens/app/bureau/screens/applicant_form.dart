@@ -9,7 +9,6 @@ import 'package:origination/core/widgets/datepicker.dart';
 import 'package:origination/core/widgets/section_title.dart';
 import 'package:origination/models/applicant_dto.dart';
 import 'package:origination/models/bureau_check/individual.dart';
-import 'package:origination/models/entity_configuration.dart';
 import 'package:origination/screens/app/bureau/screens/bureau_check_list.dart';
 import 'package:origination/service/bureau_check_service.dart';
 

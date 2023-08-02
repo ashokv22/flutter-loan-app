@@ -53,4 +53,5 @@ enum ApplicantDeclarationStatus {
   PENDING,
   INITIATED,
   COMPLETED,
+  REJECTED,
 }

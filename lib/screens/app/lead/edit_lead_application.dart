@@ -10,7 +10,6 @@ import 'package:origination/core/widgets/text_input.dart';
 import 'package:origination/models/applicant_dto.dart';
 import 'package:origination/models/entity_configuration.dart';
 import 'package:origination/screens/app/bureau/otp_validation/bureau_declration.dart';
-import 'package:origination/screens/app/bureau/screens/applicant_form.dart';
 import 'package:origination/screens/app/bureau/screens/bureau_check_list.dart';
 import 'package:origination/service/loan_application_service.dart';
 
@@ -53,7 +52,7 @@ class _EditLeadState extends State<EditLead> {
       await applicationService.updateLead(entity);
       logger.d(applicant.declaration);
       if (applicant.declaration == ApplicantDeclarationStatus.COMPLETED) {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => ApplicantForm(id: applicant!.id!)));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => BureauCheckList(id: applicant!.id!)));
       }
       else {
         Navigator.push(context, MaterialPageRoute(builder: (context) => BureauCheckDeclaration(name: applicant!.firstName!, id: applicant!.id!, mobile: applicant!.mobile ?? '1234')));
