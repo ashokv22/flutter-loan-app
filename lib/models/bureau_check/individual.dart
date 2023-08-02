@@ -24,7 +24,7 @@ class Individual {
   String? alternateMobileNumber;
   String? address1;
   String? address2;
-  int? pinCode;
+  String? pinCode;
   String? landMark;
   String? city;
   String? state;

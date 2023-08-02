@@ -28,7 +28,7 @@ Individual _$IndividualFromJson(Map<String, dynamic> json) => Individual(
       alternateMobileNumber: json['alternateMobileNumber'] as String?,
       address1: json['address1'] as String?,
       address2: json['address2'] as String?,
-      pinCode: json['pinCode'] as int?,
+      pinCode: json['pinCode'] as String?,
       landMark: json['landMark'] as String?,
       city: json['city'] as String?,
       state: json['state'] as String?,
@@ -96,4 +96,5 @@ const _$ApplicantDeclarationStatusEnumMap = {
   ApplicantDeclarationStatus.PENDING: 'PENDING',
   ApplicantDeclarationStatus.INITIATED: 'INITIATED',
   ApplicantDeclarationStatus.COMPLETED: 'COMPLETED',
+  ApplicantDeclarationStatus.REJECTED: 'REJECTED',
 };

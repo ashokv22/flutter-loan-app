@@ -5,6 +5,7 @@ import 'package:origination/models/applicant_dto.dart';
 import 'package:origination/models/entity_configuration.dart';
 import 'package:origination/models/namevalue_dto.dart';
 import 'package:origination/models/summaries/dashboard_summary.dart';
+import 'package:origination/models/summaries/leads_list_dto.dart';
 import 'package:origination/screens/sign_in/auth_interceptor.dart';
 import 'package:http/http.dart' as http;
 import 'package:origination/service/auth_service.dart';
@@ -88,8 +89,8 @@ class LoanApplicationService {
     }
   }
 
-  Future<List<ApplicantDTO>> getLeadsByStage(String stage) async {
-    String endpoint = "api/application/applicant/stage";
+  Future<List<LeadsListDTO>> getLeadsByStage(String stage) async {
+    String endpoint = "api/application/applicant/summary/stage";
     int page = 0;
     int size = 10;
     try {
@@ -103,9 +104,9 @@ class LoanApplicationService {
       ));
       if (response.statusCode == 200) {
         final List<dynamic> jsonResponse = jsonDecode(response.body);
-        List<ApplicantDTO> list = [];
+        List<LeadsListDTO> list = [];
         for (var data in jsonResponse) {
-          ApplicantDTO app = ApplicantDTO.fromJson(data);
+          LeadsListDTO app = LeadsListDTO.fromJson(data);
           list.add(app);
         }
         return list;
@@ -121,8 +122,8 @@ class LoanApplicationService {
     }
   }
 
-  Future<List<ApplicantDTO>> getLeads() async {
-    String endpoint = "api/application/applicant";
+  Future<List<LeadsListDTO>> getLeads() async {
+    String endpoint = "api/application/applicant/summary";
     int page = 0;
     int size = 10;
     try {
@@ -135,9 +136,9 @@ class LoanApplicationService {
       ));
       if (response.statusCode == 200) {
         final List<dynamic> jsonResponse = jsonDecode(response.body);
-        List<ApplicantDTO> list = [];
+        List<LeadsListDTO> list = [];
         for (var data in jsonResponse) {
-          ApplicantDTO app = ApplicantDTO.fromJson(data);
+          LeadsListDTO app = LeadsListDTO.fromJson(data);
           list.add(app);
         }
         return list;

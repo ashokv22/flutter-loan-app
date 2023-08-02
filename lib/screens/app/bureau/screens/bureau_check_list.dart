@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:origination/models/applicant_dto.dart';
+import 'package:origination/models/bureau_check/individual.dart';
 import 'package:origination/screens/widgets/reject_reason.dart';
+import 'package:origination/service/bureau_check_service.dart';
 
 import 'coapplicant_guarantor_form.dart';
 
@@ -19,10 +22,12 @@ class BureauCheckList extends StatefulWidget {
 class _BureauCheckListState extends State<BureauCheckList> {
 
   ValueNotifier<bool> isDialOpen = ValueNotifier(false);
+  final bureauService = BureauCheckService();
+  final TextEditingController rejectReason = TextEditingController();
 
   Future<void> refreshLeadsSummary() async {
   setState(() {
-    // leadsSummaryFuture = applicationService.getLeadsSummary(); // Fetch leads summary data
+    
   });
   }
 
@@ -56,245 +61,186 @@ class _BureauCheckListState extends State<BureauCheckList> {
           child: Column(
             children: [
               Expanded(
-                child: Column(
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                      padding: const EdgeInsets.all(16.0),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(8.0),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.5), //color of shadow
-                            spreadRadius: 2, //spread radius
-                            blurRadius: 6, // blur radius
-                            offset: const Offset(2, 3),
-                          )
-                        ],
+                child: FutureBuilder(
+                  future: bureauService.getIndividuals(widget.id),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const SizedBox(
+                      width: double.infinity,
+                      height: double.infinity,
+                      child: Center(
+                        child: CircularProgressIndicator()
                       ),
-                      child: Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              const Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text("Applicant",
-                                    style: TextStyle(
-                                      fontSize: 18,
+                    );
+                  } else if (snapshot.hasError) {
+                    return Center(
+                      child: Text('Error: ${snapshot.error}'),
+                    );
+                  } else if (snapshot.hasData) {
+                    List<Individual> data  =snapshot.data!;
+                    if (data.isEmpty) {
+                      return const SizedBox(
+                        width: double.infinity,
+                        height: double.infinity,
+                        child: Center(
+                          child: Text('No data found',
+                          style: TextStyle(
+                            fontSize: 20,
+                          ),)
+                        )
+                      );
+                    }
+                    return ListView.builder(
+                      itemCount: data.length,
+                      itemBuilder: (context, index) {
+                        Individual individual = data[index];
+                        IndividualType type = individual.type!;
+                        String name = "${individual.firstName} ${individual.lastName}";
+                        return GestureDetector(
+                          onTap: () {},
+                          child: Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                            padding: const EdgeInsets.all(16.0),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(8.0),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.5), //color of shadow
+                                  spreadRadius: 2, //spread radius
+                                  blurRadius: 6, // blur radius
+                                  offset: const Offset(2, 3),
+                                )
+                              ],
+                            ),
+                            child: Column(
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(type.name,
+                                          style: const TextStyle(
+                                            fontSize: 18,
+                                          ),
+                                        ),
+                                        Text(
+                                          name,
+                                          style: const TextStyle(
+                                            fontSize: 24,
+                                            fontWeight: FontWeight.w700,
+                                            // color: Color.fromARGB(255, 3, 71, 244),
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                  ),
-                                  Text(
-                                    "Ashok V",
-                                    style: TextStyle(
-                                      fontSize: 24,
-                                      fontWeight: FontWeight.w700,
-                                      // color: Color.fromARGB(255, 3, 71, 244),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                children: [
-                                  IconButton(
-                                    color: const Color.fromARGB(255, 3, 71, 244),
-                                    onPressed: () {},
-                                    icon: const Icon(Icons.edit)),
-                                ],
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: OutlinedButton(
-                                  style: OutlinedButton.styleFrom(
-                                    side: const BorderSide(width: 2, color: Colors.green), // Green border
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(30),
-                                    ),
-                                  ),
-                                  onPressed: () {}, 
-                                  child: const Text("Accept", style: TextStyle(color: Color.fromRGBO(22, 163, 74, 1))),
-                                ),
-                              ),
-                              const SizedBox(width: 10,),
-                              Expanded(
-                                child: OutlinedButton(
-                                  onPressed: () {
-                                    showModalBottomSheet(
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        return const RejectReason();
-                                      },
-                                    );
-                                  },
-                                  style: OutlinedButton.styleFrom(
-                                    side: const BorderSide(width: 2, color: Colors.red), // Red border
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(30),
-                                    ),
-                                  ),
-                                  child: const Text('Reject',style: TextStyle(color: Colors.red),),
-                                ),
-                              )
-                            ],
-                          )
-                        ],
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                      padding: const EdgeInsets.all(16.0),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(8.0),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.5), //color of shadow
-                            spreadRadius: 2, //spread radius
-                            blurRadius: 6, // blur radius
-                            offset: const Offset(2, 3),
-                          )
-                        ],
-                      ),
-                      child: Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              const Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text("Co Applicant",
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                    ),
-                                  ),
-                                  Text(
-                                    "Ajay S",
-                                    style: TextStyle(
-                                      fontSize: 24,
-                                      fontWeight: FontWeight.w700,
-                                      // color: Color.fromARGB(255, 3, 71, 244),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Row(
-                                children: [
-                                  Container(
-                                    decoration: ShapeDecoration(
-                                      gradient: const LinearGradient(
-                                        colors: [Color.fromARGB(255, 249, 33, 33), Color.fromARGB(255, 193, 3, 3)],
-                                      ),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(20),
-                                      ),
-                                    ),
-                                    child: const Padding(
-                                      padding: EdgeInsets.fromLTRB(8, 5, 8, 5),
-                                      child: Text(
-                                        'Rejected',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w600
+                                    if (individual.status == ApplicantDeclarationStatus.PENDING)
+                                      Row(
+                                        children: [
+                                          IconButton(
+                                            color: const Color.fromARGB(255, 3, 71, 244),
+                                            onPressed: () {},
+                                            icon: const Icon(Icons.edit)),
+                                        ],
+                                      )
+                                    else 
+                                      Row(
+                                        children: [
+                                          Container(
+                                            decoration: ShapeDecoration(
+                                              gradient: const LinearGradient(
+                                                colors: [Color.fromARGB(255, 249, 33, 33), Color.fromARGB(255, 193, 3, 3)],
+                                              ),
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.circular(20),
+                                              ),
+                                            ),
+                                            child: const Padding(
+                                              padding: EdgeInsets.fromLTRB(8, 5, 8, 5),
+                                              child: Text(
+                                                'Rejected',
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.w600
+                                                ),
+                                              ),
+                                            ),
+                                          )
+                                        ],
+                                      )
+                                  ],
+                                ), 
+                                if (individual.status == ApplicantDeclarationStatus.PENDING)
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: OutlinedButton(
+                                          style: OutlinedButton.styleFrom(
+                                            side: const BorderSide(width: 2, color: Colors.green), // Green border
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(30),
+                                            ),
+                                          ),
+                                          onPressed: () {}, 
+                                          child: const Text("Accept", style: TextStyle(color: Color.fromRGBO(22, 163, 74, 1))),
                                         ),
                                       ),
-                                    ),
+                                      const SizedBox(width: 10,),
+                                      Expanded(
+                                        child: OutlinedButton(
+                                          onPressed: () {
+                                            showModalBottomSheet(
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return RejectReason(id: individual.id!, cibilType: "INDIVIDUAL", applicantType: type, controller: rejectReason);
+                                              },
+                                            );
+                                          },
+                                          style: OutlinedButton.styleFrom(
+                                            side: const BorderSide(width: 2, color: Colors.red), // Red border
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(30),
+                                            ),
+                                          ),
+                                          child: const Text('Reject',style: TextStyle(color: Colors.red),),
+                                        ),
+                                      )
+                                    ],
                                   )
-                                ],
-                              ),
-                            ],
+                                else 
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: OutlinedButton(
+                                          style: OutlinedButton.styleFrom(
+                                            side: const BorderSide(width: 2, color: Colors.blue), // Green border
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(30),
+                                            ),
+                                          ),
+                                          onPressed: () {}, 
+                                          child: const Text("View Report", style: TextStyle(color: Colors.blue),)
+                                        ),
+                                      ),
+                                    ],
+                                  )
+                              ],
+                            ),
                           ),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: OutlinedButton(
-                                  style: OutlinedButton.styleFrom(
-                                    side: const BorderSide(width: 2, color: Colors.blue), // Green border
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(30),
-                                    ),
-                                  ),
-                                  onPressed: () {}, 
-                                  child: const Text("View Report", style: TextStyle(color: Colors.blue),)
-                                ),
-                              ),
-                            ],
-                          )
-                        ],
-                      ),
-                    ),
-
-                    // Guarantor
-                    Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                      padding: const EdgeInsets.all(16.0),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(8.0),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.5), //color of shadow
-                            spreadRadius: 2, //spread radius
-                            blurRadius: 6, // blur radius
-                            offset: const Offset(2, 3),
-                          )
-                        ],
-                      ),
-                      child: Column(
-                        children: [
-                          const Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text("Guarantor",
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                    ),
-                                  ),
-                                  Text(
-                                    "Dhananjay S",
-                                    style: TextStyle(
-                                      fontSize: 24,
-                                      fontWeight: FontWeight.w700,
-                                      // color: Color.fromARGB(255, 3, 71, 244),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: OutlinedButton(
-                                  style: OutlinedButton.styleFrom(
-                                    side: const BorderSide(width: 2, color: Colors.blue), // Green border
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(30),
-                                    ),
-                                  ),
-                                  onPressed: () {}, 
-                                  child: const Text("View Report", style: TextStyle(color: Colors.blue),)
-                                ),
-                              ),
-                            ],
-                          )
-                        ],
-                      ),
-                    )
-                  ],
+                        );
+                      }
+                    );
+                  } else {
+                    return Container();
+                  }
+                  }
                 )
               ),
               Padding(
-                padding: const EdgeInsets.all(10.0),
+                padding: const EdgeInsets.only(bottom: 15.0, left: 10.0, right: 10.0),
                 child: Column(
                   children: [
                     // SizedBox(

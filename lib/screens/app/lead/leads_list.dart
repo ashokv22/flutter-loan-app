@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
-import 'package:origination/models/applicant_dto.dart';
+import 'package:origination/models/summaries/leads_list_dto.dart';
 import 'package:origination/screens/app/lead/edit_lead_application.dart';
 import 'package:origination/service/loan_application_service.dart';
 
@@ -18,7 +18,7 @@ class _LeadsListState extends State<LeadsList> {
   Logger logger = Logger();
 
   int getRandomNumber() {
-    int min = 0;
+    int min = 1;
     int max = 20;
     final Random random = Random();
     return min + random.nextInt(max - min + 1);
@@ -80,7 +80,7 @@ class _LeadsListState extends State<LeadsList> {
             //   ),
             // ),
             Expanded(
-              child: FutureBuilder<List<ApplicantDTO>>(
+              child: FutureBuilder<List<LeadsListDTO>>(
                 future: applicationService.getLeads(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
@@ -96,7 +96,7 @@ class _LeadsListState extends State<LeadsList> {
                       child: Text('Error: ${snapshot.error}'),
                     );
                   } else if (snapshot.hasData) {
-                    List<ApplicantDTO> summaries = snapshot.data!;
+                    List<LeadsListDTO> summaries = snapshot.data!;
                         if (summaries.isEmpty) {
                           return const SizedBox(
                             width: double.infinity,
@@ -112,13 +112,24 @@ class _LeadsListState extends State<LeadsList> {
                     return ListView.builder(
                     itemCount: summaries.length,
                     itemBuilder: (context, index) {
-                      ApplicantDTO applicant = summaries[index];
-                      String name = "${applicant.firstName!} ${applicant.lastName!}";
+                      LeadsListDTO applicant = summaries[index];
                       int randomNumber = getRandomNumber();
                       return GestureDetector(
                         onTap: () {
-                                Navigator.push(context, MaterialPageRoute(builder: (context) => EditLead(id: applicant.id!, applicantId: int.parse(applicant.applicantId!),)));
-                              },
+                          if (applicant.status == "REJECTED") {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                showCloseIcon: true,
+                                elevation: 1,
+                                backgroundColor: Colors.black,
+                                content: Text('Lead is Rejected.'),
+                                duration: Duration(seconds: 2),
+                              ),
+                            );
+                          } else {
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => EditLead(id: applicant.id, applicantId: int.parse(applicant.applicantId))));
+                          }
+                        },
                         child: Container(
                           margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                           padding: const EdgeInsets.all(10.0),
@@ -144,30 +155,36 @@ class _LeadsListState extends State<LeadsList> {
                                     height: 80,
                                     child: ClipRRect(
                                       borderRadius: BorderRadius.circular(10),
-                                      child: Image.asset('assets/images/${applicant.gender!.toLowerCase()}-${randomNumber.toString().padLeft(2, '0')}.jpg', fit: BoxFit.cover,)),
+                                      child: Image.asset('assets/images/female-${randomNumber.toString().padLeft(2, '0')}.jpg', fit: BoxFit.cover,)),
                                   ),
                                   const SizedBox(width: 10),
                                   Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        name,
+                                        applicant.name,
                                         style: const TextStyle(
                                           fontSize: 20,
                                           fontWeight: FontWeight.w700,
                                           color: Color.fromARGB(255, 3, 71, 244),
                                         ),
                                       ),
-                                      const Text("9916315365",
-                                        style: TextStyle(
+                                      Text(applicant.mobile,
+                                        style: const TextStyle(
                                           fontSize: 18,
                                           fontWeight: FontWeight.w500,
                                         ),
                                       ),
-                                      const Text("DSA Name",
-                                        style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.w500,
+                                      SizedBox(
+                                        width: 200,
+                                        child: Text(applicant.dsaName,
+                                          style: const TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w500
+                                          ),
+                                          maxLines: 1,
+                                          softWrap: false,
+                                          overflow: TextOverflow.ellipsis,
                                         ),
                                       ),
                                     ],
@@ -178,9 +195,9 @@ class _LeadsListState extends State<LeadsList> {
                                 crossAxisAlignment: CrossAxisAlignment.end,
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  const Text(
-                                    '29/06/2023',
-                                    style: TextStyle(
+                                  Text(
+                                    "${applicant.createdDate.year.toString()}-${applicant.createdDate.month.toString().padLeft(2,'0')}-${applicant.createdDate.day.toString().padLeft(2,'0')}",
+                                    style: const TextStyle(
                                       fontSize: 20,
                                       fontWeight: FontWeight.w600
                                     ),
@@ -188,18 +205,22 @@ class _LeadsListState extends State<LeadsList> {
                                   const SizedBox(height: 20),
                                   Container(
                                     decoration: ShapeDecoration(
-                                      gradient: const LinearGradient(
+                                      gradient: applicant.status == "LEAD" ? const LinearGradient(
                                         colors: [Color(0xFF00CA2C), Color(0xFF00861D)],
+                                      ) : applicant.status == "REJECTED" ? const LinearGradient(
+                                        colors: [Colors.red, Colors.redAccent]
+                                      ) : const LinearGradient(
+                                        colors: [Colors.blue, Colors.blueAccent]
                                       ),
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(20),
                                       ),
                                     ),
-                                    child: const Padding(
-                                      padding: EdgeInsets.fromLTRB(8, 5, 8, 5),
+                                    child: Padding(
+                                      padding: const EdgeInsets.fromLTRB(8, 5, 8, 5),
                                       child: Text(
-                                        'PRE LEAD',
-                                        style: TextStyle(
+                                        applicant.status,
+                                        style: const TextStyle(
                                           color: Colors.white,
                                           fontSize: 14,
                                           fontWeight: FontWeight.w600

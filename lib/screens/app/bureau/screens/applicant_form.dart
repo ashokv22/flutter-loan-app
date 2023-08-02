@@ -90,7 +90,7 @@ void onChange(String value, TextEditingController controller) {
       alternateMobileNumber: alternateMobile.text,
       address1: address1.text,
       address2: address2.text,
-      pinCode: int.parse(pincode.text),
+      pinCode: pincode.text,
       landMark: landMark.text,
       city: city.text,
       state: state.text,

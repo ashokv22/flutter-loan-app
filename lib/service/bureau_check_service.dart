@@ -112,8 +112,13 @@ class BureauCheckService {
         final List<dynamic> jsonResponse = jsonDecode(response.body);
         List<Individual> list = [];
         for (var data in jsonResponse) {
-          Individual dto = Individual.fromJson(data);
-          list.add(dto);
+          try {
+            Individual dto = Individual.fromJson(data);
+            logger.i(dto.toJson());
+            list.add(dto);
+          } catch(e) {
+            logger.e(e.toString());
+          }
         }
         return list;
       }
