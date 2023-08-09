@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
-import 'package:origination/core/widgets/buttons/primary_button.dart';
 import 'package:origination/core/widgets/datepicker.dart';
 import 'package:origination/core/widgets/mobile_input.dart';
 import 'package:origination/core/widgets/number_input.dart';
 import 'package:origination/core/widgets/reference_code.dart';
 import 'package:origination/core/widgets/section_title.dart';
 import 'package:origination/core/widgets/text_input.dart';
-import 'package:origination/models/entity_configuration.dart';
-import 'package:origination/service/loan_application_service.dart';
+import 'package:origination/models/applicant_dto.dart';
+import 'package:origination/models/bureau_check/individual.dart';
+import 'package:origination/screens/app/bureau/screens/bureau_check_list.dart';
+import 'package:origination/service/bureau_check_service.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 
 class CoApplicantGuarantor extends StatefulWidget {
@@ -26,7 +28,7 @@ class CoApplicantGuarantor extends StatefulWidget {
 class _CoApplicantGuarantorState extends State<CoApplicantGuarantor> {
 
   Logger logger = Logger();
-  final applicationService = LoanApplicationService();
+  final bureauService = BureauCheckService();
   bool isLoading = false;
 
     // Controllers
@@ -42,6 +44,8 @@ class _CoApplicantGuarantorState extends State<CoApplicantGuarantor> {
   final TextEditingController fathersLn = TextEditingController();
   final TextEditingController mobile = TextEditingController();
   final TextEditingController dob = TextEditingController();
+  final TextEditingController gender = TextEditingController();
+  final TextEditingController maritalStatus= TextEditingController();
   final TextEditingController alternateMobile = TextEditingController();
   final TextEditingController address1 = TextEditingController();
   final TextEditingController address2 = TextEditingController();
@@ -49,10 +53,64 @@ class _CoApplicantGuarantorState extends State<CoApplicantGuarantor> {
   final TextEditingController landMark = TextEditingController();
   final TextEditingController city = TextEditingController();
   final TextEditingController state = TextEditingController();
+  final TextEditingController panController= TextEditingController();
+  final TextEditingController voterIdController= TextEditingController();
+  late DateTime _selectedDate;
+  late IndividualType type = IndividualType.CO_APPLICANT;
 
-  void onSave(Section section) async {
+  void handleDateChanged(String newValue) {
+    DateTime selectedDateTime = DateFormat('yyyy-MM-dd').parse(newValue);
+    setState(() {
+      _selectedDate = selectedDateTime;
+    });
+  }
+
+  void onChange(String value, TextEditingController controller) {
+    controller.text = value;
+  }
+
+  void onSave() async {
     setState(() {
       isLoading = true;
+    });
+    Individual individual = Individual(
+      product: product.text,
+      enquiryPurpose: enquiry.text,
+      internalRefNumber: int.parse(internalRefNo.text),
+      loanAmount: int.parse(loanAMount.text),
+      firstName: firstName.text,
+      middleName: middleName.text,
+      lastName: lastName.text,
+      fathersFirstName: fathersFn.text,
+      fathersMiddleName: fathersMn.text,
+      fathersLastName: fathersLn.text,
+      mobileNumber: mobile.text,
+      dateOfBirth: _selectedDate,
+      gender: gender.text,
+      maritalStatus: "Single",
+      alternateMobileNumber: alternateMobile.text,
+      address1: address1.text,
+      address2: address2.text,
+      pinCode: pincode.text,
+      landMark: landMark.text,
+      city: city.text,
+      state: state.text,
+      pan: panController.text,
+      voterIdNumber: voterIdController.text,
+      applicantId: widget.id,
+      type: type,
+      status: ApplicantDeclarationStatus.PENDING
+    );
+    logger.wtf(individual.toJson());
+    try {
+      bureauService.saveIndividual(individual);
+      Navigator.pop(context);
+      // Navigator.push(context, MaterialPageRoute(builder: (context) => BureauCheckList(id: widget.id)));
+    } catch (e) {
+      logger.e(e.toString());
+    }
+    setState(() {
+      isLoading = false;
     });
   }
 
@@ -94,22 +152,31 @@ class _CoApplicantGuarantorState extends State<CoApplicantGuarantor> {
                         labels: const ['Co Applicant', 'Guarantor'],
                         radiusStyle: true,
                         onToggle: (index) {
-                          print('switched to: $index');
+                            switch (index) {
+                              case 0:
+                                type = IndividualType.CO_APPLICANT;
+                                break;
+                              case 1:
+                                type = IndividualType.GUARANTOR;
+                                break;
+                              default:
+                                type = IndividualType.CO_APPLICANT;
+                            }
                         },
                       ),
                     ),
                     const SizedBox(height: 20),
                     Row(
                       children: [
-                        Expanded(child: Referencecode(label: "Product", referenceCode: "product", controller: product, onChanged: (newValue) {})),
+                        Expanded(child: Referencecode(label: "Product", referenceCode: "product", controller: product, onChanged: (newValue) => onChange(newValue!, product))),
                         const SizedBox(width: 10,),
-                        Expanded(child: Referencecode(label: "Enquiry", referenceCode: "enquiry", controller: enquiry, onChanged: (newValue) {})),
+                        Expanded(child: Referencecode(label: "Enquiry", referenceCode: "enquiry", controller: enquiry, onChanged: (newValue) => onChange(newValue!, enquiry))),
                       ],
                     ),
                     const SizedBox(height: 20),
                     Row(
                       children: [
-                        Expanded(child: TextInput(label: "Internal Ref No", controller: internalRefNo, onChanged: (newValue) {})),
+                        Expanded(child: NumberInput(label: "Internal Ref No", controller: internalRefNo)),
                         const SizedBox(width: 10,),
                         Expanded(child: NumberInput(label: "Loan Amount", controller: loanAMount)),
                       ],
@@ -131,7 +198,15 @@ class _CoApplicantGuarantorState extends State<CoApplicantGuarantor> {
                       children: [
                         Expanded(child: MobileInput(label: "Mobile No", controller: mobile, onChanged: (newValue) {})),
                         const SizedBox(width: 10,),
-                        Expanded(child: DatePickerInput(label: "Date of Birth", controller: dob, onChanged: (newValue) {})),
+                        Expanded(child: DatePickerInput(label: "Date of Birth", controller: dob, onChanged: (newValue) => handleDateChanged(newValue))),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+                    Row(
+                      children: [
+                        Expanded(child: Referencecode(label: "Gender", referenceCode: "gender", controller: gender, onChanged: (newValue) => onChange(newValue!, gender))),
+                        const SizedBox(width: 10,),
+                        Expanded(child: Referencecode(label: "Marital Status", referenceCode: "marital_status", controller: maritalStatus, onChanged: (newValue) => onChange(newValue!, maritalStatus))),
                       ],
                     ),
                     const SizedBox(height: 20),
@@ -156,13 +231,39 @@ class _CoApplicantGuarantorState extends State<CoApplicantGuarantor> {
                         Expanded(child: TextInput(label: "State", controller: state, onChanged: (newValue) {})),
                       ],
                     ),
-                    const SizedBox(height: 15.0),
-                    Align(
-                      alignment: Alignment.bottomCenter,
-                      child: SizedBox(
-                        width: double.infinity,
-                        height: 50,
-                        child: PrimaryButton(isLoading: isLoading),
+                    const SizedBox(height: 20),
+                    TextInput(label: "PAN", controller: panController, onChanged: (newValue) {}),
+                    const SizedBox(height: 20),
+                    TextInput(label: "Voter Id", controller: voterIdController, onChanged: (newValue) {}),
+                    const SizedBox(height: 20.0),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 5.0),
+                      child: Align(
+                        alignment: Alignment.bottomCenter,
+                        child: SizedBox(
+                          width: double.infinity,
+                          height: 55,
+                          child: MaterialButton(
+                            onPressed: () {
+                              onSave();
+                            },
+                            color: const Color.fromARGB(255, 3, 71, 244),
+                            textColor: Colors.white,
+                            padding: const EdgeInsets.symmetric(vertical: 16.0),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30.0),
+                            ),
+                            child: isLoading ? const SizedBox(
+                              width: 20.0,
+                              height: 20.0,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2.0,
+                                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                              ),
+                            )
+                            : const Text('Save', style: TextStyle(fontSize: 18),),
+                          ),
+                        ),
                       ),
                     )
                   ],

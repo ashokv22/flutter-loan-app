@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:origination/main.dart';
 import 'package:origination/models/applicant_dto.dart';
-import 'package:origination/models/bureau_check/individual.dart';
+import 'package:origination/models/bureau_check/bc_check_list_dto.dart';
+import 'package:origination/models/stage.dart';
 import 'package:origination/screens/widgets/reject_reason.dart';
 import 'package:origination/service/bureau_check_service.dart';
+import 'package:origination/service/loan_application_service.dart';
 
 import 'coapplicant_guarantor_form.dart';
 
@@ -23,12 +26,42 @@ class _BureauCheckListState extends State<BureauCheckList> {
 
   ValueNotifier<bool> isDialOpen = ValueNotifier(false);
   final bureauService = BureauCheckService();
+  final loanApplicationService = LoanApplicationService();
+  late Future<List<CheckListDTO>> checkListFuture;
   final TextEditingController rejectReason = TextEditingController();
+  bool proceed_loading = false;
+  bool reject_loading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    refreshLeadsSummary(); // Fetch leads summary on widget initialization
+  }
 
   Future<void> refreshLeadsSummary() async {
-  setState(() {
-    
-  });
+    setState(() {
+      checkListFuture = bureauService.getAllCheckLists(widget.id);
+    });
+  }
+
+  void updateStage() async {
+    try {
+      setState(() {
+        proceed_loading = true;
+      });
+      loanApplicationService.updateStage(widget.id, ApplicationStage.LOGIN_PENDING.name);
+      Navigator.push(context, MaterialPageRoute(builder: (context) => const Home()));
+    } catch (e) {
+      setState(() {
+        proceed_loading = false;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Something went wrong, Please try again!.'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+    }
   }
 
   @override
@@ -62,7 +95,7 @@ class _BureauCheckListState extends State<BureauCheckList> {
             children: [
               Expanded(
                 child: FutureBuilder(
-                  future: bureauService.getIndividuals(widget.id),
+                  future: checkListFuture,
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                     return const SizedBox(
@@ -77,7 +110,7 @@ class _BureauCheckListState extends State<BureauCheckList> {
                       child: Text('Error: ${snapshot.error}'),
                     );
                   } else if (snapshot.hasData) {
-                    List<Individual> data  =snapshot.data!;
+                    List<CheckListDTO> data  =snapshot.data!;
                     if (data.isEmpty) {
                       return const SizedBox(
                         width: double.infinity,
@@ -93,9 +126,8 @@ class _BureauCheckListState extends State<BureauCheckList> {
                     return ListView.builder(
                       itemCount: data.length,
                       itemBuilder: (context, index) {
-                        Individual individual = data[index];
-                        IndividualType type = individual.type!;
-                        String name = "${individual.firstName} ${individual.lastName}";
+                        CheckListDTO checkList = data[index];
+                        CibilType type = checkList.type;
                         return GestureDetector(
                           onTap: () {},
                           child: Container(
@@ -127,7 +159,7 @@ class _BureauCheckListState extends State<BureauCheckList> {
                                           ),
                                         ),
                                         Text(
-                                          name,
+                                          checkList.name,
                                           style: const TextStyle(
                                             fontSize: 24,
                                             fontWeight: FontWeight.w700,
@@ -136,13 +168,39 @@ class _BureauCheckListState extends State<BureauCheckList> {
                                         ),
                                       ],
                                     ),
-                                    if (individual.status == ApplicantDeclarationStatus.PENDING)
+                                    if (checkList.status == ApplicantDeclarationStatus.PENDING.name)
                                       Row(
                                         children: [
                                           IconButton(
                                             color: const Color.fromARGB(255, 3, 71, 244),
                                             onPressed: () {},
                                             icon: const Icon(Icons.edit)),
+                                        ],
+                                      )
+                                    else if (checkList.status == ApplicantDeclarationStatus.COMPLETED.name)
+                                      Row(
+                                        children: [
+                                          Container(
+                                            decoration: ShapeDecoration(
+                                              gradient: const LinearGradient(
+                                                colors: [Color(0xFF00CA2C), Color(0xFF00861D)],
+                                              ),
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.circular(20),
+                                              ),
+                                            ),
+                                            child: const Padding(
+                                              padding: EdgeInsets.fromLTRB(8, 5, 8, 5),
+                                              child: Text(
+                                                'Approved',
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.w600
+                                                ),
+                                              ),
+                                            ),
+                                          )
                                         ],
                                       )
                                     else 
@@ -173,7 +231,7 @@ class _BureauCheckListState extends State<BureauCheckList> {
                                       )
                                   ],
                                 ), 
-                                if (individual.status == ApplicantDeclarationStatus.PENDING)
+                                if (checkList.status == ApplicantDeclarationStatus.PENDING.name)
                                   Row(
                                     children: [
                                       Expanded(
@@ -185,7 +243,7 @@ class _BureauCheckListState extends State<BureauCheckList> {
                                             ),
                                           ),
                                           onPressed: () {}, 
-                                          child: const Text("Accept", style: TextStyle(color: Color.fromRGBO(22, 163, 74, 1))),
+                                          child: const Text("Approve", style: TextStyle(color: Color.fromRGBO(22, 163, 74, 1))),
                                         ),
                                       ),
                                       const SizedBox(width: 10,),
@@ -195,7 +253,7 @@ class _BureauCheckListState extends State<BureauCheckList> {
                                             showModalBottomSheet(
                                               context: context,
                                               builder: (BuildContext context) {
-                                                return RejectReason(id: individual.id!, cibilType: "INDIVIDUAL", applicantType: type, controller: rejectReason);
+                                                return RejectReason(id: checkList.id, cibilType: "INDIVIDUAL", applicantType: type, controller: rejectReason);
                                               },
                                             );
                                           },
@@ -243,28 +301,6 @@ class _BureauCheckListState extends State<BureauCheckList> {
                 padding: const EdgeInsets.only(bottom: 15.0, left: 10.0, right: 10.0),
                 child: Column(
                   children: [
-                    // SizedBox(
-                    //   width: double.infinity,
-                    //   height: 50,
-                    //   child: MaterialButton(
-                    //     shape: RoundedRectangleBorder(
-                    //       borderRadius: BorderRadius.circular(30.0),
-                    //     ),
-                    //     color: const Color.fromARGB(255, 3, 71, 244),
-                    //     textColor: Colors.white,
-                    //     padding: const EdgeInsets.symmetric(vertical: 16.0),
-                    //     onPressed: () {
-                    //       Navigator.push(context, MaterialPageRoute(builder: (context) => CoApplicantGuarantor(id: widget.id)));
-                    //     },
-                    //     height: 50,
-                    //     child: const Text(
-                    //       "Add Co Applicant/Guarantor",
-                    //       style: TextStyle(
-                    //         fontSize: 16
-                    //       ),
-                    //       ),
-                    //     ),
-                    // ),
                     const SizedBox(height: 10,),
                     SizedBox(
                       width: double.infinity,
@@ -280,17 +316,64 @@ class _BureauCheckListState extends State<BureauCheckList> {
                           padding: const EdgeInsets.symmetric(vertical: 16.0),
                         ),
                         onPressed: () {
-                          // Add your action here
+                          updateStage();
                         },
+                        child: proceed_loading ? const SizedBox(
+                            width: 20.0,
+                            height: 20.0,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2.0,
+                              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                            ),
+                          )
+                          : const Text("Proceed", style: TextStyle(fontSize: 16, color: Colors.white),),
+                      ),
+                    ),
+                    const SizedBox(height: 10,),
+                    SizedBox(
+                      width: double.infinity,
+                      height: 50,
+                      child: MaterialButton(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30.0),
+                        ),
+                        color: const Color.fromARGB(255, 249, 33, 33),
+                        textColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(vertical: 16.0),
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: const Text('Please Confirm'),
+                                content: const Text(
+                                    "Are you sure you want to reject the lead?"),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: const Text('Yes')),
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: const Text('No'),
+                                  )
+                                ],
+                              );
+                            }
+                          );
+                        },
+                        height: 50,
                         child: const Text(
-                          "Proceed",
+                          "Reject Lead",
                           style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.white, // Text color same as the solid button color
+                            fontSize: 16
+                          ),
                           ),
                         ),
-                      ),
-                    )
+                    ),
                   ],
                 ),
               )
@@ -299,7 +382,7 @@ class _BureauCheckListState extends State<BureauCheckList> {
         ),
       ),
       floatingActionButton: Padding(
-        padding: const EdgeInsets.only(bottom: 60.0),
+        padding: const EdgeInsets.only(bottom: 130.0),
         child: SpeedDial(
           buttonSize: const Size(56, 56),
           icon: Icons.add,

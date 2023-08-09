@@ -52,13 +52,13 @@ class SideMenu extends StatelessWidget {
                 onItemClicked(0);
               },
             ),
-            ListTile(
-              title: const Text('Leads',),
-              selected: selectedItemIndex == 1,
-              onTap: () {
-                onItemClicked(1);
-              },
-            ),
+            // ListTile(
+            //   title: const Text('Leads',),
+            //   selected: selectedItemIndex == 1,
+            //   onTap: () {
+            //     onItemClicked(1);
+            //   },
+            // ),
             // ListTile(
             //   title: const Text('Application',),
             //   selected: selectedItemIndex == 2,

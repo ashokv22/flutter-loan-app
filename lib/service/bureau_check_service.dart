@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:logger/logger.dart';
+import 'package:origination/models/bureau_check/bc_check_list_dto.dart';
 import 'package:origination/models/bureau_check/declaration.dart';
 import 'package:origination/models/bureau_check/individual.dart';
 import 'package:origination/models/bureau_check/otp_verification/otp_request_dto.dart';
@@ -93,7 +94,6 @@ class BureauCheckService {
       if (response.statusCode == 201) {
         final data = json.decode(response.body);
         Individual request = Individual.fromJson(data);
-        logger.wtf(request.toJson());
         return request;
       }
       else {
@@ -130,7 +130,7 @@ class BureauCheckService {
     }
   }
 
-  Future<bool> rejectIndividual(int id, IndividualType type, String reason) async {
+  Future<bool> rejectIndividual(int id, CibilType type, String reason) async {
     String endpoint = "api/application/bureauCheck/rejectIndividual";
     try {
       final response = await authInterceptor.patch(Uri.parse(endpoint).replace(
@@ -142,6 +142,31 @@ class BureauCheckService {
       ));
       if (response.statusCode == 200) {
         return true;
+      }
+      else {
+        throw Exception('Failed to init bureau check. Error code: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception("An error occurred while fetching data!: $e");
+    }
+  }
+
+  Future<List<CheckListDTO>> getAllCheckLists(int id) async {
+    String endpoint = "api/application/bureauCheck/getAllBureauChecks/$id";
+    try {
+      final response = await authInterceptor.get(Uri.parse(endpoint));
+      if (response.statusCode == 200) {
+        final List<dynamic> jsonResponse = jsonDecode(response.body);
+        List<CheckListDTO> list = [];
+        for (var data in jsonResponse) {
+          try {
+            CheckListDTO dto = CheckListDTO.fromJson(data);
+            list.add(dto);
+          } catch(e) {
+            logger.e(e.toString());
+          }
+        }
+        return list;
       }
       else {
         throw Exception('Failed to init bureau check. Error code: ${response.statusCode}');

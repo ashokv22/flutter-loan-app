@@ -90,7 +90,7 @@ class LoanApplicationService {
   }
 
   Future<List<LeadsListDTO>> getLeadsByStage(String stage) async {
-    String endpoint = "api/application/applicant/summary/stage";
+    String endpoint = "api/application/applicant/summary";
     int page = 0;
     int size = 10;
     try {
@@ -231,7 +231,7 @@ class LoanApplicationService {
     }
   }
 
-  Future<ApplicantDTO> updateStatus(int id, String stage) async {
+  Future<ApplicantDTO> updateStage(int id, String stage) async {
     String endpoint = "api/application/loanApplication/lead/updateStage/$id?status=$stage";
     try {
       final response = await authInterceptor.put(Uri.parse(endpoint));

@@ -4,8 +4,10 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
+import 'package:origination/models/stage.dart';
 import 'package:origination/models/summaries/leads_list_dto.dart';
 import 'package:origination/screens/app/lead/edit_lead_application.dart';
+import 'package:origination/screens/app/login_pending/login_pending_home.dart';
 import 'package:origination/service/loan_application_service.dart';
 
 class StageLeadList extends StatefulWidget {
@@ -92,7 +94,7 @@ class _StageLeadListState extends State<StageLeadList> {
                       int randomNumber = getRandomNumber();
                       return GestureDetector(
                         onTap: () {
-                          if (applicant.status == "REJECTED") {
+                          if (applicant.status == ApplicationStage.REJECTED.name) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
                                 showCloseIcon: true,
@@ -102,6 +104,8 @@ class _StageLeadListState extends State<StageLeadList> {
                                 duration: Duration(seconds: 2),
                               ),
                             );
+                          } else if (applicant.status == ApplicationStage.LOGIN_PENDING.name) {
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginPendingHome()));
                           } else {
                             Navigator.push(context, MaterialPageRoute(builder: (context) => EditLead(id: applicant.id, applicantId: int.parse(applicant.applicantId))));
                           }

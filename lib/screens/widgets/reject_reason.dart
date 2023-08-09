@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:origination/core/widgets/reference_code.dart';
-import 'package:origination/models/bureau_check/individual.dart';
+import 'package:origination/models/bureau_check/bc_check_list_dto.dart';
 import 'package:origination/service/bureau_check_service.dart';
 
 class RejectReason extends StatefulWidget {
@@ -16,7 +16,7 @@ class RejectReason extends StatefulWidget {
   final int id;
   final TextEditingController controller;
   final String cibilType;
-  final IndividualType applicantType;
+  final CibilType applicantType;
 
   @override
   State<RejectReason> createState() => _RejectReasonState();
