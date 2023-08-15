@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:logger/logger.dart';
+import 'package:origination/environments/environment.dart';
 import 'package:origination/models/applicant_dto.dart';
 import 'package:origination/models/entity_configuration.dart';
 import 'package:origination/models/login_flow/login_pending_products_dto.dart';
@@ -17,7 +18,7 @@ class LoanApplicationService {
   
   final authInterceptor = AuthInterceptor(http.Client(), authService);
   Logger logger = Logger();
-  final apiUrl = 'http://10.0.2.2:8080/';
+  final apiUrl = Environment.baseUrl;
 
   Future<void> saveLoanApplication(EntityConfigurationMetaData metaData) async {
     final payload = jsonEncode(metaData.toJson());

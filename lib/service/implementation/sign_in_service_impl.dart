@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
+import 'package:origination/environments/environment.dart';
 import 'package:origination/models/response_status_dto.dart';
 import 'package:origination/models/user_composite_dto.dart';
 import 'package:origination/screens/sign_in/auth_interceptor.dart';
@@ -14,7 +15,7 @@ class SignInServiceImpl implements SignInService {
 
   AuthService authService = AuthService();
   Logger logger = Logger();
-  final String apiUrl = 'http://10.0.2.2:8080/';
+  final String apiUrl = Environment.baseUrl;
   
   @override
   Future<void> signIn(String userName, String password) async {

@@ -7,7 +7,7 @@ part 'login_pending_products_dto.g.dart';
 class LoginPendingProductsDTO {
   int id;
   String product;
-  int loanAmount;
+  double loanAmount;
   List<Individual> applicants;
 
   LoginPendingProductsDTO({

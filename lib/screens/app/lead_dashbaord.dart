@@ -118,7 +118,7 @@ class _LeadDashboardState extends State<LeadDashboard> {
                                   Navigator.push(context, MaterialPageRoute(builder: (context) => StageLeadList(stage: summary.stage)));
                                 },
                                 child: Container(
-                                  margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                                  margin: const EdgeInsets.symmetric(horizontal: 14.0, vertical: 6.0),
                                   padding: const EdgeInsets.all(16.0),
                                   decoration: BoxDecoration(
                                     color: Colors.white,
@@ -141,14 +141,14 @@ class _LeadDashboardState extends State<LeadDashboard> {
                                           Text(
                                             summary.stage,
                                             style: const TextStyle(
-                                              fontSize: 24,
+                                              fontSize: 20,
                                               fontWeight: FontWeight.w700,
                                               color: Color.fromARGB(255, 3, 71, 244),
                                             ),
                                           ),
                                           Text("Total ${summary.count}",
                                             style: const TextStyle(
-                                              fontSize: 18,
+                                              fontSize: 16,
                                               fontWeight: FontWeight.w500,
                                             ),
                                           ),
@@ -159,7 +159,7 @@ class _LeadDashboardState extends State<LeadDashboard> {
                                           Text(
                                             '₹${LoanAmountFormatter.transform(summary.loanAmount)}',
                                             style: const TextStyle(
-                                              fontSize: 24,
+                                              fontSize: 22,
                                               fontWeight: FontWeight.w600
                                             ),
                                           ),

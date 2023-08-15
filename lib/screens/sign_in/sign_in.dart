@@ -162,33 +162,31 @@ class _SignInPageState extends State<SignIn> {
                         ),
                       ),
                       const SizedBox(height: 16.0),
-                      SafeArea(
-                        child: Padding(
-                          padding: const EdgeInsets.only(bottom: 10),
-                          child: Align(
-                            alignment: Alignment.bottomCenter,
-                            child: SizedBox(
-                              width: double.infinity,
-                              height: 70,
-                              child: MaterialButton(
-                                onPressed: _handleLogin,
-                                color: const Color.fromARGB(255, 3, 71, 244),
-                                textColor: Colors.white,
-                                padding: const EdgeInsets.symmetric(vertical: 16.0),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                ),
-                                child: _isLoading
-                                    ? const SizedBox(
-                                  width: 20.0,
-                                  height: 20.0,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2.0,
-                                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                                  ),
-                                )
-                                    : const Text('Login'),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 10),
+                        child: Align(
+                          alignment: Alignment.bottomCenter,
+                          child: SizedBox(
+                            width: double.infinity,
+                            height: 50,
+                            child: MaterialButton(
+                              onPressed: _handleLogin,
+                              color: const Color.fromARGB(255, 3, 71, 244),
+                              textColor: Colors.white,
+                              padding: const EdgeInsets.symmetric(vertical: 16.0),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.0),
                               ),
+                              child: _isLoading
+                                  ? const SizedBox(
+                                width: 20.0,
+                                height: 20.0,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2.0,
+                                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                ),
+                              )
+                                  : const Text('Log In'),
                             ),
                           ),
                         ),

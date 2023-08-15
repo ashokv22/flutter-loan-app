@@ -5,6 +5,7 @@ import 'package:origination/models/task_data.dart';
 import 'package:logger/logger.dart';
 import 'package:origination/screens/sign_in/auth_interceptor.dart';
 import 'package:origination/service/auth_service.dart';
+import 'package:origination/environments/environment.dart';
 
 final authService = AuthService();
 final authInterceptor = AuthInterceptor(http.Client(), authService);
@@ -13,8 +14,7 @@ class ApplicationService {
 
   var logger = Logger();
   
-  final String apiUrl = 'http://10.0.2.2:8080/';
-  final String token = 'fad7850e-3e53-4d6c-9310-82ccaf54c996';
+  final String apiUrl = Environment.baseUrl;
 
   Future<void> submitApplication(FlowableApplicationDto application) async {
 
@@ -129,6 +129,7 @@ class ApplicationService {
 
   Future<void> submitTask(Map<String, dynamic> jsonData) async {
     try {
+      String token = await authService.getAccessToken();
       final response = await http.post(
         Uri.parse('${apiUrl}api/application/flowable/task'),
         headers: {
@@ -150,6 +151,7 @@ class ApplicationService {
 
   Future<String> claimTask(String taskId) async {
     try {
+      String token = await authService.getAccessToken();
       final response = await http.post(
         Uri.parse('${apiUrl}api/application/flowable/claim/$taskId'),
         headers: {
@@ -170,6 +172,7 @@ class ApplicationService {
 
   Future<String> completeTask(String taskId) async {
     try {
+      String token = await authService.getAccessToken();
       final response = await http.post(
         Uri.parse('${apiUrl}api/application/flowable/task/complete?taskId=$taskId'),
         headers: {

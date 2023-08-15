@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:logger/logger.dart';
+import 'package:origination/environments/environment.dart';
 import 'package:origination/models/bureau_check/bc_check_list_dto.dart';
 import 'package:origination/models/bureau_check/declaration.dart';
 import 'package:origination/models/bureau_check/individual.dart';
@@ -17,8 +18,8 @@ class BureauCheckService {
   final authInterceptor = AuthInterceptor(http.Client(), authService);
   Logger logger = Logger();
 
-  final String apiUrl = 'http://10.0.2.2:8080/';
-  final String token = 'fad7850e-3e53-4d6c-9310-82ccaf54c996';
+  final String apiUrl = Environment.baseUrl;
+  // final String token = 'fad7850e-3e53-4d6c-9310-82ccaf54c996';
 
   // Init OTP
   Future<OtpRequestDTO> initBureauCheck(int id) async {
@@ -42,6 +43,7 @@ class BureauCheckService {
   // Validate OTP
   Future<OtpRequestDTO> validateBureauCheckOtp(int id, OtpValidationDTO request) async {
     // String endpoint = "api/application/bureauCheck/validate?applicantId=$id";
+    String token = await authService.getAccessToken();
     final response = await http.post(
       Uri.parse('${apiUrl}api/application/bureauCheck/validate?applicantId=$id'),
       headers: {
@@ -82,6 +84,7 @@ class BureauCheckService {
 
   Future<Individual> saveIndividual(Individual individual) async {
     String endpoint = "api/application/individualCibil";
+    String token = await authService.getAccessToken();
     try {
       final response = await http.post(
       Uri.parse(apiUrl + endpoint),

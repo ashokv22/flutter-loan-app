@@ -112,7 +112,7 @@ class _StageLeadListState extends State<StageLeadList> {
                         },
                         child: Container(
                           margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                          padding: const EdgeInsets.all(16.0),
+                          padding: const EdgeInsets.all(12.0),
                           decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(8.0),
@@ -144,22 +144,22 @@ class _StageLeadListState extends State<StageLeadList> {
                                       Text(
                                         applicant.name,
                                         style: const TextStyle(
-                                          fontSize: 20,
+                                          fontSize: 18,
                                           fontWeight: FontWeight.w700,
                                           color: Color.fromARGB(255, 3, 71, 244),
                                         ),
                                       ),
                                       Text(applicant.mobile,
                                         style: const TextStyle(
-                                          fontSize: 18,
+                                          fontSize: 16,
                                           fontWeight: FontWeight.w500,
                                         ),
                                       ),
                                       SizedBox(
-                                        width: 200,
+                                        width: 150,
                                         child: Text(applicant.dsaName,
                                           style: const TextStyle(
-                                            fontSize: 18,
+                                            fontSize: 14,
                                             fontWeight: FontWeight.w500,
                                           ),
                                           maxLines: 1,
@@ -178,12 +178,13 @@ class _StageLeadListState extends State<StageLeadList> {
                                   Text(
                                     "${applicant.createdDate.year.toString()}-${applicant.createdDate.month.toString().padLeft(2,'0')}-${applicant.createdDate.day.toString().padLeft(2,'0')}",
                                     style: const TextStyle(
-                                      fontSize: 20,
+                                      fontSize: 16,
                                       fontWeight: FontWeight.w600
                                     ),
                                   ),
                                   const SizedBox(height: 20),
                                   Container(
+                                    width: 100,
                                     decoration: ShapeDecoration(
                                       gradient: applicant.status == "LEAD" ? const LinearGradient(
                                         colors: [Color(0xFF00CA2C), Color(0xFF00861D)],
@@ -202,7 +203,7 @@ class _StageLeadListState extends State<StageLeadList> {
                                         applicant.status,
                                         style: const TextStyle(
                                           color: Colors.white,
-                                          fontSize: 14,
+                                          fontSize: 10,
                                           fontWeight: FontWeight.w600
                                         ),
                                       ),

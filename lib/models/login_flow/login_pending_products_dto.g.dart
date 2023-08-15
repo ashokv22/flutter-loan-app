@@ -11,7 +11,7 @@ LoginPendingProductsDTO _$LoginPendingProductsDTOFromJson(
     LoginPendingProductsDTO(
       id: json['id'] as int,
       product: json['product'] as String,
-      loanAmount: json['loanAmount'] as int,
+      loanAmount: (json['loanAmount'] as num).toDouble(),
       applicants: (json['applicants'] as List<dynamic>)
           .map((e) => Individual.fromJson(e as Map<String, dynamic>))
           .toList(),

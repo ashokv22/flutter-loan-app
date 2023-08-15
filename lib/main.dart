@@ -140,7 +140,7 @@ class _Home extends State<Home> {
               }
             ),
             title:  Text('DCB', style: TextStyle(
-              fontSize: 26,
+              fontSize: 20,
               color: Theme.of(context).textTheme.bodyLarge!.color
             ),),
             backgroundColor: Colors.transparent,
@@ -163,6 +163,7 @@ class _Home extends State<Home> {
                     child: Padding(
                       padding: const EdgeInsets.all(0),
                       child: Image(
+                        width: 30,
                         image: Image.asset('assets/images/female-04.jpg').image, 
                         fit: BoxFit.cover,
                       ),
