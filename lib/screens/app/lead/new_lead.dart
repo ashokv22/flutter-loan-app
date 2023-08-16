@@ -58,12 +58,14 @@ class _NewLeadState extends State<NewLead> {
 
   @override
   Widget build(BuildContext context) {
-
+    final isDarkTheme = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
       appBar: AppBar(title: const Text("New Lead")),
       body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
+        decoration: BoxDecoration(
+          gradient: isDarkTheme
+              ? null // No gradient for dark theme, use a single color
+              : const LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [

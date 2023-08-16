@@ -38,9 +38,18 @@ class SideMenu extends StatelessWidget {
                 padding: const EdgeInsets.only(bottom: 10.0),
                 child: CircleAvatar(backgroundImage: Image.asset('assets/images/female-04.jpg').image),
               ),
-              accountName: Text(name, style: const TextStyle(fontSize: 24.0, color: Colors.black),
+              accountName: Text(name, 
+                style: TextStyle(
+                  fontSize: 24.0, 
+                  color: Theme.of(context).textTheme.displayMedium!.color
+                ),
               ),
-              accountEmail: Text(email, style: const TextStyle(fontSize: 20.0 ,color: Colors.black),),
+              accountEmail: Text(email, 
+                style: TextStyle(
+                  fontSize: 20.0, 
+                  color: Theme.of(context).textTheme.displayMedium!.color
+                  ),
+                ),
               decoration: const BoxDecoration(
                 color: Colors.transparent,
               ),

@@ -29,8 +29,9 @@ class _BureauCheckListState extends State<BureauCheckList> {
   final loanApplicationService = LoanApplicationService();
   late Future<List<CheckListDTO>> checkListFuture;
   final TextEditingController rejectReason = TextEditingController();
-  bool proceed_loading = false;
-  bool reject_loading = false;
+  bool proceedLoading = false;
+  bool rejectLoading = false;
+  bool approveLoading = false;
 
   @override
   void initState() {
@@ -47,25 +48,45 @@ class _BureauCheckListState extends State<BureauCheckList> {
   void updateStage() async {
     try {
       setState(() {
-        proceed_loading = true;
+        proceedLoading = true;
       });
       loanApplicationService.updateStage(widget.id, ApplicationStage.LOGIN_PENDING.name);
       Navigator.push(context, MaterialPageRoute(builder: (context) => const Home()));
     } catch (e) {
       setState(() {
-        proceed_loading = false;
+        proceedLoading = false;
       });
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Something went wrong, Please try again!.'),
-          duration: Duration(seconds: 2),
-        ),
-      );
+      displayError();
     }
+  }
+
+  void approveCibil(int id, CibilType type) async {
+    try {
+      setState(() {
+        approveLoading = true;
+      });
+      await loanApplicationService.approveCibil(id, type.name);
+      setState(() {
+        approveLoading = false;
+      });
+      refreshLeadsSummary();
+    } catch(e) {
+      displayError();
+    }
+  }
+
+  void displayError() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Something went wrong, Please try again!.'),
+        duration: Duration(seconds: 2),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
+    final isDarkTheme = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -79,8 +100,10 @@ class _BureauCheckListState extends State<BureauCheckList> {
       body: RefreshIndicator(
         onRefresh: refreshLeadsSummary,
         child: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
+          decoration: BoxDecoration(
+            gradient: isDarkTheme
+              ? null // No gradient for dark theme, use a single color
+              : const LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
@@ -134,9 +157,14 @@ class _BureauCheckListState extends State<BureauCheckList> {
                             margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                             padding: const EdgeInsets.all(16.0),
                             decoration: BoxDecoration(
-                              color: Colors.white,
+                              color: Theme.of(context).cardColor,
                               borderRadius: BorderRadius.circular(8.0),
-                              boxShadow: [
+                              border: isDarkTheme
+                                      ? Border.all(color: Colors.white12, width: 1.0) // Outlined border for dark theme
+                                      : null,
+                              boxShadow: isDarkTheme
+                                ? null // No gradient for dark theme, use a single color
+                                : [
                                 BoxShadow(
                                   color: Colors.grey.withOpacity(0.5), //color of shadow
                                   spreadRadius: 2, //spread radius
@@ -242,8 +270,41 @@ class _BureauCheckListState extends State<BureauCheckList> {
                                               borderRadius: BorderRadius.circular(30),
                                             ),
                                           ),
-                                          onPressed: () {}, 
-                                          child: const Text("Approve", style: TextStyle(color: Color.fromRGBO(22, 163, 74, 1))),
+                                          onPressed: () {
+                                            showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return AlertDialog(
+                                                  title: const Text('Please Confirm'),
+                                                  content: Text(
+                                                      "Are you sure you want to Approve ${checkList.name}?"),
+                                                  actions: [
+                                                    TextButton(
+                                                      onPressed: () {
+                                                        approveCibil(checkList.id, type);
+                                                        Navigator.of(context).pop();
+                                                      },
+                                                      child: const Text('Yes')),
+                                                    TextButton(
+                                                      onPressed: () {
+                                                        Navigator.of(context).pop();
+                                                      },
+                                                      child: const Text('No'),
+                                                    )
+                                                  ],
+                                                );
+                                              }
+                                            );
+                                          }, 
+                                          child: approveLoading ? const SizedBox(
+                                            width: 20.0,
+                                            height: 20.0,
+                                            child: CircularProgressIndicator(
+                                              strokeWidth: 2.0,
+                                              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                            ),
+                                          )
+                                          : const Text("Approve", style: TextStyle(color: Color.fromRGBO(22, 163, 74, 1))),
                                         ),
                                       ),
                                       const SizedBox(width: 10,),
@@ -310,15 +371,15 @@ class _BureauCheckListState extends State<BureauCheckList> {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(30.0),
                           ),
-                          side: const BorderSide(
-                            color: Colors.white, // Border color same as the solid button color
+                          side: BorderSide(
+                            color: isDarkTheme ? Colors.blue : Colors.white, // Border color same as the solid button color
                           ),
                           padding: const EdgeInsets.symmetric(vertical: 16.0),
                         ),
                         onPressed: () {
                           updateStage();
                         },
-                        child: proceed_loading ? const SizedBox(
+                        child: proceedLoading ? const SizedBox(
                             width: 20.0,
                             height: 20.0,
                             child: CircularProgressIndicator(
@@ -326,7 +387,7 @@ class _BureauCheckListState extends State<BureauCheckList> {
                               valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                             ),
                           )
-                          : const Text("Proceed", style: TextStyle(fontSize: 16, color: Colors.white),),
+                          : Text("Proceed", style: TextStyle(fontSize: 16, color: isDarkTheme ? Colors.blue : Colors.white),),
                       ),
                     ),
                     const SizedBox(height: 10,),

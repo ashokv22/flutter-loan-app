@@ -76,6 +76,7 @@ class _OtpValidationState extends State<OtpValidation> {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkTheme = Theme.of(context).brightness == Brightness.dark;
     return WillPopScope(
       onWillPop: () async {
         return otpValidated;
@@ -88,8 +89,10 @@ class _OtpValidationState extends State<OtpValidation> {
         )
         ),
         body: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
+          decoration: BoxDecoration(
+            gradient: isDarkTheme
+              ? null // No gradient for dark theme, use a single color
+              : const LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: [

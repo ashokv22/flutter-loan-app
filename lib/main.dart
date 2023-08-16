@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:origination/screens/app/lead_dashbaord.dart';
+import 'package:origination/screens/pages/profile/profile_screen.dart';
 import 'package:origination/screens/sign_in/forgot_password.dart';
 import 'package:origination/screens/sign_in/reset_password.dart';
 import 'package:origination/screens/sign_in/sign_in.dart';
@@ -158,7 +159,9 @@ class _Home extends State<Home> {
                 //     ),
                 // ),
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => const ProfileScreen()));
+                  },
                   icon: ClipOval(
                     child: Padding(
                       padding: const EdgeInsets.all(0),

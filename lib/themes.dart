@@ -8,6 +8,7 @@ final lightTheme = ThemeData(
     secondary: Colors.green, // Set the accent color here
   ),
   textTheme: const TextTheme(
+    titleLarge: TextStyle(color: Color.fromARGB(255, 3, 71, 244)),
     bodyLarge: TextStyle(color: Colors.black),
     bodyMedium: TextStyle(color: Colors.black),
     bodySmall: TextStyle(color: Colors.black),
@@ -15,24 +16,33 @@ final lightTheme = ThemeData(
     displayMedium: TextStyle(color: Colors.black87)
   ),
   iconTheme: const IconThemeData(
-    color: Colors.white,
-  )
+    color: Colors.white70,
+  ),
+  cardColor: Colors.white,
 );
 
 // Dark theme
 final darkTheme = ThemeData(
   brightness: Brightness.dark,
-  primaryColor: const Color.fromARGB(255, 3, 71, 244), 
+  primaryColor: Colors.blueAccent[400], 
+  colorSchemeSeed: const Color.fromARGB(255, 3, 71, 244),
+  useMaterial3: true,
   colorScheme: const ColorScheme.dark(
     secondary: Colors.green
   ),
   textTheme: const TextTheme(
+    titleLarge: TextStyle(color: Colors.blue),
     bodyLarge: TextStyle(color: Colors.white),
     bodyMedium: TextStyle(color: Colors.white),
     bodySmall: TextStyle(color: Colors.white),
-    displayLarge: TextStyle(color: Colors.white),
-    displayMedium: TextStyle(color: Colors.white),
+    displayLarge: TextStyle(color: Colors.white70),
+    displayMedium: TextStyle(color: Colors.white30),
+    displaySmall: TextStyle(color: Colors.white12)
   ),
+  iconTheme: const IconThemeData(
+    color: Colors.black87,
+  ),
+  cardColor: Colors.black87
 );
 
 // Function to get the system default theme

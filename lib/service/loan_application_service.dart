@@ -307,9 +307,27 @@ class LoanApplicationService {
         List<LoginPendingProductsDTO> list = [];
         for (var data in jsonResponse) {
           LoginPendingProductsDTO app = LoginPendingProductsDTO.fromJson(data);
+          logger.wtf(app.toJson());
           list.add(app);
         }
         return list;
+      }
+      else {
+        throw Exception('Failed to get data. Error code: ${response.statusCode}');
+      }
+    }
+    catch (e) {
+      throw  Exception('An error occurred while getting the data: $e');
+    }
+  }
+
+  Future<String> approveCibil(int id, String type) async {
+    String endpoint = "api/application/bureauCheck/approveIndividual?id=$id&type=$type";
+    try {
+      final response = await authInterceptor.patch(Uri.parse(endpoint));
+      if (response.statusCode == 200) {
+        final jsonResponse = json.decode(response.body);
+        return jsonResponse;
       }
       else {
         throw Exception('Failed to get data. Error code: ${response.statusCode}');

@@ -78,14 +78,17 @@ class _BureauCheckDeclarationState extends State<BureauCheckDeclaration> {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkTheme = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(onPressed: () {Navigator.pop(context);}, icon: const Icon(CupertinoIcons.arrow_left)),
         title: const Text("Bureau Check")
       ),
       body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
+        decoration: BoxDecoration(
+          gradient: isDarkTheme
+              ? null // No gradient for dark theme, use a single color
+              : const LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [

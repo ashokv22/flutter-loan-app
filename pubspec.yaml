@@ -63,11 +63,27 @@ dev_dependencies:
   build_runner: ^2.0.8
   json_serializable: ^6.7.1
   eva_icons_flutter: ^3.1.0
+  line_awesome_flutter: ^2.0.0
+  get: ^4.6.5
+  flutter_native_splash: ^2.3.2
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
 # The following section is specific to Flutter packages.
+flutter_native_splash:
+  color: '#f7f6f1'
+  color_dark: '#272727'
+  image: assets/figma.png
+  image_dark: assets/figma.png
+
+  android_12:
+    image: assets/figma.png
+    icon_background_color: "#ffffff"
+    image_dark: assets/figma.png
+    icon_background_color_dark: "#121212"
+  web: false
+
 flutter:
 
   # The following line ensures that the Material Icons font is

@@ -33,21 +33,25 @@ class _LeadDashboardState extends State<LeadDashboard> {
   
   @override
   Widget build(BuildContext context) {
+    final isDarkTheme = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
       body: RefreshIndicator(
         onRefresh: refreshLeadsSummary,
         child: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                Colors.white,
-                Color.fromRGBO(193, 248, 245, 1),
-                Color.fromRGBO(184, 182, 253, 1),
-                Color.fromRGBO(62, 58, 250, 1),
-              ]
+          decoration: BoxDecoration(
+            gradient: isDarkTheme
+              ? null // No gradient for dark theme, use a single color
+              : const LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    Colors.white,
+                    Color.fromRGBO(193, 248, 245, 1),
+                    Color.fromRGBO(184, 182, 253, 1),
+                    Color.fromRGBO(62, 58, 250, 1),
+                  ]
             ),
+            color: isDarkTheme ? Colors.black38 : null
           ),
           child: Column(
             children: [
@@ -121,9 +125,13 @@ class _LeadDashboardState extends State<LeadDashboard> {
                                   margin: const EdgeInsets.symmetric(horizontal: 14.0, vertical: 6.0),
                                   padding: const EdgeInsets.all(16.0),
                                   decoration: BoxDecoration(
-                                    color: Colors.white,
+                                    color: Theme.of(context).cardColor,
                                     borderRadius: BorderRadius.circular(8.0),
-                                    boxShadow: [
+                                    border: isDarkTheme
+                                      ? Border.all(color: Colors.white12, width: 1.0) // Outlined border for dark theme
+                                      : null,
+                                    boxShadow: isDarkTheme
+                                      ? null : [
                                       BoxShadow(
                                         color: Colors.grey.withOpacity(0.5), //color of shadow
                                         spreadRadius: 2, //spread radius
@@ -140,15 +148,16 @@ class _LeadDashboardState extends State<LeadDashboard> {
                                         children: [
                                           Text(
                                             summary.stage,
-                                            style: const TextStyle(
+                                            style: TextStyle(
                                               fontSize: 20,
                                               fontWeight: FontWeight.w700,
-                                              color: Color.fromARGB(255, 3, 71, 244),
+                                              color: isDarkTheme ? Colors.blueAccent[400] : const Color.fromARGB(255, 3, 71, 244),
                                             ),
                                           ),
                                           Text("Total ${summary.count}",
-                                            style: const TextStyle(
+                                            style: TextStyle(
                                               fontSize: 16,
+                                              color: Theme.of(context).textTheme.displaySmall!.color,
                                               fontWeight: FontWeight.w500,
                                             ),
                                           ),
@@ -158,8 +167,9 @@ class _LeadDashboardState extends State<LeadDashboard> {
                                         children: [
                                           Text(
                                             '₹${LoanAmountFormatter.transform(summary.loanAmount)}',
-                                            style: const TextStyle(
+                                            style: TextStyle(
                                               fontSize: 22,
+                                              color: Theme.of(context).textTheme.displayLarge!.color,
                                               fontWeight: FontWeight.w600
                                             ),
                                           ),

@@ -33,7 +33,8 @@ class _LoginPendingHomeState extends State<LoginPendingHome> {
 
   Future<void> refreshLeadsSummary() async {
     setState(() {
-      pendingProductsFuture = applicationService.getPendingProducts(); // Fetch leads summary data
+      pendingProductsFuture = applicationService.getPendingProducts();
+      logger.wtf(pendingProductsFuture.then((value) => value));
     });
   }
 
@@ -48,6 +49,7 @@ class _LoginPendingHomeState extends State<LoginPendingHome> {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkTheme = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(onPressed: () {Navigator.pop(context);}, icon: const Icon(CupertinoIcons.arrow_left)),
@@ -56,8 +58,10 @@ class _LoginPendingHomeState extends State<LoginPendingHome> {
       body: RefreshIndicator(
         onRefresh: refreshLeadsSummary,
         child: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
+          decoration: BoxDecoration(
+            gradient: isDarkTheme
+              ? null // No gradient for dark theme, use a single color
+              : const LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
@@ -67,48 +71,49 @@ class _LoginPendingHomeState extends State<LoginPendingHome> {
                 Color.fromRGBO(62, 58, 250, 1),
               ]
             ),
+            color: isDarkTheme ? Colors.black38 : null
           ),
           child: Column(
             children: [
-              Container(
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      // Colors.white,
-                      Color.fromARGB(255, 53, 51, 51),
-                      Color.fromARGB(255, 35, 32, 32),
-                      Color.fromARGB(255, 20, 18, 18),
-                    ]
-                  ),
-                ),
-                child: const Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.all(16.0),
-                      child: Text(
-                        'Hello Ashok\nDCB00123',
-                        style: TextStyle(
-                          color: Colors.white, 
-                          fontSize: 20),
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.all(16.0),
-                      child: Text(
-                        textAlign: TextAlign.right,
-                        'Jayanagar Branch\nKarnataka',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              // Container(
+              //   decoration: const BoxDecoration(
+              //     gradient: LinearGradient(
+              //       begin: Alignment.topLeft,
+              //       end: Alignment.bottomRight,
+              //       colors: [
+              //         Color.fromARGB(255, 40, 39, 39),
+              //         Color.fromARGB(255, 53, 51, 51),
+              //         Color.fromARGB(255, 40, 38, 38),
+              //         Color.fromARGB(255, 20, 18, 18),
+              //       ]
+              //     ),
+              //   ),
+              //   child: const Row(
+              //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //     children: [
+              //       Padding(
+              //         padding: EdgeInsets.all(16.0),
+              //         child: Text(
+              //           'Hello Ashok\nDCB00123',
+              //           style: TextStyle(
+              //             color: Colors.white, 
+              //             fontSize: 20),
+              //         ),
+              //       ),
+              //       Padding(
+              //         padding: EdgeInsets.all(16.0),
+              //         child: Text(
+              //           textAlign: TextAlign.right,
+              //           'Jayanagar Branch\nKarnataka',
+              //           style: TextStyle(
+              //             color: Colors.white,
+              //             fontSize: 20,
+              //           ),
+              //         ),
+              //       ),
+              //     ],
+              //   ),
+              // ),
               Expanded(
                 child: FutureBuilder<List<LoginPendingProductsDTO>>(
                   future: pendingProductsFuture,
@@ -153,12 +158,16 @@ class _LoginPendingHomeState extends State<LoginPendingHome> {
                               Navigator.push(context, MaterialPageRoute(builder: (context) => const ProductPending()));
                             },
                             child: Container(
-                              margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                              margin: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
                               padding: const EdgeInsets.all(16.0),
                               decoration: BoxDecoration(
-                                color: Colors.white,
+                                color: Theme.of(context).cardColor,
                                 borderRadius: BorderRadius.circular(8.0),
-                                boxShadow: [
+                                border: isDarkTheme
+                                  ? Border.all(color: Colors.white12, width: 1.0) // Outlined border for dark theme
+                                  : null,
+                                boxShadow: isDarkTheme
+                                  ? null : [
                                   BoxShadow(
                                     color: Colors.grey.withOpacity(0.5), //color of shadow
                                     spreadRadius: 2, //spread radius
@@ -183,10 +192,10 @@ class _LoginPendingHomeState extends State<LoginPendingHome> {
                                           ),
                                           Text(
                                             product.product,
-                                            style: const TextStyle(
+                                            style: TextStyle(
                                               fontSize: 24,
                                               fontWeight: FontWeight.w700,
-                                              color: Color.fromARGB(255, 3, 71, 244),
+                                              color: isDarkTheme ? Colors.blueAccent[400] : const Color.fromARGB(255, 3, 71, 244),
                                             ),
                                           ),
                                         ],
@@ -202,10 +211,10 @@ class _LoginPendingHomeState extends State<LoginPendingHome> {
                                           ),
                                           Text(
                                             '₹${LoanAmountFormatter.transform(product.loanAmount)}',
-                                            style: const TextStyle(
+                                            style: TextStyle(
                                               fontSize: 26,
                                               fontWeight: FontWeight.w900,
-                                              color: Color.fromARGB(255, 3, 71, 244),
+                                              color: isDarkTheme ? Colors.blueAccent[400] : const Color.fromARGB(255, 3, 71, 244),
                                             ),
                                           ),
                                         ],
@@ -221,9 +230,9 @@ class _LoginPendingHomeState extends State<LoginPendingHome> {
                                         children: [
                                           Row(
                                             children: [
-                                              const Text("Applicant:",
+                                              Text("Applicant:",
                                                 style: TextStyle(
-                                                  color: Colors.black,
+                                                  color: Theme.of(context).textTheme.displayMedium!.color,
                                                   fontSize: 20,
                                                   fontFamily: 'Inter',
                                                   fontWeight: FontWeight.w400,
@@ -232,11 +241,11 @@ class _LoginPendingHomeState extends State<LoginPendingHome> {
                                               const SizedBox(width: 50,),
                                               Text(
                                                 applicantName,
-                                                style: const TextStyle(
+                                                style: TextStyle(
                                                   fontSize: 22,
                                                   fontFamily: 'Inter',
                                                   fontWeight: FontWeight.w600,
-                                                  color: Color.fromARGB(255, 3, 71, 244),
+                                                  color: isDarkTheme ? Colors.blueAccent[400] : const Color.fromARGB(255, 3, 71, 244),
                                                 ),
                                               ),
                                             ],
@@ -245,9 +254,9 @@ class _LoginPendingHomeState extends State<LoginPendingHome> {
                                             crossAxisAlignment: CrossAxisAlignment.center,
                                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                             children: [
-                                              const Text("Co Applicant",
+                                              Text("Co Applicant",
                                                 style: TextStyle(
-                                                  color: Colors.black,
+                                                  color: Theme.of(context).textTheme.displayMedium!.color,
                                                   fontSize: 20,
                                                   fontFamily: 'Inter',
                                                   fontWeight: FontWeight.w400,
@@ -256,11 +265,11 @@ class _LoginPendingHomeState extends State<LoginPendingHome> {
                                               const SizedBox(width: 25,),
                                               Text(
                                                 coApplicantNames,
-                                                style: const TextStyle(
+                                                style: TextStyle(
                                                   fontSize: 22,
                                                   fontFamily: 'Inter',
                                                   fontWeight: FontWeight.w600,
-                                                  color: Color.fromARGB(255, 3, 71, 244),
+                                                  color: isDarkTheme ? Colors.blueAccent[400] : const Color.fromARGB(255, 3, 71, 244),
                                                 ),
                                               ),
                                             ],
@@ -269,9 +278,9 @@ class _LoginPendingHomeState extends State<LoginPendingHome> {
                                             crossAxisAlignment: CrossAxisAlignment.center,
                                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                             children: [
-                                              const Text("Guarantor",
+                                              Text("Guarantor",
                                                 style: TextStyle(
-                                                  color: Colors.black,
+                                                  color: Theme.of(context).textTheme.displayMedium!.color,
                                                   fontSize: 20,
                                                   fontFamily: 'Inter',
                                                   fontWeight: FontWeight.w400,
@@ -282,11 +291,11 @@ class _LoginPendingHomeState extends State<LoginPendingHome> {
                                                 width: 250,
                                                 child: Text(
                                                   guarantorNames,
-                                                  style: const TextStyle(
+                                                  style: TextStyle(
                                                     fontSize: 22,
                                                     fontFamily: 'Inter',
                                                     fontWeight: FontWeight.w600,
-                                                    color: Color.fromARGB(255, 3, 71, 244),
+                                                    color: isDarkTheme ? Colors.blueAccent[400] : const Color.fromARGB(255, 3, 71, 244),
                                                   ),
                                                   maxLines: 1,
                                                   softWrap: false,
