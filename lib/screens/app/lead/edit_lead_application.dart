@@ -32,6 +32,7 @@ class _EditLeadState extends State<EditLead> {
   late Future<EntityConfigurationMetaData> leadApplicationFuture;
   late EntityConfigurationMetaData entity;
   late ApplicantDTO applicant;
+  Map<String, TextEditingController> textEditingControllerMap = {};
 
   @override
   void initState() {
@@ -235,7 +236,13 @@ class _EditLeadState extends State<EditLead> {
 
   Widget buildFieldWidget(Field field) {
     String fieldName = field.fieldMeta!.displayTitle!;
-    TextEditingController controller = TextEditingController(text: field.value);
+    // TextEditingController controller = TextEditingController(text: field.value);
+    if (!textEditingControllerMap.containsKey(fieldName)) {
+      textEditingControllerMap[fieldName] = TextEditingController(text: field.value);
+    }
+    
+    TextEditingController controller = textEditingControllerMap[fieldName]!;
+
     if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'TextBox') {
       return TextInput(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field));
     } 

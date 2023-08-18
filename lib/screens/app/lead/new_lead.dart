@@ -23,6 +23,7 @@ class _NewLeadState extends State<NewLead> {
   late Future<EntityConfigurationMetaData> leadApplicationFuture;
   late EntityConfigurationMetaData entity;
   bool isLoading = false;
+  Map<String, TextEditingController> textEditingControllerMap = {};
 
   @override
   void initState() {
@@ -181,7 +182,13 @@ class _NewLeadState extends State<NewLead> {
 
   Widget buildFieldWidget(Field field) {
     String fieldName = field.fieldMeta!.displayTitle!;
-    TextEditingController controller = TextEditingController(text: field.value);
+    if (!textEditingControllerMap.containsKey(fieldName)) {
+      textEditingControllerMap[fieldName] = TextEditingController(text: field.value);
+    }
+    
+    TextEditingController controller = textEditingControllerMap[fieldName]!;
+
+    // TextEditingController controller = TextEditingController(text: field.value);
     if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'TextBox') {
       return TextInput(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field));
     } 

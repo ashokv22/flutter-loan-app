@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:origination/core/widgets/dropdown.dart';
-import 'package:origination/core/widgets/section_data_widget.dart';
+import 'package:origination/models/login_flow/sections/loan_application_entity.dart';
+import 'package:origination/service/login_flow_service.dart';
 
 class RelatedParties extends StatefulWidget {
   const RelatedParties({super.key});
@@ -11,8 +13,17 @@ class RelatedParties extends StatefulWidget {
 }
 
 class _RelatedPartiesState extends State<RelatedParties> {
+
+  final loginPendingService = LoginPendingService();
+  var logger = Logger();
+
   String selectedType = "Applicant";
   TextEditingController controller = TextEditingController();
+
+  Future<LoanApplicationEntity> _fetchLoanSection(String sectionName) async {
+    return await loginPendingService.getSectionMaster(sectionName);
+  }
+
   @override
   Widget build(BuildContext context) {
     final isDarkTheme = Theme.of(context).brightness == Brightness.dark;
@@ -45,19 +56,85 @@ class _RelatedPartiesState extends State<RelatedParties> {
                 Container(
                   margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 8.0),
                   padding: const EdgeInsets.all(8.0),
-                  child: DropDown(label: "Related Parties", options: const ['Applicant', 'Co Applicant', 'Guarantor'], controller: controller, onChanged: (newValue) => updateFieldValue(newValue!)),
+                  child: DropDown(label: "Related Parties", options: const ['Applicant', 'CoApplicant', 'Guarantor'], controller: controller, onChanged: (newValue) => updateFieldValue(newValue!)),
+                ),
+                Expanded(
+                  child: FutureBuilder(
+                    future: _fetchLoanSection("${selectedType}Section"),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const SizedBox(
+                      width: double.infinity,
+                      height: double.infinity,
+                      child: Center(
+                        child: CircularProgressIndicator()
+                      ),
+                    );
+                  } else if (snapshot.hasError) {
+                    return Center(
+                      child: Text('Error: ${snapshot.error}'),
+                    );
+                  } else if (snapshot.hasData) {
+                    LoanApplicationEntity entity = snapshot.data!;
+                    if (entity.loanSections.isEmpty) {
+                      return const SizedBox(
+                        width: double.infinity,
+                        height: double.infinity,
+                        child: Center(
+                          child: Text('No data found',
+                          style: TextStyle(
+                            fontSize: 20,
+                          ),)
+                        )
+                      );
+                    } else {
+                      return ListView.builder(
+                        itemCount: entity.loanSections.length,
+                        itemBuilder: (context, index) {
+                          LoanSection section = entity.loanSections[index];
+                          return GestureDetector(
+                          child: Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                            padding: const EdgeInsets.all(16.0),
+                            decoration: ShapeDecoration(
+                              shape: RoundedRectangleBorder(
+                                  side: BorderSide(
+                                    width: 0.50,
+                                    strokeAlign: BorderSide.strokeAlignOutside,
+                                    color: isDarkTheme
+                                      ? Colors.white70
+                                      : Colors.black87
+                                  ),
+                                  borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  section.displayTitle,
+                                  style: TextStyle(
+                                    color: Theme.of(context).textTheme.displayMedium!.color,
+                                    fontSize: 18,
+                                    fontFamily: 'Inter',
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                Icon(
+                                  CupertinoIcons.chevron_right_circle_fill,
+                                  color: Theme.of(context).iconTheme.color,)
+                              ],
+                            ),
+                          ),
+                        );
+                      }
+                        );
+                    }
+                  }
+                  return Container();
+                }
+                ),
                 ),  
-                SectionDataWidget(isDarkTheme: isDarkTheme, status: "PENDING", name: "Primary KYC",),
-                SectionDataWidget(isDarkTheme: isDarkTheme, status: "PENDING", name: "Secondary KYC",),
-                SectionDataWidget(isDarkTheme: isDarkTheme, status: "PENDING", name: "Personal Details",),
-                if (selectedType == "Applicant")
-                Column(
-                  children: [
-                    SectionDataWidget(isDarkTheme: isDarkTheme, status: "PENDING", name: "Loan Details",),
-                    SectionDataWidget(isDarkTheme: isDarkTheme, status: "PENDING", name: "Income Details",),
-                    SectionDataWidget(isDarkTheme: isDarkTheme, status: "PENDING", name: "Bank Account Details",)
-                  ],
-                )
               ],
             ),
       ),

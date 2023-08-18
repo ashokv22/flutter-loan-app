@@ -4,7 +4,6 @@ import 'package:logger/logger.dart';
 import 'package:origination/environments/environment.dart';
 import 'package:origination/models/applicant_dto.dart';
 import 'package:origination/models/entity_configuration.dart';
-import 'package:origination/models/login_flow/login_pending_products_dto.dart';
 import 'package:origination/models/namevalue_dto.dart';
 import 'package:origination/models/summaries/dashboard_summary.dart';
 import 'package:origination/models/summaries/leads_list_dto.dart';
@@ -252,14 +251,9 @@ class LoanApplicationService {
   }
 
   Future<Section> getSection(String sectionName) async {
-    String endpoint = "https://ironaman.loca.lt/api/application/entitySection/sectionName?sectionName=$sectionName";
+    String endpoint = "api/application/entitySection/sectionName?sectionName=$sectionName";
     try {
-      final response = await http.get(
-        Uri.parse(endpoint),
-        headers: {
-          'X-Auth-Token': await authService.getAccessToken(),
-        }
-      );
+      final response = await authInterceptor.get(Uri.parse(endpoint));
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         Section section = Section.fromJson(data);
@@ -288,29 +282,6 @@ class LoanApplicationService {
         final jsonResponse = json.decode(response.body);
         ApplicantDTO applicant = ApplicantDTO.fromJson(jsonResponse);
         return applicant;
-      }
-      else {
-        throw Exception('Failed to get data. Error code: ${response.statusCode}');
-      }
-    }
-    catch (e) {
-      throw  Exception('An error occurred while getting the data: $e');
-    }
-  }
-
-  Future<List<LoginPendingProductsDTO>> getPendingProducts() async {
-    String endpoint = "api/application/loanApplication/lead/loginPending";
-    try {
-      final response = await authInterceptor.get(Uri.parse(endpoint));
-      if (response.statusCode == 200) {
-        final jsonResponse = json.decode(response.body);
-        List<LoginPendingProductsDTO> list = [];
-        for (var data in jsonResponse) {
-          LoginPendingProductsDTO app = LoginPendingProductsDTO.fromJson(data);
-          logger.wtf(app.toJson());
-          list.add(app);
-        }
-        return list;
       }
       else {
         throw Exception('Failed to get data. Error code: ${response.statusCode}');

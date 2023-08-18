@@ -5,7 +5,7 @@ import 'package:origination/core/utils/loan_amount_formatter.dart';
 import 'package:origination/models/bureau_check/individual.dart';
 import 'package:origination/models/login_flow/login_pending_products_dto.dart';
 import 'package:origination/screens/app/login_pending/product_pending.dart';
-import 'package:origination/service/loan_application_service.dart';
+import 'package:origination/service/login_flow_service.dart';
 
 class LoginPendingHome extends StatefulWidget {
   const LoginPendingHome({
@@ -21,7 +21,7 @@ class LoginPendingHome extends StatefulWidget {
 
 class _LoginPendingHomeState extends State<LoginPendingHome> {
 
-  final applicationService = LoanApplicationService();
+  final loginPendingService = LoginPendingService();
   var logger = Logger();
   late Future<List<LoginPendingProductsDTO>> pendingProductsFuture;
 
@@ -33,7 +33,7 @@ class _LoginPendingHomeState extends State<LoginPendingHome> {
 
   Future<void> refreshLeadsSummary() async {
     setState(() {
-      pendingProductsFuture = applicationService.getPendingProducts();
+      pendingProductsFuture = loginPendingService.getPendingProducts();
       logger.wtf(pendingProductsFuture.then((value) => value));
     });
   }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:origination/screens/sign_in/sign_in.dart';
 import 'package:origination/service/auth_service.dart';
+import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 
 class SideMenu extends StatelessWidget {
   final int selectedItemIndex;
@@ -30,8 +31,8 @@ class SideMenu extends StatelessWidget {
           final name = user['name'] ?? '';
           final email = user['email'] ?? '';
           
-          return ListView(
-          padding: EdgeInsets.zero,
+          return Column(
+          // padding: EdgeInsets.zero,
           children: <Widget>[
             UserAccountsDrawerHeader(
               currentAccountPicture: Padding(
@@ -55,19 +56,13 @@ class SideMenu extends StatelessWidget {
               ),
             ),
             ListTile(
+              leading: const Icon(LineAwesomeIcons.home),
               title: const Text('Home',),
               selected: selectedItemIndex == 0,
               onTap: () {
                 onItemClicked(0);
               },
             ),
-            // ListTile(
-            //   title: const Text('Leads',),
-            //   selected: selectedItemIndex == 1,
-            //   onTap: () {
-            //     onItemClicked(1);
-            //   },
-            // ),
             // ListTile(
             //   title: const Text('Application',),
             //   selected: selectedItemIndex == 2,
@@ -103,8 +98,10 @@ class SideMenu extends StatelessWidget {
             //     onItemClicked(4);
             //   },
             // ),
+            const Spacer(),
             const Divider(),
             ListTile(
+              leading: const Icon(LineAwesomeIcons.alternate_sign_out),
               title: const Text('Sign out'),
               selected: selectedItemIndex == 5,
               onTap: () {
