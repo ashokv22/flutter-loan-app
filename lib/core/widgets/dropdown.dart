@@ -28,7 +28,7 @@ class DropDown extends StatelessWidget {
           ),
           child: DropdownButtonHideUnderline(
             child: DropdownButtonFormField<String>(
-              // value: controller.text,
+              value: controller.text,
               items: [
                 const DropdownMenuItem<String>(
                   value: 'choose_option', 

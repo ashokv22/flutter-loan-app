@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:origination/my_theme.dart';
 import 'package:origination/screens/app/lead_dashbaord.dart';
 import 'package:origination/screens/pages/profile/profile_screen.dart';
 import 'package:origination/screens/sign_in/forgot_password.dart';
@@ -12,28 +13,33 @@ import 'screens/pages/application_form.dart';
 import 'screens/pages/branch_manager_table.dart';
 import 'screens/widgets/side_menu.dart';
 // import 'screens/widgets/bottom_bar.dart';
-import 'service/task_data_provider.dart';
 import 'package:provider/provider.dart';
-import 'themes.dart';
+// import 'themes.dart';
 
 void main() {
   
   runApp(
-    ChangeNotifierProvider<TaskDataProvider>(
-      create: (_) => TaskDataProvider(),
+    ChangeNotifierProvider(
+      create: (_) => MyTheme(),
       child: const SideMenuApp(),
     ),
   );
 }
 
-class SideMenuApp extends StatelessWidget {
+class SideMenuApp extends StatefulWidget {
   const SideMenuApp({Key? key}) : super(key: key);
+
+  @override
+  State<SideMenuApp> createState() => _SideMenuAppState();
+}
+
+class _SideMenuAppState extends State<SideMenuApp> {
 
   @override
   Widget build(BuildContext context) {
     final AuthService authService = AuthService();
-    final Brightness brightness = MediaQuery.of(context).platformBrightness;
-
+    // final Brightness brightness = MediaQuery.of(context).platformBrightness;
+    final themeProvider = context.watch<MyTheme>();
     return MaterialApp(
       title: 'Origination',
       theme: ThemeData(
@@ -47,6 +53,7 @@ class SideMenuApp extends StatelessWidget {
         brightness: Brightness.dark,
       ),
       // theme: getSystemDefaultTheme(brightness),
+      themeMode: themeProvider.currentThemeMode,
       home: const Home(),
       debugShowCheckedModeBanner: false,
       routes: {
@@ -147,17 +154,6 @@ class _Home extends State<Home> {
             backgroundColor: Colors.transparent,
             elevation: 0,
             actions: [
-              // IconButton(onPressed: () {}, icon: const Icon(Icons.account_circle_outlined, size: 35,))
-                // IconButton(
-                //     onPressed: () {},
-                //     icon: ClipOval(
-                //       child: Image.asset(
-                //           'assets/images/female-04.jpg',
-                //           height: 50,
-                //           width: 50,
-                //         ),
-                //     ),
-                // ),
                 IconButton(
                   onPressed: () {
                     Navigator.push(context, MaterialPageRoute(builder: (context) => const ProfileScreen()));
