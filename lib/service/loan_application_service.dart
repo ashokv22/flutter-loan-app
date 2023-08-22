@@ -232,6 +232,28 @@ class LoanApplicationService {
     }
   }
 
+  Future<List<NameValueDTO>> searchReferenceCodes(String classifier, String query) async {
+    String endpoint = "api/sjs-core/_refs/reference-codes/search/$classifier?name=$query";
+    try {
+      final response = await authInterceptor.get(Uri.parse(endpoint));
+      if (response.statusCode == 200) {
+        final jsonResponse = json.decode(response.body);
+        List<NameValueDTO> list = [];
+        for (var data in jsonResponse) {
+          NameValueDTO app = NameValueDTO.fromJson(data);
+          list.add(app);
+        }
+        return list;
+      }
+      else {
+        throw Exception('Failed to get data. Error code: ${response.statusCode}');
+      }
+    }
+    catch (e) {
+      throw  Exception('An error occurred while getting the data: $e');
+    }
+  }
+
   Future<ApplicantDTO> updateStage(int id, String stage) async {
     String endpoint = "api/application/loanApplication/lead/updateStage/$id?status=$stage";
     try {

@@ -49,6 +49,7 @@ dependencies:
   flutter_otp_text_field: ^1.1.1
   toggle_switch: ^2.1.0
   flutter_speed_dial: ^7.0.0
+  flutter_typeahead: ^4.6.2
 
 dev_dependencies:
   flutter_test:
@@ -82,6 +83,7 @@ flutter_native_splash:
     icon_background_color: "#ffffff"
     image_dark: assets/figma.png
     icon_background_color_dark: "#121212"
+    size: "300x300"
   web: false
 
 flutter:

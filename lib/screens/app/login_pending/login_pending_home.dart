@@ -4,16 +4,16 @@ import 'package:logger/logger.dart';
 import 'package:origination/core/utils/loan_amount_formatter.dart';
 import 'package:origination/models/bureau_check/individual.dart';
 import 'package:origination/models/login_flow/login_pending_products_dto.dart';
-import 'package:origination/screens/app/login_pending/product_pending.dart';
+import 'package:origination/screens/app/login_pending/sections_data.dart';
 import 'package:origination/service/login_flow_service.dart';
 
 class LoginPendingHome extends StatefulWidget {
   const LoginPendingHome({
     super.key,
-    // required this.id
+    required this.id
   });
 
-  // int id;
+  final int id;
 
   @override
   State<LoginPendingHome> createState() => _LoginPendingHomeState();
@@ -155,7 +155,7 @@ class _LoginPendingHomeState extends State<LoginPendingHome> {
 
                           return GestureDetector(
                             onTap: () {
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => const ProductPending()));
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => SectionsData(id: widget.id)));
                             },
                             child: Container(
                               margin: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),

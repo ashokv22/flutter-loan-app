@@ -2,18 +2,26 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:origination/models/login_flow/sections/loan_application_entity.dart';
+import 'package:origination/screens/app/bureau/screens/bureau_check_list.dart';
+// import 'package:origination/screens/app/login_pending/number_advanced.dart';
 import 'package:origination/screens/app/login_pending/related_parties.dart';
 import 'package:origination/screens/app/login_pending/section_screen_empty.dart';
+import 'package:origination/screens/app/login_pending/typeahead_test.dart';
 import 'package:origination/service/login_flow_service.dart';
 
-class ProductPending extends StatefulWidget {
-  const ProductPending({super.key});
+class SectionsData extends StatefulWidget {
+  const SectionsData({
+    super.key,
+    required this.id,
+  });
+
+  final int id;
 
   @override
-  State<ProductPending> createState() => _ProductPendingState();
+  State<SectionsData> createState() => _SectionsDataState();
 }
 
-class _ProductPendingState extends State<ProductPending> {
+class _SectionsDataState extends State<SectionsData> {
 
   final loginPendingService = LoginPendingService();
   var logger = Logger();
@@ -86,8 +94,18 @@ class _ProductPendingState extends State<ProductPending> {
                           return GestureDetector(
                             onTap: () {
                               if (section.sectionName == "Applicant") {
-                                Navigator.push(context, MaterialPageRoute(builder: (context) => const RelatedParties()));
-                              } else {
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => RelatedParties(id: widget.id,)));
+                              }
+                              else if (section.sectionName == "DocumentUpload") {
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => const TypeaheadTest()));  
+                              } 
+                              else if (section.sectionName == "CheckList") {
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => BureauCheckList(id: widget.id,)));  
+                              }
+                              // else if (section.sectionName == "Declaration") {
+                              //   Navigator.push(context, MaterialPageRoute(builder: (context) => const TypeaheadTest()));  
+                              // }
+                              else {
                                 Navigator.push(context, MaterialPageRoute(builder: (context) => SectionScreenEmpty(title: title,)));
                               }
                             },

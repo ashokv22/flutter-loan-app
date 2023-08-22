@@ -122,7 +122,7 @@ class _StageLeadListState extends State<StageLeadList> {
                               ),
                             );
                           } else if (applicant.status == ApplicationStage.LOGIN_PENDING.name) {
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginPendingHome()));
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPendingHome(id: applicant.id,)));
                           } else {
                             Navigator.push(context, MaterialPageRoute(builder: (context) => EditLead(id: applicant.id, applicantId: int.parse(applicant.applicantId))));
                           }
@@ -207,7 +207,19 @@ class _StageLeadListState extends State<StageLeadList> {
                                       fontWeight: FontWeight.w600
                                     ),
                                   ),
-                                  const SizedBox(height: 20),
+                                  // const SizedBox(height: 10),
+                                  Text(
+                                    applicant.model,
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: Theme.of(context).textTheme.displayMedium!.color,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                    maxLines: 1,
+                                    softWrap: false,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  const SizedBox(height: 10),
                                   Container(
                                     decoration: ShapeDecoration(
                                       gradient: applicant.status == "LEAD" ? const LinearGradient(
