@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:origination/my_theme.dart';
+import 'package:origination/screens/app/lead/new_lead.dart';
+import 'package:origination/screens/app/lead/search_new.dart';
 import 'package:origination/screens/app/lead_dashbaord.dart';
 import 'package:origination/screens/pages/profile/profile_screen.dart';
 import 'package:origination/screens/sign_in/forgot_password.dart';
 import 'package:origination/screens/sign_in/reset_password.dart';
 import 'package:origination/screens/sign_in/sign_in.dart';
+import 'package:origination/screens/widgets/lead_bottom_bar.dart';
+// import 'package:origination/screens/widgets/bottom_bar.dart';
 import 'package:origination/service/auth_service.dart';
 import 'screens/pages/claimed_tasks.dart';
 import 'screens/pages/completed_tasks.dart';
@@ -12,7 +16,6 @@ import 'screens/pages/supervisor_table.dart';
 import 'screens/pages/application_form.dart';
 import 'screens/pages/branch_manager_table.dart';
 import 'screens/widgets/side_menu.dart';
-// import 'screens/widgets/bottom_bar.dart';
 import 'package:provider/provider.dart';
 // import 'themes.dart';
 
@@ -77,9 +80,11 @@ class _SideMenuAppState extends State<SideMenuApp> {
                 }
               },
             ),
+        // Authentication
         '/sign-in': (context) => const SignIn(),
         '/forgotPassword': (context) => const ForgotPassword(),
         '/reset-password': (context) => const ResetPassword(),
+        // Flowable
         '/application': (context) => const ApplicationForm(),
         '/branch_manager': (context) => const BranchManagerTable(),
         '/supervisor': (context) => const SupervisorTable(),
@@ -87,6 +92,9 @@ class _SideMenuAppState extends State<SideMenuApp> {
         '/completed': (context) => CompletedTasks(),
         // DCB
         '/leads/home': (context) => const LeadDashboard(),
+        '/lead/add': (context) => const NewLead(),
+        '/lead/search': (context) => SearchPage(),
+        '/profile': (context) => const ProfileScreen(),
       }
     );
   }
@@ -117,6 +125,13 @@ class _Home extends State<Home> {
         return const LeadDashboard();
       // case 1:
       //   return const LeadsList();
+      case 1:
+        return const NewLead();
+      case 2:
+        return const SearchBar();
+      case 3:
+        return const ProfileScreen();
+      // Flowable
       // case 1:
       //   return const BranchManagerTable();
       // case 2:
@@ -176,7 +191,7 @@ class _Home extends State<Home> {
             onItemClicked: _onDrawerItemClicked,
           ),
           body: _getCurrentPage(),
-          // bottomNavigationBar: const bottomNavBar(),
+          bottomNavigationBar: const LeadBottomNavigationBar(),
         );
       },
     );

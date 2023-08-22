@@ -3,7 +3,7 @@ import 'package:logger/logger.dart';
 import 'package:origination/core/utils/loan_amount_formatter.dart';
 import 'package:origination/models/summaries/dashboard_summary.dart';
 import 'package:origination/screens/app/lead/stage_leads_list.dart';
-import 'package:origination/screens/widgets/products.dart';
+// import 'package:origination/screens/widgets/products.dart';
 import 'package:origination/service/loan_application_service.dart';
 
 class LeadDashboard extends StatefulWidget {
@@ -192,24 +192,24 @@ class _LeadDashboardState extends State<LeadDashboard> {
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          showModalBottomSheet(
-            context: context,
-            builder: (BuildContext context) {
-              return const Products();
-            },
-          );
-        },
-        backgroundColor: const Color.fromARGB(255, 3, 71, 244),
-        elevation: 5.0,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-        child: const Icon(
-          Icons.add,
-          color: Colors.white,
-        ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () {
+      //     showModalBottomSheet(
+      //       context: context,
+      //       builder: (BuildContext context) {
+      //         return const Products();
+      //       },
+      //     );
+      //   },
+      //   backgroundColor: const Color.fromARGB(255, 3, 71, 244),
+      //   elevation: 5.0,
+      //   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+      //   child: const Icon(
+      //     Icons.add,
+      //     color: Colors.white,
+      //   ),
+      // ),
+      // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }
