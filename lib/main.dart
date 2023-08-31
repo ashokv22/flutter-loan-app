@@ -128,7 +128,7 @@ class _Home extends State<Home> {
       case 1:
         return const NewLead();
       case 2:
-        return const SearchBar();
+        return const SearchPage();
       case 3:
         return const ProfileScreen();
       // Flowable
@@ -151,47 +151,62 @@ class _Home extends State<Home> {
     return Builder(
       builder: (BuildContext context) {
         return Scaffold(
-          appBar: AppBar(
-            leading: Builder(
-              builder: (context) {
-                return IconButton(
-                  onPressed: () {
-                    Scaffold.of(context).openDrawer();
-                  },
-                  icon: Icon(Icons.menu, color: Theme.of(context).iconTheme.color),
-                );
-              }
-            ),
-            title:  Text('DCB', style: TextStyle(
-              fontSize: 20,
-              color: Theme.of(context).textTheme.bodyLarge!.color
-            ),),
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-            actions: [
-                IconButton(
-                  onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => const ProfileScreen()));
-                  },
-                  icon: ClipOval(
-                    child: Padding(
-                      padding: const EdgeInsets.all(0),
-                      child: Image(
-                        width: 30,
-                        image: Image.asset('assets/images/female-04.jpg').image, 
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                ),
-            ],
-          ),
+          // appBar: AppBar(
+          //   leading: Builder(
+          //     builder: (context) {
+          //       return IconButton(
+          //         onPressed: () {
+          //           Scaffold.of(context).openDrawer();
+          //         },
+          //         icon: Icon(Icons.menu, color: Theme.of(context).iconTheme.color),
+          //       );
+          //     }
+          //   ),
+          //   title:  Text('DCB', style: TextStyle(
+          //     fontSize: 20,
+          //     color: Theme.of(context).textTheme.bodyLarge!.color
+          //   ),),
+          //   backgroundColor: Colors.transparent,
+          //   elevation: 0,
+          //   actions: [
+          //       IconButton(
+          //         onPressed: () {
+          //           Navigator.push(context, MaterialPageRoute(builder: (context) => const ProfileScreen()));
+          //         },
+          //         icon: ClipOval(
+          //           child: Padding(
+          //             padding: const EdgeInsets.all(0),
+          //             child: Image(
+          //               width: 30,
+          //               image: Image.asset('assets/images/female-04.jpg').image, 
+          //               fit: BoxFit.cover,
+          //             ),
+          //           ),
+          //         ),
+          //       ),
+          //   ],
+          // ),
           drawer: SideMenu(
             selectedItemIndex: _selectedItemIndex,
             onItemClicked: _onDrawerItemClicked,
           ),
-          body: _getCurrentPage(),
-          bottomNavigationBar: const LeadBottomNavigationBar(),
+          body: IndexedStack(
+            index: _selectedItemIndex,
+            children: const <Widget>[
+              LeadDashboard(),
+              NewLead(),
+              SearchPage(),
+              ProfileScreen(),
+            ],
+          ),
+          bottomNavigationBar: LeadBottomNavigationBar(
+            selectedIndex: _selectedItemIndex,
+            onItemClicked: (index) {
+              setState(() {
+                _selectedItemIndex = index;
+              });
+            }
+          ),
         );
       },
     );

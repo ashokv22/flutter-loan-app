@@ -4,6 +4,7 @@ import 'package:origination/my_theme.dart';
 import 'package:origination/screens/pages/profile/profile_menu_widget.dart';
 import 'package:get/get.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
+import 'package:origination/screens/sign_in/sign_in.dart';
 import 'package:origination/screens/pages/profile/theme_selection_dialog.dart';
 import 'package:origination/screens/pages/profile/update_profile_screen.dart';
 import 'package:origination/service/auth_service.dart';
@@ -131,7 +132,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                           confirm: Expanded(
                             child: ElevatedButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                AuthService.signOut().then((_) => 
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => const SignIn()),
+                                  )
+                                );
+                              },
                               style: ElevatedButton.styleFrom(backgroundColor: Colors.redAccent, side: BorderSide.none),
                               child: const Text("Yes"),
                             ),

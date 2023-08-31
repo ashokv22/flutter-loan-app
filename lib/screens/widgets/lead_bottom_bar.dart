@@ -3,8 +3,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 
 class LeadBottomNavigationBar extends StatefulWidget {
+  final Function(int) onItemClicked;
+  final int selectedIndex;
   const LeadBottomNavigationBar({
     super.key,
+    required this.selectedIndex,
+    required this.onItemClicked,
   });
 
   @override
@@ -12,19 +16,13 @@ class LeadBottomNavigationBar extends StatefulWidget {
 }
 
 class _LeadBottomNavigationBarState extends State<LeadBottomNavigationBar> {
-  int _selectedIndex = 0;
-  final List<String> routeNames = [
-    '/lead/home',
-    '/lead/add',
-    '/lead/search',
-    '/profile',
-  ];
 
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
       type: BottomNavigationBarType.fixed,
-      iconSize: 30,
+      iconSize: 28,
+      elevation: 0,
       showSelectedLabels: false,
       showUnselectedLabels: false,
       selectedIconTheme: const IconThemeData(size: 35),
@@ -44,12 +42,14 @@ class _LeadBottomNavigationBarState extends State<LeadBottomNavigationBar> {
         ),
         BottomNavigationBarItem(
           icon: Container(
-            decoration: _selectedIndex == 3 ? BoxDecoration(
+            decoration: BoxDecoration(
               shape: BoxShape.circle,
-              border: Border.all(
-                width: 1.0, // Border width
-              ),
-            ): null,
+              border: widget.selectedIndex == 3 ? Border.all(
+                width: 2.0,
+                color: Colors.blue
+              )
+              : Border.all(width: 0)
+            ),
             child: ClipOval(
               child: Padding(
                 padding: const EdgeInsets.all(0),
@@ -64,22 +64,8 @@ class _LeadBottomNavigationBarState extends State<LeadBottomNavigationBar> {
           label: "Profile",
         ),
       ],
-      currentIndex: _selectedIndex, //New
-      onTap: _onItemTapped,
+      currentIndex: widget.selectedIndex,
+      onTap: widget.onItemClicked,
     );
-  }
-
-  void _onItemTapped(int index) {
-    String routeName = routeNames[index];
-
-    // Navigate to the selected route
-    Navigator.pushNamed(context, routeName).then((value) {
-      // After navigating, explicitly set _selectedIndex to 0 if on the home page
-      if (routeName == '/lead/home') {
-        setState(() {
-          _selectedIndex = 0;
-        });
-      }
-    });
   }
 }

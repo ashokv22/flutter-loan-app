@@ -8,7 +8,7 @@ import 'package:logger/logger.dart';
 import 'package:origination/models/stage.dart';
 import 'package:origination/models/summaries/leads_list_dto.dart';
 import 'package:origination/screens/app/lead/edit_lead_application.dart';
-import 'package:origination/screens/app/lead/search_lead.dart';
+import 'package:origination/screens/app/lead/search_new.dart';
 import 'package:origination/screens/app/login_pending/login_pending_home.dart';
 import 'package:origination/service/loan_application_service.dart';
 
@@ -47,11 +47,7 @@ class _StageLeadListState extends State<StageLeadList> {
         actions: [
           IconButton(
             onPressed: () {
-              showSearch(
-                context: context,
-                // delegate to customize the search bar
-                delegate: SearchLead()
-              );
+              const SearchPage();
             },
             icon: const Icon(Icons.search_rounded))
         ],

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
+import 'package:origination/core/widgets/number_input.dart';
 import 'package:origination/core/widgets/text_input.dart';
 import 'package:origination/core/widgets/reference_code.dart';
 import 'package:origination/core/widgets/mobile_input.dart';
@@ -210,6 +211,9 @@ class _NewLeadState extends State<NewLead> {
     } 
     else if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'Phone') {
       return MobileInput(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field),);
+    }
+    else if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'Number') {
+      return NumberInput(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field),);
     }
     return const SizedBox();
   }

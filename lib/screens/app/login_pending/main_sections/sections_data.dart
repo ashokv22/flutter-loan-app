@@ -4,8 +4,8 @@ import 'package:logger/logger.dart';
 import 'package:origination/models/login_flow/sections/loan_application_entity.dart';
 import 'package:origination/screens/app/bureau/screens/bureau_check_list.dart';
 // import 'package:origination/screens/app/login_pending/number_advanced.dart';
-import 'package:origination/screens/app/login_pending/related_parties.dart';
-import 'package:origination/screens/app/login_pending/section_screen_empty.dart';
+import 'package:origination/screens/app/login_pending/related_parties_sections/related_parties.dart';
+import 'package:origination/screens/app/login_pending/main_sections/main_section_screen.dart';
 import 'package:origination/screens/app/login_pending/typeahead_test.dart';
 import 'package:origination/service/login_flow_service.dart';
 
@@ -57,7 +57,7 @@ class _SectionsDataState extends State<SectionsData> {
           children: [
             Expanded(
               child: FutureBuilder(
-                future: loginPendingService.getSectionMaster("MainSection"),
+                future: loginPendingService.getSectionMaster(widget.id, "All"),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const SizedBox(
@@ -136,9 +136,14 @@ class _SectionsDataState extends State<SectionsData> {
                                       fontWeight: FontWeight.w600,
                                     ),
                                   ),
-                                  Icon(
-                                    CupertinoIcons.chevron_right_circle_fill,
-                                    color: Theme.of(context).iconTheme.color,)
+                                  if (section.status == "COMPLETED")
+                                    const Icon(
+                                      CupertinoIcons.checkmark_alt_circle_fill,
+                                      color: Color.fromARGB(255, 0, 152, 58),)
+                                  else
+                                    Icon(
+                                      CupertinoIcons.chevron_right_circle_fill,
+                                      color: Theme.of(context).iconTheme.color,)
                                 ],
                               ),
                             ),

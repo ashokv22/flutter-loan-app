@@ -64,30 +64,30 @@ class SideMenu extends StatelessWidget {
                 onItemClicked(0);
               },
             ),
-            // ListTile(
-            //   leading: const Icon(CupertinoIcons.add),
-            //   title: const Text('New Lead'),
-            //   selected: selectedItemIndex == 1,
-            //   onTap: () {
-            //     onItemClicked(1);
-            //   },
-            // ),
-            // ListTile(
-            //   leading: const Icon(CupertinoIcons.search),
-            //   title: const Text('Search Lead'),
-            //   selected: selectedItemIndex == 2,
-            //   onTap: () {
-            //     onItemClicked(2);
-            //   },
-            // ),
-            // ListTile(
-            //   leading: const Icon(CupertinoIcons.profile_circled),
-            //   title: const Text('Profile'),
-            //   selected: selectedItemIndex == 3,
-            //   onTap: () {
-            //     onItemClicked(3);
-            //   },
-            // ),
+            ListTile(
+              leading: const Icon(CupertinoIcons.add),
+              title: const Text('New Lead'),
+              selected: selectedItemIndex == 1,
+              onTap: () {
+                onItemClicked(1);
+              },
+            ),
+            ListTile(
+              leading: const Icon(CupertinoIcons.search),
+              title: const Text('Search Lead'),
+              selected: selectedItemIndex == 2,
+              onTap: () {
+                onItemClicked(2);
+              },
+            ),
+            ListTile(
+              leading: const Icon(CupertinoIcons.profile_circled),
+              title: const Text('Profile'),
+              selected: selectedItemIndex == 3,
+              onTap: () {
+                onItemClicked(3);
+              },
+            ),
             // ListTile(
             //   title: const Text('Application',),
             //   selected: selectedItemIndex == 2,

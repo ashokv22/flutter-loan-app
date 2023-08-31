@@ -4,7 +4,7 @@ import 'package:logger/logger.dart';
 import 'package:origination/core/utils/loan_amount_formatter.dart';
 import 'package:origination/models/bureau_check/individual.dart';
 import 'package:origination/models/login_flow/login_pending_products_dto.dart';
-import 'package:origination/screens/app/login_pending/sections_data.dart';
+import 'package:origination/screens/app/login_pending/main_sections/sections_data.dart';
 import 'package:origination/service/login_flow_service.dart';
 
 class LoginPendingHome extends StatefulWidget {

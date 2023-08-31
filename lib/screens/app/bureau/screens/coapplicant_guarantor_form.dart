@@ -9,7 +9,6 @@ import 'package:origination/core/widgets/section_title.dart';
 import 'package:origination/core/widgets/text_input.dart';
 import 'package:origination/models/applicant_dto.dart';
 import 'package:origination/models/bureau_check/individual.dart';
-import 'package:origination/screens/app/bureau/screens/bureau_check_list.dart';
 import 'package:origination/service/bureau_check_service.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 
@@ -176,9 +175,9 @@ class _CoApplicantGuarantorState extends State<CoApplicantGuarantor> {
                     const SizedBox(height: 20),
                     Row(
                       children: [
-                        Expanded(child: NumberInput(label: "Internal Ref No", controller: internalRefNo)),
+                        Expanded(child: NumberInput(label: "Internal Ref No", controller: internalRefNo, onChanged: (newValue) {})),
                         const SizedBox(width: 10,),
-                        Expanded(child: NumberInput(label: "Loan Amount", controller: loanAMount)),
+                        Expanded(child: NumberInput(label: "Loan Amount", controller: loanAMount, onChanged: (newValue) {})),
                       ],
                     ),
                     const SizedBox(height: 20),
@@ -218,7 +217,7 @@ class _CoApplicantGuarantorState extends State<CoApplicantGuarantor> {
                     const SizedBox(height: 20),
                     Row(
                       children: [
-                        Expanded(child: NumberInput(label: "Pincode", controller: pincode)),
+                        Expanded(child: NumberInput(label: "Pincode", controller: pincode, onChanged: (newValue) {})),
                         const SizedBox(width: 10,),
                         Expanded(child: TextInput(label: "Landmark", controller: landMark, onChanged: (newValue) {})),
                       ],

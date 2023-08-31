@@ -39,8 +39,8 @@ class LoginPendingService {
     }
   }
 
-  Future<LoanApplicationEntity> getSectionMaster(String section) async {
-    String endpoint = "api/application/loanApplicationEntity/entityTypeAndEntitySubType?entityType=Sections&entitySubType=$section";
+  Future<LoanApplicationEntity> getSectionMaster(int applicantId, String section) async {
+    String endpoint = "api/application/loanApplicationEntity/$applicantId/section?entityType=Application&entitySubType=$section";
     try {
       final response = await authInterceptor.get(Uri.parse(endpoint));
       if (response.statusCode == 200) {

@@ -57,14 +57,16 @@ class _TypeAheadState extends State<TypeAhead> {
             onChanged: (value) => widget.onChanged(value),
             decoration: InputDecoration(
               prefixIcon: const Icon(CupertinoIcons.search, size: 18),
-              suffixIcon: IconButton(
-                onPressed: () {
-                  setState(() {
-                    widget.controller.clear();
-                  });
-                },
-                icon: const Icon(CupertinoIcons.clear_circled, size: 18),
-              ),
+              suffixIcon: widget.controller.text.isNotEmpty
+              ? IconButton(
+                  onPressed: () {
+                    setState(() {
+                      widget.controller.clear();
+                    });
+                  },
+                  icon: const Icon(CupertinoIcons.clear, size: 18),
+                )
+              : null,
               labelText: widget.label,
               border: const OutlineInputBorder(),
               isDense: true,

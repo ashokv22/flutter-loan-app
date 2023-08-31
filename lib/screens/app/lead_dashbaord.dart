@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:heroicons/heroicons.dart';
 import 'package:logger/logger.dart';
 import 'package:origination/core/utils/loan_amount_formatter.dart';
 import 'package:origination/models/summaries/dashboard_summary.dart';
 import 'package:origination/screens/app/lead/stage_leads_list.dart';
+import 'package:origination/service/auth_service.dart';
 // import 'package:origination/screens/widgets/products.dart';
 import 'package:origination/service/loan_application_service.dart';
 
@@ -18,6 +20,8 @@ class _LeadDashboardState extends State<LeadDashboard> {
   final applicationService = LoanApplicationService();
   var logger = Logger();
   late Future<List<DashBoardSummaryDTO>> leadsSummaryFuture;
+  final AuthService athService = AuthService();
+  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -35,6 +39,7 @@ class _LeadDashboardState extends State<LeadDashboard> {
   Widget build(BuildContext context) {
     final isDarkTheme = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
+      key: _scaffoldKey,
       body: RefreshIndicator(
         onRefresh: refreshLeadsSummary,
         child: Container(
@@ -56,31 +61,52 @@ class _LeadDashboardState extends State<LeadDashboard> {
           child: Column(
             children: [
               Container(
+                padding: const EdgeInsets.only(top: 20),
                 color: Colors.black,
-                child: const Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.all(16.0),
-                      child: Text(
-                        'Hello Ashok\nDCB00123',
-                        style: TextStyle(
-                          color: Colors.white, 
-                          fontSize: 20),
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.all(16.0),
-                      child: Text(
-                        textAlign: TextAlign.right,
-                        'Jayanagar Branch\nKarnataka',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
+                child: FutureBuilder(
+                  future: athService.getLoggedUser(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const LinearProgressIndicator();
+                    }
+                    var userInfo = snapshot.data ?? {};
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            Builder(
+                              builder: (context) {
+                                return IconButton(
+                                  onPressed: () {
+                                   Scaffold.of(context).openDrawer();
+                                  },
+                                  icon: const HeroIcon(HeroIcons.bars3CenterLeft, color: Colors.white),
+                                );
+                              }
+                            ),
+                            Text(
+                              "Hello ${userInfo['name']}\n${userInfo['branchData']['branchCode']}",
+                              style: const TextStyle(
+                                color: Colors.white, 
+                                fontSize: 20),
+                            ),
+                          ],
                         ),
-                      ),
-                    ),
-                  ],
+                        Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Text(
+                            textAlign: TextAlign.right,
+                            "${userInfo['branchData']['branch']} Branch\n${userInfo['branchData']['city']}",
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                            ),
+                          ),
+                        ),
+                      ],
+                    );
+                  }
                 ),
               ),
                   Expanded(

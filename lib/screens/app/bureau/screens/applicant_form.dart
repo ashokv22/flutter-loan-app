@@ -151,9 +151,9 @@ void onChange(String value, TextEditingController controller) {
                     const SizedBox(height: 20),
                     Row(
                       children: [
-                        Expanded(child: NumberInput(label: "Internal Ref No", controller: internalRefNo)),
+                        Expanded(child: NumberInput(label: "Internal Ref No", controller: internalRefNo, onChanged: (newValue) {})),
                         const SizedBox(width: 10,),
-                        Expanded(child: NumberInput(label: "Loan Amount", controller: loanAMount)),
+                        Expanded(child: NumberInput(label: "Loan Amount", controller: loanAMount, onChanged: (newValue) {})),
                       ],
                     ),
                     const SizedBox(height: 20),
@@ -193,7 +193,7 @@ void onChange(String value, TextEditingController controller) {
                     const SizedBox(height: 20),
                     Row(
                       children: [
-                        Expanded(child: NumberInput(label: "Pincode", controller: pincode)),
+                        Expanded(child: NumberInput(label: "Pincode", controller: pincode, onChanged: (newValue) {},)),
                         const SizedBox(width: 10,),
                         Expanded(child: TextInput(label: "Landmark", controller: landMark, onChanged: (newValue) {})),
                       ],

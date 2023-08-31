@@ -31,12 +31,12 @@ class _SearchPageState extends State<SearchPage> {
     return Scaffold(
       appBar: AppBar(
           iconTheme: Theme.of(context).iconTheme,
-          leading: IconButton(
-            icon: const Icon(
-              CupertinoIcons.arrow_left,
-            ),
-            onPressed: () => Navigator.of(context).pop(),
-          ),
+          // leading: IconButton(
+          //   icon: const Icon(
+          //     CupertinoIcons.arrow_left,
+          //   ),
+          //   onPressed: () => Navigator.of(context).pop(),
+          // ),
           title: Center(
             child: CupertinoSearchTextField(
               suffixIcon: const Icon(CupertinoIcons.clear),
@@ -82,7 +82,13 @@ class _SearchPageState extends State<SearchPage> {
               itemBuilder: (context, index) {
                 var result = searchResults[index];
                 return ListTile(
-                  title: Text(result.name!), // Display the appropriate property
+                  title: Text(result.name!),
+                  onTap: () {
+                    setState(() {
+                      _controller.text = result.name!;
+                      searchResults.clear();
+                    });
+                  }, // Display the appropriate property
                 );
               },
                   ),
