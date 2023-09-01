@@ -5,7 +5,7 @@ import 'package:origination/models/login_flow/sections/loan_application_entity.d
 import 'package:origination/screens/app/bureau/screens/bureau_check_list.dart';
 // import 'package:origination/screens/app/login_pending/number_advanced.dart';
 import 'package:origination/screens/app/login_pending/related_parties_sections/related_parties.dart';
-import 'package:origination/screens/app/login_pending/main_sections/main_section_screen.dart';
+import 'package:origination/screens/app/login_pending/main_sections/section_data.dart';
 import 'package:origination/screens/app/login_pending/typeahead_test.dart';
 import 'package:origination/service/login_flow_service.dart';
 
@@ -106,7 +106,7 @@ class _SectionsDataState extends State<SectionsData> {
                               //   Navigator.push(context, MaterialPageRoute(builder: (context) => const TypeaheadTest()));  
                               // }
                               else {
-                                Navigator.push(context, MaterialPageRoute(builder: (context) => SectionScreenEmpty(title: title,)));
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => SectionScreenEmpty(id: widget.id, title: title,)));
                               }
                             },
                             child: Container(

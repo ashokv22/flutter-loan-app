@@ -5,7 +5,7 @@ import 'package:logger/logger.dart';
 import 'package:origination/core/widgets/custom/related_parties_dropdown.dart';
 import 'package:origination/models/bureau_check/bc_check_list_dto.dart';
 import 'package:origination/models/login_flow/sections/loan_application_entity.dart';
-import 'package:origination/screens/app/login_pending/main_sections/main_section_screen.dart';
+import 'package:origination/screens/app/login_pending/main_sections/section_data.dart';
 import 'package:origination/service/bureau_check_service.dart';
 import 'package:origination/service/login_flow_service.dart';
 
@@ -137,7 +137,7 @@ class _RelatedPartiesState extends State<RelatedParties> {
                 LoanSection section = entity.loanSections[index];
                 return GestureDetector(
                   onTap: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => SectionScreenEmpty(title: section.sectionName,)));
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => SectionScreenEmpty(id: widget.id, title: section.sectionName,)));
                   },
                 child: Container(
                   margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),

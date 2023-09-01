@@ -10,14 +10,16 @@ import 'package:origination/core/widgets/section_title.dart';
 import 'package:origination/core/widgets/text_input.dart';
 import 'package:origination/models/entity_configuration.dart';
 import 'package:origination/service/loan_application_service.dart';
-// import 'package:origination/service/login_flow_service.dart';
+import 'package:origination/service/login_flow_service.dart';
 
 class SectionScreenEmpty extends StatefulWidget {
   const SectionScreenEmpty({
     super.key,
+    required this.id,
     required this.title,
   });
 
+  final int id;
   final String title;
 
   @override
@@ -25,7 +27,7 @@ class SectionScreenEmpty extends StatefulWidget {
 }
 
 class _SectionScreenEmptyState extends State<SectionScreenEmpty> {
-  // final loginPendingService = LoginPendingService();
+  final loginPendingService = LoginPendingService();
   final loanApplicationService = LoanApplicationService();
   late Future<Section> leadApplicationFuture;
   var logger = Logger();
@@ -35,7 +37,7 @@ class _SectionScreenEmptyState extends State<SectionScreenEmpty> {
   @override
   void initState() {
     super.initState();
-    leadApplicationFuture = loanApplicationService.getSection(widget.title);
+    leadApplicationFuture = loginPendingService.getMainSectionDataForApplicantAndSection(widget.id, widget.title);
   }
 
   @override
@@ -113,13 +115,14 @@ class _SectionScreenEmptyState extends State<SectionScreenEmpty> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  // SectionTitle(title: section.displayTitle ?? 'Section'),
+                                  SectionTitle(title: section.displayTitle!.isEmpty ? 'Section' : section.displayTitle!),
                                   if (section.subSections != null)
                                     for (var subSection in section.subSections!)
                                       Column(
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
-                                          SectionTitle(title: subSection.displayTitle ?? 'Section'),
+                                          if (subSection.displayTitle! != "Main Section")
+                                            SectionTitle(title: subSection.displayTitle!.isEmpty ? 'Main Section' : subSection.displayTitle!),
                                           if (subSection.fields != null)
                                             for (var field in subSection.fields!)
                                               Column(

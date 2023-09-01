@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:origination/core/widgets/switcher_input.dart';
 import 'package:origination/core/widgets/type_ahead.dart';
 
 class TypeaheadTest extends StatefulWidget {
@@ -13,6 +14,8 @@ class _TypeaheadTestState extends State<TypeaheadTest> {
   TextEditingController manufacturer = TextEditingController();
   TextEditingController model = TextEditingController();
   String selectedManufacturer = '';
+  bool iosV = false;
+  TextEditingController test = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +62,12 @@ class _TypeaheadTestState extends State<TypeaheadTest> {
                     referenceCode: "manufacturer"
                   ),
                   const SizedBox(height: 10,),
-                  TypeAhead(label: "Model", controller: TextEditingController(), onChanged: (newValue) => (){}, referenceCode: selectedManufacturer)
+                  TypeAhead(label: "Model", controller: TextEditingController(), onChanged: (newValue) => (){}, referenceCode: selectedManufacturer),
+                  SwitcherInput(label: "Switcher", controller: test, onChanged: (newValue) => setState(() {
+                    test.text = newValue;
+                  }), trueLabel: "Father", falseLabel: "Spouse"),
+                  const SizedBox(height: 20),
+                  Text("Value:${test.text}", style: Theme.of(context).textTheme.bodyLarge,),
                 ],
               ),
             ),
