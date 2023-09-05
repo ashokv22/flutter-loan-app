@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 
 class LeadBottomNavigationBar extends StatefulWidget {
   final Function(int) onItemClicked;
@@ -19,53 +18,79 @@ class _LeadBottomNavigationBarState extends State<LeadBottomNavigationBar> {
 
   @override
   Widget build(BuildContext context) {
-    return BottomNavigationBar(
-      type: BottomNavigationBarType.fixed,
-      iconSize: 28,
-      elevation: 0,
-      showSelectedLabels: false,
-      showUnselectedLabels: false,
-      selectedIconTheme: const IconThemeData(size: 35),
-      items: <BottomNavigationBarItem>[
-        const BottomNavigationBarItem(
-          activeIcon: Icon(Icons.home_rounded),
-          icon: Icon(LineAwesomeIcons.home),
-          label: "Home"
-        ),
-        const BottomNavigationBarItem(
-          icon: Icon(CupertinoIcons.add),
-          label: "Add"
-        ),
-        const BottomNavigationBarItem(
-          icon: Icon(CupertinoIcons.search),
-          label: "Search"
-        ),
-        BottomNavigationBarItem(
-          icon: Container(
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: widget.selectedIndex == 3 ? Border.all(
-                width: 2.0,
-                color: Colors.blue
-              )
-              : Border.all(width: 0)
-            ),
-            child: ClipOval(
-              child: Padding(
-                padding: const EdgeInsets.all(0),
-                child: Image(
-                  width: 30,
-                  image: Image.asset('assets/images/female-04.jpg').image, 
-                  fit: BoxFit.cover,
-                ),
-              ),
+    return Container(
+      decoration: BoxDecoration(
+        border: Border(
+          top: BorderSide(
+            color: Colors.grey.withOpacity(0.5),
+            width: 0.5
+          ),
+        )
+      ),
+      child: Row(
+        children: <Widget>[
+          buildNavItem(Icons.home_rounded, "Home", 0),
+          buildNavItem(CupertinoIcons.add, "Add", 1),
+          buildNavItem(CupertinoIcons.search, "Search", 2),
+          buildNavItem(
+            'assets/images/female-04.jpg',
+            "Profile",
+            3,
+            isImage: true,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget buildNavItem(dynamic icon, String label, int index,
+    {bool isImage = false}) {
+      Color primary = const Color.fromARGB(255, 3, 71, 244);
+      final selected = widget.selectedIndex == index;
+      Color iconColor = selected ? primary : Colors.black;
+      if (Theme.of(context).brightness == Brightness.dark && !selected) {
+        iconColor = Colors.white;
+      }
+      return Expanded(
+        child: GestureDetector(
+          onTap: () => widget.onItemClicked(index),
+          child: Ink(
+            height: 50,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                if (isImage)
+                  Container(
+                    width: 30,
+                    height: 30,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: selected
+                          ? Border.all(
+                              width: 2.0,
+                              color: primary,
+                            )
+                          : null,
+                    ),
+                    child: ClipOval(
+                      child: Image.asset(
+                        icon,
+                        width: 30,
+                        height: 30,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                if (!isImage)
+                  Icon(
+                    icon,
+                    size: 28,
+                    color: iconColor,
+                  ),
+              ],
             ),
           ),
-          label: "Profile",
         ),
-      ],
-      currentIndex: widget.selectedIndex,
-      onTap: widget.onItemClicked,
-    );
+      );
   }
 }

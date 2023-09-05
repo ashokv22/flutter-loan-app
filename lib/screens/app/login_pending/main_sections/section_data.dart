@@ -132,6 +132,15 @@ class _SectionScreenEmptyState extends State<SectionScreenEmpty> {
                                                   const SizedBox(height: 16.0),
                                                 ]
                                               ),
+                                          if (subSection.isRepeatable == true)
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text("Add", style: Theme.of(context).textTheme.bodyLarge,),
+                                              // const Spacer(),
+                                              IconButton(onPressed: () {}, icon: const Icon(Icons.add))
+                                            ],
+                                          ),
                                           const SizedBox(height: 20.0)
                                         ],
                                       ),

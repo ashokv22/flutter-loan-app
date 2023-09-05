@@ -30,7 +30,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(onPressed: () => Navigator.pop(context), icon: const Icon(CupertinoIcons.arrow_left)),
-        title: Center(child: Text("Profile", style: Theme.of(context).textTheme.headlineSmall)),
+        title: Center(child: Text("Profile", style: Theme.of(context).textTheme.titleLarge)),
         actions: [IconButton(onPressed: () {}, icon: Icon(isDark ? CupertinoIcons.moon : CupertinoIcons.sun_max_fill))],
       ),
       body: SingleChildScrollView(
@@ -78,12 +78,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   const SizedBox(height: 10),
                   Text("Hi $name", 
                     style: TextStyle(
-                      fontSize: 34, 
+                      fontSize: 26, 
                       color: Theme.of(context).textTheme.displaySmall!.color,
-                      fontWeight: FontWeight.w600
+                      fontWeight: FontWeight.w400
                     )
                   ),
-                  Text(email, style: Theme.of(context).textTheme.headlineSmall),
+                  Text(email, style: Theme.of(context).textTheme.bodyLarge),
                   // const SizedBox(height: 20),
 
                   // /// -- BUTTON
@@ -123,29 +123,35 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       textColor: Colors.red,
                       endIcon: false,
                       onPress: () {
-                        Get.defaultDialog(
-                          title: "LOGOUT",
-                          titleStyle: const TextStyle(fontSize: 20),
-                          content: const Padding(
-                            padding: EdgeInsets.symmetric(vertical: 15.0),
-                            child: Text("Are you sure, you want to Logout?"),
-                          ),
-                          confirm: Expanded(
-                            child: ElevatedButton(
-                              onPressed: () {
-                                AuthService.signOut().then((_) => 
-                                  Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(builder: (context) => const SignIn()),
-                                  )
-                                );
-                              },
-                              style: ElevatedButton.styleFrom(backgroundColor: Colors.redAccent, side: BorderSide.none),
-                              child: const Text("Yes"),
-                            ),
-                          ),
-                          cancel: OutlinedButton(onPressed: () => Get.back(), child: const Text("No")),
+                        AuthService.signOut().then((_) => 
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(builder: (context) => const SignIn()),
+                          )
                         );
+                        // Get.defaultDialog(
+                        //   title: "LOGOUT",
+                        //   titleStyle: const TextStyle(fontSize: 20),
+                        //   content: const Padding(
+                        //     padding: EdgeInsets.symmetric(vertical: 15.0),
+                        //     child: Text("Are you sure, you want to Logout?"),
+                        //   ),
+                        //   confirm: Expanded(
+                        //     child: ElevatedButton(
+                        //       onPressed: () {
+                        //         AuthService.signOut().then((_) => 
+                        //           Navigator.pushReplacement(
+                        //             context,
+                        //             MaterialPageRoute(builder: (context) => const SignIn()),
+                        //           )
+                        //         );
+                        //       },
+                        //       style: ElevatedButton.styleFrom(backgroundColor: Colors.redAccent, side: BorderSide.none),
+                        //       child: const Text("Yes"),
+                        //     ),
+                        //   ),
+                        //   cancel: OutlinedButton(onPressed: () => Get.back(), child: const Text("No")),
+                        // );
                       }),
                 ],
               );

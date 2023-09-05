@@ -27,7 +27,6 @@ class SignInServiceImpl implements SignInService {
       'userName': userName,
       'password': password,
     });
-
     final response = await http.post(url, headers: headers, body: body);
     if (response.statusCode == 200) {
       final accessToken = response.headers['x-auth-token'];

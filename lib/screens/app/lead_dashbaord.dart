@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:heroicons/heroicons.dart';
 import 'package:logger/logger.dart';
 import 'package:origination/core/utils/loan_amount_formatter.dart';
 import 'package:origination/models/summaries/dashboard_summary.dart';
@@ -73,25 +72,14 @@ class _LeadDashboardState extends State<LeadDashboard> {
                     return Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Row(
-                          children: [
-                            Builder(
-                              builder: (context) {
-                                return IconButton(
-                                  onPressed: () {
-                                   Scaffold.of(context).openDrawer();
-                                  },
-                                  icon: const HeroIcon(HeroIcons.bars3CenterLeft, color: Colors.white),
-                                );
-                              }
-                            ),
-                            Text(
-                              "Hello ${userInfo['name']}\n${userInfo['branchData']['branchCode']}",
-                              style: const TextStyle(
-                                color: Colors.white, 
-                                fontSize: 20),
-                            ),
-                          ],
+                        Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Text(
+                            "Hello ${userInfo['name']}\n${userInfo['branchData']['branchCode']}",
+                            style: const TextStyle(
+                              color: Colors.white, 
+                              fontSize: 20),
+                          ),
                         ),
                         Padding(
                           padding: const EdgeInsets.all(16.0),
