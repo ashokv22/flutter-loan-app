@@ -59,6 +59,8 @@ class FieldUiProperties {
   String? valueKey;
   String? cssClassName;
   String? patternForValidation;
+  String? trueLabel;
+  String? falseLabel;
 
   FieldUiProperties({
     this.id,
@@ -68,6 +70,8 @@ class FieldUiProperties {
     this.valueKey,
     this.cssClassName,
     this.patternForValidation,
+    this.trueLabel,
+    this.falseLabel,
   });
 
   factory FieldUiProperties.fromJson(Map<String, dynamic> json) =>

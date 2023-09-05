@@ -61,6 +61,8 @@ FieldUiProperties _$FieldUiPropertiesFromJson(Map<String, dynamic> json) =>
       valueKey: json['valueKey'] as String?,
       cssClassName: json['cssClassName'] as String?,
       patternForValidation: json['patternForValidation'] as String?,
+      trueLabel: json['trueLabel'] as String?,
+      falseLabel: json['falseLabel'] as String?,
     );
 
 Map<String, dynamic> _$FieldUiPropertiesToJson(FieldUiProperties instance) =>
@@ -72,6 +74,8 @@ Map<String, dynamic> _$FieldUiPropertiesToJson(FieldUiProperties instance) =>
       'valueKey': instance.valueKey,
       'cssClassName': instance.cssClassName,
       'patternForValidation': instance.patternForValidation,
+      'trueLabel': instance.trueLabel,
+      'falseLabel': instance.falseLabel,
     };
 
 FieldMeta _$FieldMetaFromJson(Map<String, dynamic> json) => FieldMeta(

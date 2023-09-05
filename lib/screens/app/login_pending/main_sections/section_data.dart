@@ -8,6 +8,7 @@ import 'package:origination/core/widgets/number_input.dart';
 import 'package:origination/core/widgets/reference_code.dart';
 import 'package:origination/core/widgets/section_title.dart';
 import 'package:origination/core/widgets/text_input.dart';
+import 'package:origination/core/widgets/switcher_input.dart';
 import 'package:origination/models/entity_configuration.dart';
 import 'package:origination/service/loan_application_service.dart';
 import 'package:origination/service/login_flow_service.dart';
@@ -212,6 +213,10 @@ class _SectionScreenEmptyState extends State<SectionScreenEmpty> {
     } 
     else if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'Phone') {
       return MobileInput(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field),);
+    }
+    else if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'Switcher') {
+      return SwitcherInput(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field),
+        trueLabel: "Father", falseLabel: "Spouse");
     }
     return const SizedBox();
   }
