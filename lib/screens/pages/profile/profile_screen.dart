@@ -1,8 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:origination/my_theme.dart';
 import 'package:origination/screens/pages/profile/profile_menu_widget.dart';
-import 'package:get/get.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:origination/screens/sign_in/sign_in.dart';
 import 'package:origination/screens/pages/profile/theme_selection_dialog.dart';
@@ -26,12 +24,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var isDark = MediaQuery.of(context).platformBrightness == Brightness.dark;
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(onPressed: () => Navigator.pop(context), icon: const Icon(CupertinoIcons.arrow_left)),
         title: Center(child: Text("Profile", style: Theme.of(context).textTheme.titleLarge)),
-        actions: [IconButton(onPressed: () {}, icon: Icon(isDark ? CupertinoIcons.moon : CupertinoIcons.sun_max_fill))],
       ),
       body: SingleChildScrollView(
         child: Container(

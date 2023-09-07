@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:origination/core/widgets/check_box.dart';
 import 'package:origination/core/widgets/switcher_input.dart';
 import 'package:origination/core/widgets/type_ahead.dart';
 
@@ -68,6 +69,8 @@ class _TypeaheadTestState extends State<TypeaheadTest> {
                   }), trueLabel: "Father", falseLabel: "Spouse"),
                   const SizedBox(height: 20),
                   Text("Value:${test.text}", style: Theme.of(context).textTheme.bodyLarge,),
+                  const SizedBox(height: 20),
+                  CustomCheckBox(label: "Exisitng customer", initialValue: false, onChanged: (newValue) {print(newValue);})
                 ],
               ),
             ),

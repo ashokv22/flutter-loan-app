@@ -61,7 +61,19 @@ class _LeadDashboardState extends State<LeadDashboard> {
             children: [
               Container(
                 padding: const EdgeInsets.only(top: 20),
-                color: Colors.black,
+                // color: Colors.black,
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      Color.fromARGB(255, 40, 39, 39),
+                      Color.fromARGB(255, 53, 51, 51),
+                      Color.fromARGB(255, 40, 38, 38),
+                      Color.fromARGB(255, 20, 18, 18),
+                    ]
+                  ),
+                ),                
                 child: FutureBuilder(
                   future: athService.getLoggedUser(),
                   builder: (context, snapshot) {
