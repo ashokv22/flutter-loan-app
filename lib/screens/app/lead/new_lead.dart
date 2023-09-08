@@ -200,7 +200,7 @@ class _NewLeadState extends State<NewLead> {
     else if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'TextArea') {
       return TextInput(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field));
     } 
-    else if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'Referencecode' || field.fieldMeta?.fieldUiProperties?.uiComponentName == 'DropDown') {
+    else if (field.fieldMeta?.fieldUiProperties?.uiComponentName!.toLowerCase() == 'referencecode' || field.fieldMeta?.fieldUiProperties?.uiComponentName == 'DropDown') {
       return Referencecode(label: fieldName, referenceCode: field.fieldMeta!.referenceCodeClassifier!, controller: controller, onChanged: (newValue) => updateFieldValue(newValue!, field));
     } 
     else if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'DatePicker') {
