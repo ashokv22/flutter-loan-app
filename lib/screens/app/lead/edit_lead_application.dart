@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:origination/core/widgets/datepicker.dart';
-import 'package:origination/core/widgets/dropdown.dart';
+// import 'package:origination/core/widgets/dropdown.dart';
 import 'package:origination/core/widgets/mobile_input.dart';
 import 'package:origination/core/widgets/reference_code.dart';
 import 'package:origination/core/widgets/section_title.dart';
@@ -242,19 +242,19 @@ class _EditLeadState extends State<EditLead> {
     }
     
     TextEditingController controller = textEditingControllerMap[fieldName]!;
-
-    if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'TextBox') {
+  logger.wtf(field.fieldMeta?.fieldUiProperties?.uiComponentName);
+    if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'TextBox' || field.fieldMeta?.fieldUiProperties?.uiComponentName == 'Number') {
       return TextInput(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field));
     } 
     else if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'TextArea') {
       return TextInput(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field));
     } 
-    else if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'Referencecode') {
+    else if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'ReferenceCode' || field.fieldMeta?.fieldUiProperties?.uiComponentName!.toLowerCase() == 'dropdown') {
       return Referencecode(label: fieldName, referenceCode: field.fieldMeta!.referenceCodeClassifier!, controller: controller, onChanged: (newValue) => updateFieldValue(newValue!, field));
     } 
-    else if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'DropDown') {
-      return DropDown(label: fieldName, options: const ['Abcd', 'Def'], controller: controller, onChanged: (newValue) => updateFieldValue(newValue!, field));
-    } 
+    // else if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'DropDown') {
+    //   return DropDown(label: fieldName, options: const ['Abcd', 'Def'], controller: controller, onChanged: (newValue) => updateFieldValue(newValue!, field));
+    // } 
     else if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'DatePicker') {
       return DatePickerInput(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field),);
     } 

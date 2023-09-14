@@ -128,16 +128,19 @@ class _NewLeadState extends State<NewLead> {
                                             Column(
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
-                                                  SectionTitle(title: subSection.displayTitle ?? 'Section'),
-                                                  if (subSection.fields != null)
-                                                    for (var field in subSection.fields!)
-                                                      Column(
-                                                        children: [
-                                                          buildFieldWidget(field),
-                                                          const SizedBox(height: 16.0),
-                                                        ]
-                                                      ),
-                                                  const SizedBox(height: 20.0)
+                                                if (subSection.displayTitle!.isNotEmpty)
+                                                  SectionTitle(title: subSection.displayTitle!)
+                                                else 
+                                                  const SectionTitle(title: "Main Section"), 
+                                                if (subSection.fields != null)
+                                                  for (var field in subSection.fields!)
+                                                    Column(
+                                                      children: [
+                                                        buildFieldWidget(field),
+                                                        const SizedBox(height: 16.0),
+                                                      ]
+                                                    ),
+                                                const SizedBox(height: 20.0)
                                               ],
                                             ),
                                   const SizedBox(height: 15.0),
