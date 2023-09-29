@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:origination/core/utils/loan_amount_formatter.dart';
+import 'package:origination/models/stage.dart';
 import 'package:origination/models/summaries/dashboard_summary.dart';
 import 'package:origination/screens/app/lead/stage_leads_list.dart';
+import 'package:origination/screens/app/login_pending/login_pending_home.dart';
 import 'package:origination/service/auth_service.dart';
 // import 'package:origination/screens/widgets/products.dart';
 import 'package:origination/service/loan_application_service.dart';
@@ -145,7 +147,11 @@ class _LeadDashboardState extends State<LeadDashboard> {
                               DashBoardSummaryDTO summary = summaries[index];
                               return GestureDetector(
                                 onTap: () {
-                                  Navigator.push(context, MaterialPageRoute(builder: (context) => StageLeadList(stage: summary.stage)));
+                                  if (summary.stage == ApplicationStage.LOGIN_PENDING.name) {
+                                    Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginPendingHome()));
+                                  } else {
+                                    Navigator.push(context, MaterialPageRoute(builder: (context) => StageLeadList(stage: summary.stage)));
+                                  }
                                 },
                                 child: Container(
                                   margin: const EdgeInsets.symmetric(horizontal: 14.0, vertical: 6.0),

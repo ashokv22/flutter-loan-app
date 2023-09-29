@@ -3,7 +3,6 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:origination/main.dart';
 import 'package:origination/models/applicant_dto.dart';
 import 'package:origination/models/bureau_check/bc_check_list_dto.dart';
-import 'package:origination/models/stage.dart';
 import 'package:origination/screens/widgets/reject_reason.dart';
 import 'package:origination/service/bureau_check_service.dart';
 import 'package:origination/service/loan_application_service.dart';
@@ -50,7 +49,7 @@ class _BureauCheckListState extends State<BureauCheckList> {
       setState(() {
         proceedLoading = true;
       });
-      loanApplicationService.updateStage(widget.id, ApplicationStage.LOGIN_PENDING.name);
+      loanApplicationService.loginPanding(widget.id);
       Navigator.push(context, MaterialPageRoute(builder: (context) => const Home()));
     } catch (e) {
       setState(() {

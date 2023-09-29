@@ -10,10 +10,7 @@ import 'package:origination/service/login_flow_service.dart';
 class LoginPendingHome extends StatefulWidget {
   const LoginPendingHome({
     super.key,
-    required this.id
   });
-
-  final int id;
 
   @override
   State<LoginPendingHome> createState() => _LoginPendingHomeState();
@@ -155,7 +152,7 @@ class _LoginPendingHomeState extends State<LoginPendingHome> {
 
                           return GestureDetector(
                             onTap: () {
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => SectionsData(id: widget.id)));
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => SectionsData(id: product.id)));
                             },
                             child: Container(
                               margin: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
