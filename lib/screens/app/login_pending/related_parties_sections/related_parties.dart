@@ -84,7 +84,7 @@ class _RelatedPartiesState extends State<RelatedParties> {
             child: Column(
               children: [
                 Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 8.0),
+                  margin: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 4.0),
                   padding: const EdgeInsets.all(8.0),
                   child: RelatedPartiedsDropdown(
                     label: "Related Parties",
@@ -147,8 +147,8 @@ class _RelatedPartiesState extends State<RelatedParties> {
                     }
                   },
                 child: Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                  padding: const EdgeInsets.all(16.0),
+                  margin: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
                   decoration: ShapeDecoration(
                     shape: RoundedRectangleBorder(
                         side: BorderSide(

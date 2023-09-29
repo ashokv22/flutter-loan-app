@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:origination/models/login_flow/sections/loan_application_entity.dart';
 import 'package:origination/screens/app/bureau/screens/bureau_check_list.dart';
+// import 'package:origination/screens/app/login_pending/main_sections/land_and_crop_details.dart';
 // import 'package:origination/screens/app/login_pending/number_advanced.dart';
 import 'package:origination/screens/app/login_pending/related_parties_sections/related_parties.dart';
 import 'package:origination/screens/app/login_pending/main_sections/section_data.dart';
@@ -32,7 +33,7 @@ class _SectionsDataState extends State<SectionsData> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(onPressed: () {Navigator.pop(context);}, icon: const Icon(CupertinoIcons.arrow_left)),
-        title: const Text("Details"),
+        title: const Text("Details", style: TextStyle(fontSize: 18)),
       ),
       body: Container(
         decoration: BoxDecoration(
@@ -102,16 +103,16 @@ class _SectionsDataState extends State<SectionsData> {
                               else if (section.sectionName == "CheckList") {
                                 Navigator.push(context, MaterialPageRoute(builder: (context) => BureauCheckList(id: widget.id,)));  
                               }
-                              // else if (section.sectionName == "Declaration") {
-                              //   Navigator.push(context, MaterialPageRoute(builder: (context) => const TypeaheadTest()));  
+                              // else if (section.sectionName == "LandAndCropDetails") {
+                              //   Navigator.push(context, MaterialPageRoute(builder: (context) => LandAndCropDetials(id: widget.id, displayTitle: section.displayTitle, sectionName: section.sectionName,)));  
                               // }
                               else {
                                 Navigator.push(context, MaterialPageRoute(builder: (context) => SectionScreenEmpty(id: widget.id, title: title,)));
                               }
                             },
                             child: Container(
-                              margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                              padding: const EdgeInsets.all(16.0),
+                              margin: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4.0),
+                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
                               decoration: ShapeDecoration(
                                 shape: RoundedRectangleBorder(
                                     side: BorderSide(

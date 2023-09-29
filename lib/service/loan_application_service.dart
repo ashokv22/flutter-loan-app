@@ -272,6 +272,24 @@ class LoanApplicationService {
     }
   }
 
+  Future<ApplicantDTO> loginPanding(int id) async {
+    String endpoint = "api/application/loanApplication/lead/loginPending/$id";
+    try {
+      final response = await authInterceptor.put(Uri.parse(endpoint));
+      if (response.statusCode == 200) {
+        final jsonResponse = json.decode(response.body);
+        ApplicantDTO applicant = ApplicantDTO.fromJson(jsonResponse);
+        return applicant;
+      }
+      else {
+        throw Exception('Failed to get data. Error code: ${response.statusCode}');
+      }
+    }
+    catch (e) {
+      throw  Exception('An error occurred while getting the data: $e');
+    }
+  }
+
   Future<Section> getSection(String sectionName) async {
     String endpoint = "api/application/entitySection/sectionName?sectionName=$sectionName";
     try {

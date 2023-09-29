@@ -96,5 +96,6 @@ const _$ApplicantDeclarationStatusEnumMap = {
   ApplicantDeclarationStatus.PENDING: 'PENDING',
   ApplicantDeclarationStatus.INITIATED: 'INITIATED',
   ApplicantDeclarationStatus.COMPLETED: 'COMPLETED',
+  ApplicantDeclarationStatus.APPROVED: 'APPROVED',
   ApplicantDeclarationStatus.REJECTED: 'REJECTED',
 };

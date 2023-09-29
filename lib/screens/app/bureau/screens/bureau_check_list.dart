@@ -94,7 +94,7 @@ class _BureauCheckListState extends State<BureauCheckList> {
           },
           icon: const Icon(Icons.arrow_back),
         ),
-        title: const Text("Bureau Check"),
+        title: const Text("Bureau Check", style: TextStyle(fontSize: 18)),
       ),
       body: RefreshIndicator(
         onRefresh: refreshLeadsSummary,
@@ -182,13 +182,13 @@ class _BureauCheckListState extends State<BureauCheckList> {
                                       children: [
                                         Text(type.name,
                                           style: const TextStyle(
-                                            fontSize: 18,
+                                            fontSize: 14,
                                           ),
                                         ),
                                         Text(
                                           checkList.name,
                                           style: const TextStyle(
-                                            fontSize: 24,
+                                            fontSize: 18,
                                             fontWeight: FontWeight.w700,
                                             // color: Color.fromARGB(255, 3, 71, 244),
                                           ),

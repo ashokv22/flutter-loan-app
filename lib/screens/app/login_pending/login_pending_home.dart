@@ -50,7 +50,7 @@ class _LoginPendingHomeState extends State<LoginPendingHome> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(onPressed: () {Navigator.pop(context);}, icon: const Icon(CupertinoIcons.arrow_left)),
-        title: const Text("Login Pending"),
+        title: const Text("Login Pending", style: TextStyle(fontSize: 18)),
       ),
       body: RefreshIndicator(
         onRefresh: refreshLeadsSummary,
@@ -155,7 +155,7 @@ class _LoginPendingHomeState extends State<LoginPendingHome> {
                               Navigator.push(context, MaterialPageRoute(builder: (context) => SectionsData(id: product.id)));
                             },
                             child: Container(
-                              margin: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+                              margin: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4.0),
                               padding: const EdgeInsets.all(16.0),
                               decoration: BoxDecoration(
                                 color: Theme.of(context).cardColor,
@@ -183,14 +183,14 @@ class _LoginPendingHomeState extends State<LoginPendingHome> {
                                         children: [
                                           const Text("Product",
                                             style: TextStyle(
-                                              fontSize: 20,
+                                              fontSize: 16,
                                               fontWeight: FontWeight.w600
                                             ),
                                           ),
                                           Text(
                                             product.product,
                                             style: TextStyle(
-                                              fontSize: 24,
+                                              fontSize: 18,
                                               fontWeight: FontWeight.w700,
                                               color: isDarkTheme ? Colors.blueAccent[400] : const Color.fromARGB(255, 3, 71, 244),
                                             ),
@@ -202,14 +202,14 @@ class _LoginPendingHomeState extends State<LoginPendingHome> {
                                         children: [
                                           const Text("Loan Amount",
                                             style: TextStyle(
-                                              fontSize: 20,
+                                              fontSize: 16,
                                               fontWeight: FontWeight.w600
                                             ),
                                           ),
                                           Text(
                                             '₹${LoanAmountFormatter.transform(product.loanAmount)}',
                                             style: TextStyle(
-                                              fontSize: 26,
+                                              fontSize: 20,
                                               fontWeight: FontWeight.w900,
                                               color: isDarkTheme ? Colors.blueAccent[400] : const Color.fromARGB(255, 3, 71, 244),
                                             ),
@@ -224,25 +224,34 @@ class _LoginPendingHomeState extends State<LoginPendingHome> {
                                     children: [
                                       Column(
                                         crossAxisAlignment: CrossAxisAlignment.start,
+
                                         children: [
                                           Row(
+                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                             children: [
                                               Text("Applicant:",
                                                 style: TextStyle(
                                                   color: Theme.of(context).textTheme.displayMedium!.color,
-                                                  fontSize: 20,
+                                                  fontSize: 16,
                                                   fontFamily: 'Inter',
                                                   fontWeight: FontWeight.w400,
                                                 ),
                                               ),
                                               const SizedBox(width: 50,),
-                                              Text(
-                                                applicantName,
-                                                style: TextStyle(
-                                                  fontSize: 22,
-                                                  fontFamily: 'Inter',
-                                                  fontWeight: FontWeight.w600,
-                                                  color: isDarkTheme ? Colors.blueAccent[400] : const Color.fromARGB(255, 3, 71, 244),
+                                              SizedBox(
+                                                width: 150,
+                                                child: Text(
+                                                  applicantName,
+                                                  style: TextStyle(
+                                                    fontSize: 18,
+                                                    fontFamily: 'Inter',
+                                                    fontWeight: FontWeight.w600,
+                                                    color: isDarkTheme ? Colors.blueAccent[400] : const Color.fromARGB(255, 3, 71, 244),
+                                                  ),
+                                                  maxLines: 1,
+                                                  softWrap: false,
+                                                  overflow: TextOverflow.ellipsis,
                                                 ),
                                               ),
                                             ],
@@ -254,19 +263,25 @@ class _LoginPendingHomeState extends State<LoginPendingHome> {
                                               Text("Co Applicant",
                                                 style: TextStyle(
                                                   color: Theme.of(context).textTheme.displayMedium!.color,
-                                                  fontSize: 20,
+                                                  fontSize: 16,
                                                   fontFamily: 'Inter',
                                                   fontWeight: FontWeight.w400,
                                                 ),
                                               ),
-                                              const SizedBox(width: 25,),
-                                              Text(
-                                                coApplicantNames,
-                                                style: TextStyle(
-                                                  fontSize: 22,
-                                                  fontFamily: 'Inter',
-                                                  fontWeight: FontWeight.w600,
-                                                  color: isDarkTheme ? Colors.blueAccent[400] : const Color.fromARGB(255, 3, 71, 244),
+                                              const SizedBox(width: 30,),
+                                              SizedBox(
+                                                width: 150,
+                                                child: Text(
+                                                  coApplicantNames,
+                                                  style: TextStyle(
+                                                    fontSize: 18,
+                                                    fontFamily: 'Inter',
+                                                    fontWeight: FontWeight.w600,
+                                                    color: isDarkTheme ? Colors.blueAccent[400] : const Color.fromARGB(255, 3, 71, 244),
+                                                  ),
+                                                  maxLines: 1,
+                                                  softWrap: false,
+                                                  overflow: TextOverflow.ellipsis,
                                                 ),
                                               ),
                                             ],
@@ -278,18 +293,19 @@ class _LoginPendingHomeState extends State<LoginPendingHome> {
                                               Text("Guarantor",
                                                 style: TextStyle(
                                                   color: Theme.of(context).textTheme.displayMedium!.color,
-                                                  fontSize: 20,
+                                                  fontSize: 16,
                                                   fontFamily: 'Inter',
                                                   fontWeight: FontWeight.w400,
                                                 ),
                                               ),
                                               const SizedBox(width: 50,),
                                               SizedBox(
-                                                width: 250,
-                                                child: Text(
+                                                width: 150,
+                                                child: 
+                                                Text(
                                                   guarantorNames,
                                                   style: TextStyle(
-                                                    fontSize: 22,
+                                                    fontSize: 18,
                                                     fontFamily: 'Inter',
                                                     fontWeight: FontWeight.w600,
                                                     color: isDarkTheme ? Colors.blueAccent[400] : const Color.fromARGB(255, 3, 71, 244),

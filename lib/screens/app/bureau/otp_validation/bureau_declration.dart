@@ -82,7 +82,7 @@ class _BureauCheckDeclarationState extends State<BureauCheckDeclaration> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(onPressed: () {Navigator.pop(context);}, icon: const Icon(CupertinoIcons.arrow_left)),
-        title: const Text("Bureau Check")
+        title: const Text("Bureau Check", style: TextStyle(fontSize: 18))
       ),
       body: Container(
         decoration: BoxDecoration(
@@ -129,7 +129,7 @@ class _BureauCheckDeclarationState extends State<BureauCheckDeclaration> {
                         "Declaration", 
                         textAlign: TextAlign.left, 
                         style: TextStyle(
-                          fontSize: 30, 
+                          fontSize: 24, 
                           fontWeight: FontWeight.bold,
                           color: Color.fromARGB(255, 3, 71, 244)
                         ),
@@ -150,7 +150,7 @@ class _BureauCheckDeclarationState extends State<BureauCheckDeclaration> {
                         border: OutlineInputBorder(),
                         counter: Offstage()
                       ),
-                      style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                       controller: _mobileController,
                       keyboardType: TextInputType.phone,
                       maxLength: 10,
@@ -179,7 +179,7 @@ class _BureauCheckDeclarationState extends State<BureauCheckDeclaration> {
                                 valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                               ),
                             )
-                            : const Text('Send OTP', style: TextStyle(fontSize: 20),),
+                            : const Text('Send OTP', style: TextStyle(fontSize: 18),),
                           ),
                         ),
                       ),

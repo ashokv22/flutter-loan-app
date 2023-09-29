@@ -86,37 +86,13 @@ class _EditLeadState extends State<EditLead> {
     }
   }
 
-  void deleteLead(int id) async {
-    logger.i("Request to delete lead for id: $id");
-    try {
-      applicationService.deleteLead(id);
-      Navigator.pop(context);
-    }
-    catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Uh oh! There\'s something wrong!'),
-          duration: Duration(seconds: 2),
-        ),
-      );
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final isDarkTheme = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(onPressed: () {Navigator.pop(context);}, icon: const Icon(CupertinoIcons.arrow_left)),
-        title: const Text("Edit Lead"),
-        actions: [
-          TextButton(
-            onPressed: () {
-              deleteLead(widget.id);
-            },
-            child: const Text("Delete", style: TextStyle(color: Colors.red),)
-          )
-        ],
+        title: const Text("Edit Lead", style: TextStyle(fontSize: 18)),
       ),
       body: Container(
         decoration: BoxDecoration(

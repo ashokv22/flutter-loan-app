@@ -34,6 +34,22 @@ class _StageLeadListState extends State<StageLeadList> {
     final Random random = Random();
     return min + random.nextInt(max - min + 1);
   }
+
+  void deleteLead(int id) async {
+    logger.e("Request to delete lead for id: $id");
+    try {
+      applicationService.deleteLead(id);
+      Navigator.pop(context);
+    }
+    catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Uh oh! There\'s something wrong!'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+    }
+  }
   
   @override
   Widget build(BuildContext context) {
@@ -42,7 +58,7 @@ class _StageLeadListState extends State<StageLeadList> {
     logger.d(stage);
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Lead List"),
+        title: const Text("Lead List", style: TextStyle(fontSize: 18, textBaseline: TextBaseline.alphabetic)),
         actions: [
           IconButton(
             onPressed: () {
@@ -105,145 +121,169 @@ class _StageLeadListState extends State<StageLeadList> {
                       LeadsListDTO applicant = summaries[index];
                       int randomNumber = getRandomNumber();
                       logger.i('${applicant.applicantId}, ${applicant.name}');
-                      return GestureDetector(
-                        onTap: () {
-                          if (applicant.status == ApplicationStage.REJECTED.name) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                showCloseIcon: true,
-                                elevation: 1,
-                                backgroundColor: Colors.black,
-                                content: Text('Lead is Rejected ${applicant.id}'),
-                                duration: const Duration(seconds: 2),
-                              ),
-                            );
-                          } else if (applicant.status == ApplicationStage.LOGIN_PENDING.name) {
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPendingHome(id: applicant.id,)));
-                          } else {
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => EditLead(id: applicant.id, applicantId: int.parse(applicant.applicantId))));
-                          }
+                      return Dismissible(
+                        direction: DismissDirection.endToStart,
+                        key: Key(applicant.toString()),
+                        onDismissed: (direction) {
+                          deleteLead(applicant.id);
+                          ScaffoldMessenger.of(context)
+                            .showSnackBar(SnackBar(content: Text("${applicant.name} Deleted!")));
                         },
-                        child: Container(
-                          margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                          padding: const EdgeInsets.all(12.0),
-                          decoration: BoxDecoration(
-                            color: Theme.of(context).cardColor,
-                            border: isDarkTheme
-                              ? Border.all(color: Colors.white12, width: 1.0) // Outlined border for dark theme
-                              : null,
-                            borderRadius: BorderRadius.circular(8.0),
-                            boxShadow: isDarkTheme
-                              ? null : [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.5), //color of shadow
-                                spreadRadius: 2, //spread radius
-                                blurRadius: 6, // blur radius
-                                offset: const Offset(2, 3),
-                              )
-                            ],
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Row(
+                        background: Container(
+                            color: Colors.red,
+                            child: const Padding(
+                              padding: EdgeInsets.all(15.0),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
-                                  SizedBox(
-                                    width: 80,
-                                    height: 80,
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(10),
-                                      child: Image.asset('assets/images/female-${randomNumber.toString().padLeft(2, '0')}.jpg', fit: BoxFit.cover,)),
+                                  Icon(
+                                    Icons.delete,
+                                    color: Colors.white,
                                   ),
-                                  const SizedBox(width: 10),
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        applicant.name,
-                                        style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.w700,
-                                          color: isDarkTheme ? Colors.blueAccent[400] : const Color.fromARGB(255, 3, 71, 244),
-                                          // color: Color.fromARGB(255, 3, 71, 244),
-                                        ),
-                                      ),
-                                      Text(applicant.mobile,
-                                        style: TextStyle(
-                                          color: Theme.of(context).textTheme.displayMedium!.color,
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        width: 150,
-                                        child: Text(applicant.dsaName,
+                                ],
+                              ),
+                            ),
+                          ),
+                        child: GestureDetector(
+                          onTap: () {
+                            if (applicant.status == ApplicationStage.REJECTED.name) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  showCloseIcon: true,
+                                  elevation: 1,
+                                  backgroundColor: Colors.black,
+                                  content: Text('Lead is Rejected ${applicant.id}'),
+                                  duration: const Duration(seconds: 2),
+                                ),
+                              );
+                            } else if (applicant.status == ApplicationStage.LOGIN_PENDING.name) {
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginPendingHome()));
+                            } else {
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => EditLead(id: applicant.id, applicantId: int.parse(applicant.applicantId))));
+                            }
+                          },
+                          child: Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                            padding: const EdgeInsets.all(12.0),
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).cardColor,
+                              border: isDarkTheme
+                                ? Border.all(color: Colors.white12, width: 1.0) // Outlined border for dark theme
+                                : null,
+                              borderRadius: BorderRadius.circular(8.0),
+                              boxShadow: isDarkTheme
+                                ? null : [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.5), //color of shadow
+                                  spreadRadius: 2, //spread radius
+                                  blurRadius: 6, // blur radius
+                                  offset: const Offset(2, 3),
+                                )
+                              ],
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
+                                  children: [
+                                    SizedBox(
+                                      width: 80,
+                                      height: 80,
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(10),
+                                        child: Image.asset('assets/images/female-${randomNumber.toString().padLeft(2, '0')}.jpg', fit: BoxFit.cover,)),
+                                    ),
+                                    const SizedBox(width: 10),
+                                    Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          applicant.name,
                                           style: TextStyle(
-                                            fontSize: 14,
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w700,
+                                            color: isDarkTheme ? Colors.blueAccent[400] : const Color.fromARGB(255, 3, 71, 244),
+                                            // color: Color.fromARGB(255, 3, 71, 244),
+                                          ),
+                                        ),
+                                        Text(applicant.mobile,
+                                          style: TextStyle(
                                             color: Theme.of(context).textTheme.displayMedium!.color,
+                                            fontSize: 16,
                                             fontWeight: FontWeight.w500,
                                           ),
-                                          maxLines: 1,
-                                          softWrap: false,
-                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                        SizedBox(
+                                          width: 150,
+                                          child: Text(applicant.dsaName,
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              color: Theme.of(context).textTheme.displayMedium!.color,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                            maxLines: 1,
+                                            softWrap: false,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      "${applicant.createdDate.year.toString()}-${applicant.createdDate.month.toString().padLeft(2,'0')}-${applicant.createdDate.day.toString().padLeft(2,'0')}",
+                                      style: TextStyle(
+                                        color: Theme.of(context).textTheme.displayMedium!.color,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600
+                                      ),
+                                    ),
+                                    // const SizedBox(height: 10),
+                                    Text(
+                                      applicant.model,
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: Theme.of(context).textTheme.displayMedium!.color,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                      maxLines: 1,
+                                      softWrap: false,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                    const SizedBox(height: 10),
+                                    Container(
+                                      decoration: ShapeDecoration(
+                                        gradient: applicant.status == "LEAD" ? const LinearGradient(
+                                          colors: [Color(0xFF00CA2C), Color(0xFF00861D)],
+                                        ) : applicant.status == "REJECTED" ? const LinearGradient(
+                                          colors: [Colors.red, Colors.redAccent]
+                                        ) : const LinearGradient(
+                                          colors: [Colors.blue, Colors.blueAccent]
+                                        ),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(20),
                                         ),
                                       ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    "${applicant.createdDate.year.toString()}-${applicant.createdDate.month.toString().padLeft(2,'0')}-${applicant.createdDate.day.toString().padLeft(2,'0')}",
-                                    style: TextStyle(
-                                      color: Theme.of(context).textTheme.displayMedium!.color,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w600
-                                    ),
-                                  ),
-                                  // const SizedBox(height: 10),
-                                  Text(
-                                    applicant.model,
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      color: Theme.of(context).textTheme.displayMedium!.color,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                    maxLines: 1,
-                                    softWrap: false,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                  const SizedBox(height: 10),
-                                  Container(
-                                    decoration: ShapeDecoration(
-                                      gradient: applicant.status == "LEAD" ? const LinearGradient(
-                                        colors: [Color(0xFF00CA2C), Color(0xFF00861D)],
-                                      ) : applicant.status == "REJECTED" ? const LinearGradient(
-                                        colors: [Colors.red, Colors.redAccent]
-                                      ) : const LinearGradient(
-                                        colors: [Colors.blue, Colors.blueAccent]
-                                      ),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(20),
-                                      ),
-                                    ),
-                                    child: Padding(
-                                      padding: const EdgeInsets.fromLTRB(8, 5, 8, 5),
-                                      child: Text(
-                                        applicant.status,
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 10,
-                                          fontWeight: FontWeight.w600
+                                      child: Padding(
+                                        padding: const EdgeInsets.fromLTRB(8, 5, 8, 5),
+                                        child: Text(
+                                          applicant.status,
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 10,
+                                            fontWeight: FontWeight.w600
+                                          ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                            ],
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       );

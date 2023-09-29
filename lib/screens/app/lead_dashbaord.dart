@@ -92,7 +92,7 @@ class _LeadDashboardState extends State<LeadDashboard> {
                             "Hello ${userInfo['name']}\n${userInfo['branchData']['branchCode']}",
                             style: const TextStyle(
                               color: Colors.white, 
-                              fontSize: 20),
+                              fontSize: 18),
                           ),
                         ),
                         Padding(
@@ -102,7 +102,7 @@ class _LeadDashboardState extends State<LeadDashboard> {
                             "${userInfo['branchData']['branch']} Branch\n${userInfo['branchData']['city']}",
                             style: const TextStyle(
                               color: Colors.white,
-                              fontSize: 20,
+                              fontSize: 18,
                             ),
                           ),
                         ),
@@ -154,7 +154,7 @@ class _LeadDashboardState extends State<LeadDashboard> {
                                   }
                                 },
                                 child: Container(
-                                  margin: const EdgeInsets.symmetric(horizontal: 14.0, vertical: 6.0),
+                                  margin: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
                                   padding: const EdgeInsets.all(12.0),
                                   decoration: BoxDecoration(
                                     color: Theme.of(context).cardColor,
@@ -181,14 +181,14 @@ class _LeadDashboardState extends State<LeadDashboard> {
                                           Text(
                                             summary.stage,
                                             style: TextStyle(
-                                              fontSize: 18,
+                                              fontSize: 16,
                                               fontWeight: FontWeight.w700,
                                               color: isDarkTheme ? Colors.blueAccent[400] : const Color.fromARGB(255, 3, 71, 244),
                                             ),
                                           ),
                                           Text("Total ${summary.count}",
                                             style: TextStyle(
-                                              fontSize: 16,
+                                              fontSize: 14,
                                               color: Theme.of(context).textTheme.displaySmall!.color,
                                               fontWeight: FontWeight.w500,
                                             ),
@@ -200,7 +200,7 @@ class _LeadDashboardState extends State<LeadDashboard> {
                                           Text(
                                             '₹${LoanAmountFormatter.transform(summary.loanAmount)}',
                                             style: TextStyle(
-                                              fontSize: 20,
+                                              fontSize: 18,
                                               color: Theme.of(context).textTheme.displayLarge!.color,
                                               fontWeight: FontWeight.w600
                                             ),
