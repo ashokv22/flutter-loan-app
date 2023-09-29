@@ -2,7 +2,6 @@
 
 import 'dart:math';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:origination/models/stage.dart';
@@ -105,16 +104,17 @@ class _StageLeadListState extends State<StageLeadList> {
                     itemBuilder: (context, index) {
                       LeadsListDTO applicant = summaries[index];
                       int randomNumber = getRandomNumber();
+                      logger.i('${applicant.applicantId}, ${applicant.name}');
                       return GestureDetector(
                         onTap: () {
                           if (applicant.status == ApplicationStage.REJECTED.name) {
                             ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
+                              SnackBar(
                                 showCloseIcon: true,
                                 elevation: 1,
                                 backgroundColor: Colors.black,
-                                content: Text('Lead is Rejected.'),
-                                duration: Duration(seconds: 2),
+                                content: Text('Lead is Rejected ${applicant.id}'),
+                                duration: const Duration(seconds: 2),
                               ),
                             );
                           } else if (applicant.status == ApplicationStage.LOGIN_PENDING.name) {

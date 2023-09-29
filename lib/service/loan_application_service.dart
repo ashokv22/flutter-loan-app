@@ -92,15 +92,15 @@ class LoanApplicationService {
 
   Future<List<LeadsListDTO>> getLeadsByStage(String stage) async {
     String endpoint = "api/application/loanApplication/summary";
-    int page = 0;
-    int size = 10;
+    // int page = 0;
+    // int size = 10;
     try {
       final response = await authInterceptor.get(Uri.parse(endpoint).replace(
         queryParameters: {
           'stage': stage,
-          'page': page.toString(),
-          'size': size.toString(),
-          'sort': "ASC"
+          // 'page': page.toString(),
+          // 'size': size.toString(),
+          // 'sort': "ASC"
         }
       ));
       if (response.statusCode == 200) {
@@ -331,4 +331,23 @@ class LoanApplicationService {
     }
   }
 
-}
+  Future<void> deleteLead(int id) async {
+    String endpoint = "api/application/loanApplication/lead/$id";
+    try {
+      final response = await http.delete(Uri.parse(apiUrl + endpoint), headers: {
+      'X-AUTH-TOKEN': await authService.getAccessToken()
+      });
+      logger.d(response.statusCode);
+      if (response.statusCode == 200) {
+        logger.i(response.statusCode);
+      }
+      if (response.statusCode != 200) {
+        throw Exception('Lead is not in Lead state. Error code: ${response.statusCode}');
+      }
+    }
+    catch (e) {
+      throw  Exception('An error occurred while getting the data: $e');
+    }
+  }
+
+} 

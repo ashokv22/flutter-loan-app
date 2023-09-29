@@ -149,7 +149,7 @@ class _LeadDashboardState extends State<LeadDashboard> {
                                 },
                                 child: Container(
                                   margin: const EdgeInsets.symmetric(horizontal: 14.0, vertical: 6.0),
-                                  padding: const EdgeInsets.all(16.0),
+                                  padding: const EdgeInsets.all(12.0),
                                   decoration: BoxDecoration(
                                     color: Theme.of(context).cardColor,
                                     borderRadius: BorderRadius.circular(8.0),
@@ -175,7 +175,7 @@ class _LeadDashboardState extends State<LeadDashboard> {
                                           Text(
                                             summary.stage,
                                             style: TextStyle(
-                                              fontSize: 20,
+                                              fontSize: 18,
                                               fontWeight: FontWeight.w700,
                                               color: isDarkTheme ? Colors.blueAccent[400] : const Color.fromARGB(255, 3, 71, 244),
                                             ),
@@ -194,7 +194,7 @@ class _LeadDashboardState extends State<LeadDashboard> {
                                           Text(
                                             '₹${LoanAmountFormatter.transform(summary.loanAmount)}',
                                             style: TextStyle(
-                                              fontSize: 22,
+                                              fontSize: 20,
                                               color: Theme.of(context).textTheme.displayLarge!.color,
                                               fontWeight: FontWeight.w600
                                             ),
