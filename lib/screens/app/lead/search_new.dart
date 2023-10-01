@@ -31,16 +31,12 @@ class _SearchPageState extends State<SearchPage> {
     return Scaffold(
       appBar: AppBar(
           iconTheme: Theme.of(context).iconTheme,
-          // leading: IconButton(
-          //   icon: const Icon(
-          //     CupertinoIcons.arrow_left,
-          //   ),
-          //   onPressed: () => Navigator.of(context).pop(),
-          // ),
           title: Center(
             child: CupertinoSearchTextField(
+              prefixIcon: Icon(Icons.search,color: Colors.grey.shade600, size: 20,),
               suffixIcon: const Icon(CupertinoIcons.clear),
               controller: _controller,
+              padding: const EdgeInsets.only(top: 10, bottom: 10, left: 5, right: 5),
               onChanged: (value) {
               _fetchSearchResults(value); // Fetch results on text change
             },

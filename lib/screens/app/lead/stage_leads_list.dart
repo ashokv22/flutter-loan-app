@@ -1,5 +1,3 @@
-
-
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -69,18 +67,18 @@ class _StageLeadListState extends State<StageLeadList> {
       ),
       body: Container(
         decoration: BoxDecoration(
-          gradient: isDarkTheme
-        ? null // No gradient for dark theme, use a single color
-        : const LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Colors.white,
-              Color.fromRGBO(193, 248, 245, 1),
-              Color.fromRGBO(184, 182, 253, 1),
-              Color.fromRGBO(62, 58, 250, 1),
-            ],
-          ),
+        //   gradient: isDarkTheme
+        // ? null // No gradient for dark theme, use a single color
+        // : const LinearGradient(
+        //     begin: Alignment.topLeft,
+        //     end: Alignment.bottomRight,
+        //     colors: [
+        //       Colors.white,
+        //       Color.fromRGBO(193, 248, 245, 1),
+        //       Color.fromRGBO(184, 182, 253, 1),
+        //       Color.fromRGBO(62, 58, 250, 1),
+        //     ],
+        //   ),
           color: isDarkTheme ? Colors.black38 : null
         ),
         child: Column(
@@ -163,34 +161,34 @@ class _StageLeadListState extends State<StageLeadList> {
                             }
                           },
                           child: Container(
-                            margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                            // margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
                             padding: const EdgeInsets.all(12.0),
-                            decoration: BoxDecoration(
-                              color: Theme.of(context).cardColor,
-                              border: isDarkTheme
-                                ? Border.all(color: Colors.white12, width: 1.0) // Outlined border for dark theme
-                                : null,
-                              borderRadius: BorderRadius.circular(8.0),
-                              boxShadow: isDarkTheme
-                                ? null : [
-                                BoxShadow(
-                                  color: Colors.grey.withOpacity(0.5), //color of shadow
-                                  spreadRadius: 2, //spread radius
-                                  blurRadius: 6, // blur radius
-                                  offset: const Offset(2, 3),
-                                )
-                              ],
-                            ),
+                            // decoration: BoxDecoration(
+                            //   color: Theme.of(context).cardColor,
+                            //   border: isDarkTheme
+                            //     ? Border.all(color: Colors.white12, width: 1.0) // Outlined border for dark theme
+                            //     : null,
+                            //   borderRadius: BorderRadius.circular(8.0),
+                            //   boxShadow: isDarkTheme
+                            //     ? null : [
+                            //     BoxShadow(
+                            //       color: Colors.grey.withOpacity(0.5), //color of shadow
+                            //       spreadRadius: 2, //spread radius
+                            //       blurRadius: 6, // blur radius
+                            //       offset: const Offset(2, 3),
+                            //     )
+                            //   ],
+                            // ),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Row(
                                   children: [
                                     SizedBox(
-                                      width: 80,
-                                      height: 80,
+                                      width: 60,
+                                      height: 60,
                                       child: ClipRRect(
-                                        borderRadius: BorderRadius.circular(10),
+                                        borderRadius: BorderRadius.circular(50),
                                         child: Image.asset('assets/images/female-${randomNumber.toString().padLeft(2, '0')}.jpg', fit: BoxFit.cover,)),
                                     ),
                                     const SizedBox(width: 10),
@@ -200,7 +198,7 @@ class _StageLeadListState extends State<StageLeadList> {
                                         Text(
                                           applicant.name,
                                           style: TextStyle(
-                                            fontSize: 18,
+                                            fontSize: 16,
                                             fontWeight: FontWeight.w700,
                                             color: isDarkTheme ? Colors.blueAccent[400] : const Color.fromARGB(255, 3, 71, 244),
                                             // color: Color.fromARGB(255, 3, 71, 244),
@@ -209,8 +207,8 @@ class _StageLeadListState extends State<StageLeadList> {
                                         Text(applicant.mobile,
                                           style: TextStyle(
                                             color: Theme.of(context).textTheme.displayMedium!.color,
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w500,
+                                            fontSize: 14,
+                                            // fontWeight: FontWeight.w500,
                                           ),
                                         ),
                                         SizedBox(
@@ -219,7 +217,7 @@ class _StageLeadListState extends State<StageLeadList> {
                                             style: TextStyle(
                                               fontSize: 14,
                                               color: Theme.of(context).textTheme.displayMedium!.color,
-                                              fontWeight: FontWeight.w500,
+                                              // fontWeight: FontWeight.w500,
                                             ),
                                             maxLines: 1,
                                             softWrap: false,
@@ -238,7 +236,7 @@ class _StageLeadListState extends State<StageLeadList> {
                                       "${applicant.createdDate.year.toString()}-${applicant.createdDate.month.toString().padLeft(2,'0')}-${applicant.createdDate.day.toString().padLeft(2,'0')}",
                                       style: TextStyle(
                                         color: Theme.of(context).textTheme.displayMedium!.color,
-                                        fontSize: 16,
+                                        fontSize: 14,
                                         fontWeight: FontWeight.w600
                                       ),
                                     ),
@@ -248,13 +246,13 @@ class _StageLeadListState extends State<StageLeadList> {
                                       style: TextStyle(
                                         fontSize: 14,
                                         color: Theme.of(context).textTheme.displayMedium!.color,
-                                        fontWeight: FontWeight.w500,
+                                        // fontWeight: FontWeight.w500,
                                       ),
                                       maxLines: 1,
                                       softWrap: false,
                                       overflow: TextOverflow.ellipsis,
                                     ),
-                                    const SizedBox(height: 10),
+                                    // const SizedBox(height: 10),
                                     Container(
                                       decoration: ShapeDecoration(
                                         gradient: applicant.status == "LEAD" ? const LinearGradient(

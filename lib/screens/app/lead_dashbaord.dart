@@ -40,6 +40,60 @@ class _LeadDashboardState extends State<LeadDashboard> {
   Widget build(BuildContext context) {
     final isDarkTheme = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(100),
+        child: Container(
+          padding: const EdgeInsets.only(top: 20),
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Color.fromRGBO(45, 46, 46, 1),
+                Color.fromRGBO(14, 15, 15, 1)
+                // Color.fromARGB(255, 40, 39, 39),
+                // Color.fromARGB(255, 53, 51, 51),
+                // Color.fromARGB(255, 40, 38, 38),
+                // Color.fromARGB(255, 20, 18, 18),
+              ]
+            ),
+          ),                
+          child: FutureBuilder(
+            future: athService.getLoggedUser(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const LinearProgressIndicator();
+              }
+              var userInfo = snapshot.data ?? {};
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Text(
+                      "Hello ${userInfo['name']}\n${userInfo['branchData']['branchCode']}",
+                      style: const TextStyle(
+                        color: Colors.white, 
+                        fontSize: 18),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Text(
+                      textAlign: TextAlign.right,
+                      "${userInfo['branchData']['branch']} Branch\n${userInfo['branchData']['city']}",
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            }
+          ),
+        )
+      ),
       key: _scaffoldKey,
       body: RefreshIndicator(
         onRefresh: refreshLeadsSummary,
@@ -60,188 +114,122 @@ class _LeadDashboardState extends State<LeadDashboard> {
             color: isDarkTheme ? Colors.black38 : null
           ),
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              Container(
-                padding: const EdgeInsets.only(top: 20),
-                // color: Colors.black,
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      Color.fromARGB(255, 40, 39, 39),
-                      Color.fromARGB(255, 53, 51, 51),
-                      Color.fromARGB(255, 40, 38, 38),
-                      Color.fromARGB(255, 20, 18, 18),
-                    ]
-                  ),
-                ),                
-                child: FutureBuilder(
-                  future: athService.getLoggedUser(),
+              const SizedBox(height: 5,),
+              Expanded(
+                child: FutureBuilder<List<DashBoardSummaryDTO>>(
+                  future: applicationService.getLeadsSummary(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const LinearProgressIndicator();
-                    }
-                    var userInfo = snapshot.data ?? {};
-                    return Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Text(
-                            "Hello ${userInfo['name']}\n${userInfo['branchData']['branchCode']}",
-                            style: const TextStyle(
-                              color: Colors.white, 
-                              fontSize: 18),
-                          ),
+                      return const SizedBox(
+                        width: double.infinity,
+                        height: double.infinity,
+                        child: Center(
+                          child: CircularProgressIndicator()
                         ),
-                        Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Text(
-                            textAlign: TextAlign.right,
-                            "${userInfo['branchData']['branch']} Branch\n${userInfo['branchData']['city']}",
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 18,
-                            ),
-                          ),
-                        ),
-                      ],
-                    );
-                  }
-                ),
-              ),
-                  Expanded(
-                    child: FutureBuilder<List<DashBoardSummaryDTO>>(
-                      future: applicationService.getLeadsSummary(),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.waiting) {
-                          return const SizedBox(
-                            width: double.infinity,
-                            height: double.infinity,
-                            child: Center(
-                              child: CircularProgressIndicator()
-                            ),
-                          );
-                        } else if (snapshot.hasError) {
-                          return Center(
-                            child: Text('Error: ${snapshot.error}'),
-                          );
-                        } else if (snapshot.hasData) {
-                          List<DashBoardSummaryDTO> summaries = snapshot.data!;
-                          if (summaries.isEmpty) {
-                            return const SizedBox(
-                              width: double.infinity,
-                              height: double.infinity,
-                              child: Center(
-                                child: Text('No data found',
-                                style: TextStyle(
-                                  fontSize: 20,
-                                ),)
-                              )
-                            );
-                          }
-                          return ListView.builder(
-                            itemCount: summaries.length,
-                            itemBuilder: (context, index) {
-                              DashBoardSummaryDTO summary = summaries[index];
-                              return GestureDetector(
-                                onTap: () {
-                                  if (summary.stage == ApplicationStage.LOGIN_PENDING.name) {
-                                    Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginPendingHome()));
-                                  } else {
-                                    Navigator.push(context, MaterialPageRoute(builder: (context) => StageLeadList(stage: summary.stage)));
-                                  }
-                                },
-                                child: Container(
-                                  margin: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
-                                  padding: const EdgeInsets.all(12.0),
-                                  decoration: BoxDecoration(
-                                    color: Theme.of(context).cardColor,
-                                    borderRadius: BorderRadius.circular(8.0),
-                                    border: isDarkTheme
-                                      ? Border.all(color: Colors.white12, width: 1.0) // Outlined border for dark theme
-                                      : null,
-                                    boxShadow: isDarkTheme
-                                      ? null : [
-                                      BoxShadow(
-                                        color: Colors.grey.withOpacity(0.5), //color of shadow
-                                        spreadRadius: 2, //spread radius
-                                        blurRadius: 6, // blur radius
-                                        offset: const Offset(2, 3),
-                                      )
-                                    ],
-                                  ),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            summary.stage,
-                                            style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w700,
-                                              color: isDarkTheme ? Colors.blueAccent[400] : const Color.fromARGB(255, 3, 71, 244),
-                                            ),
-                                          ),
-                                          Text("Total ${summary.count}",
-                                            style: TextStyle(
-                                              fontSize: 14,
-                                              color: Theme.of(context).textTheme.displaySmall!.color,
-                                              fontWeight: FontWeight.w500,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      Row(
-                                        children: [
-                                          Text(
-                                            '₹${LoanAmountFormatter.transform(summary.loanAmount)}',
-                                            style: TextStyle(
-                                              fontSize: 18,
-                                              color: Theme.of(context).textTheme.displayLarge!.color,
-                                              fontWeight: FontWeight.w600
-                                            ),
-                                          ),
-                                          const Icon(Icons.chevron_right),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              );
+                      );
+                    } else if (snapshot.hasError) {
+                      return Center(
+                        child: Text('Error: ${snapshot.error}'),
+                      );
+                    } else if (snapshot.hasData) {
+                      List<DashBoardSummaryDTO> summaries = snapshot.data!;
+                      if (summaries.isEmpty) {
+                        return const SizedBox(
+                          width: double.infinity,
+                          height: double.infinity,
+                          child: Center(
+                            child: Text('No data found',
+                            style: TextStyle(
+                              fontSize: 20,
+                            ),)
+                          )
+                        );
+                      }
+                      return ListView.builder(
+                        itemCount: summaries.length,
+                        itemBuilder: (context, index) {
+                          DashBoardSummaryDTO summary = summaries[index];
+                          return GestureDetector(
+                            onTap: () {
+                              if (summary.stage == ApplicationStage.LOGIN_PENDING.name) {
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginPendingHome()));
+                              } else {
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => StageLeadList(stage: summary.stage)));
+                              }
                             },
+                            child: Container(
+                              margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
+                              padding: const EdgeInsets.all(12.0),
+                              decoration: BoxDecoration(
+                                color: Theme.of(context).cardColor,
+                                borderRadius: BorderRadius.circular(8.0),
+                                border: isDarkTheme
+                                  ? Border.all(color: Colors.white12, width: 1.0) // Outlined border for dark theme
+                                  : null,
+                                boxShadow: isDarkTheme
+                                  ? null : [
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(0.5), //color of shadow
+                                    spreadRadius: 2, //spread radius
+                                    blurRadius: 6, // blur radius
+                                    offset: const Offset(2, 3),
+                                  )
+                                ],
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        summary.stage,
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w700,
+                                          color: isDarkTheme ? Colors.blueAccent[400] : const Color.fromARGB(255, 3, 71, 244),
+                                        ),
+                                      ),
+                                      Text("Total ${summary.count}",
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          color: Theme.of(context).textTheme.displaySmall!.color,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        '₹${LoanAmountFormatter.transform(summary.loanAmount)}',
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          color: Theme.of(context).textTheme.displayLarge!.color,
+                                          fontWeight: FontWeight.w600
+                                        ),
+                                      ),
+                                      const Icon(Icons.chevron_right),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
                           );
-                        } else {
-                          return Container(); // Placeholder widget when no data is available
-                        }
-                      },
-                    ),
+                        },
+                      );
+                    } else {
+                      return Container(); // Placeholder widget when no data is available
+                    }
+                  },
+                ),
               ),
             ],
           ),
         ),
       ),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () {
-      //     showModalBottomSheet(
-      //       context: context,
-      //       builder: (BuildContext context) {
-      //         return const Products();
-      //       },
-      //     );
-      //   },
-      //   backgroundColor: const Color.fromARGB(255, 3, 71, 244),
-      //   elevation: 5.0,
-      //   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-      //   child: const Icon(
-      //     Icons.add,
-      //     color: Colors.white,
-      //   ),
-      // ),
-      // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }

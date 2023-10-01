@@ -53,10 +53,10 @@ class _EditLeadState extends State<EditLead> {
       await applicationService.updateLead(entity);
       logger.d(applicant.declaration);
       if (applicant.declaration == ApplicantDeclarationStatus.COMPLETED) {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => BureauCheckList(id: applicant!.id!)));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => BureauCheckList(id: applicant.id!)));
       }
       else {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => BureauCheckDeclaration(name: applicant!.firstName!, id: applicant!.id!, mobile: applicant!.mobile ?? '1234')));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => BureauCheckDeclaration(name: applicant.firstName!, id: applicant!.id!, mobile: applicant!.mobile ?? '1234')));
       }
     }
     catch (e) {

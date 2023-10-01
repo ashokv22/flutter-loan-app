@@ -155,8 +155,8 @@ class _LoginPendingHomeState extends State<LoginPendingHome> {
                               Navigator.push(context, MaterialPageRoute(builder: (context) => SectionsData(id: product.id)));
                             },
                             child: Container(
-                              margin: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4.0),
-                              padding: const EdgeInsets.all(16.0),
+                              margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
+                              padding: const EdgeInsets.all(12.0),
                               decoration: BoxDecoration(
                                 color: Theme.of(context).cardColor,
                                 borderRadius: BorderRadius.circular(8.0),
