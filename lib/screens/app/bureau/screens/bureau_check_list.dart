@@ -28,6 +28,8 @@ class _BureauCheckListState extends State<BureauCheckList> {
   final loanApplicationService = LoanApplicationService();
   late Future<List<CheckListDTO>> checkListFuture;
   final TextEditingController rejectReason = TextEditingController();
+  bool pendingReports = true;
+  bool pendingReportsLoading = false;
   bool proceedLoading = false;
   bool rejectLoading = false;
   bool approveLoading = false;
@@ -41,6 +43,18 @@ class _BureauCheckListState extends State<BureauCheckList> {
   Future<void> refreshLeadsSummary() async {
     setState(() {
       checkListFuture = bureauService.getAllCheckLists(widget.id);
+      checkListFuture.then((checkList) {
+        if (checkList.any((check) => check.status == "PENDING")) {
+          setState(() {
+            print("Before: $pendingReports");
+            pendingReports = true;
+            print("After: $pendingReports");
+          });
+        } else {
+          print("No pending found: $pendingReports");
+          pendingReports = false;
+        }
+      });
     });
   }
 
@@ -49,7 +63,7 @@ class _BureauCheckListState extends State<BureauCheckList> {
       setState(() {
         proceedLoading = true;
       });
-      loanApplicationService.loginPanding(widget.id);
+      bureauService.loginPending(widget.id);
       Navigator.push(context, MaterialPageRoute(builder: (context) => const Home()));
     } catch (e) {
       setState(() {
@@ -57,6 +71,19 @@ class _BureauCheckListState extends State<BureauCheckList> {
       });
       displayError();
     }
+  }
+
+  void generateReports() async {
+    setState(() {
+      pendingReportsLoading = true;
+    });
+    await Future.delayed(const Duration(seconds: 2));
+    setState(() {
+      pendingReports = false;
+      bureauService.generateReports(widget.id);
+      pendingReportsLoading = false;
+      // refreshLeadsSummary();
+    });
   }
 
   void approveCibil(int id, CibilType type) async {
@@ -201,10 +228,10 @@ class _BureauCheckListState extends State<BureauCheckList> {
                                           IconButton(
                                             color: const Color.fromARGB(255, 3, 71, 244),
                                             onPressed: () {},
-                                            icon: const Icon(Icons.edit)),
+                                            icon: pendingReports == true ? const Icon(Icons.edit) : const Icon(Icons.visibility_rounded)) ,
                                         ],
                                       )
-                                    else if (checkList.status == ApplicantDeclarationStatus.COMPLETED.name)
+                                    else if (checkList.status == ApplicantDeclarationStatus.APPROVED.name)
                                       Row(
                                         children: [
                                           Container(
@@ -258,9 +285,10 @@ class _BureauCheckListState extends State<BureauCheckList> {
                                       )
                                   ],
                                 ), 
-                                if (checkList.status == ApplicantDeclarationStatus.PENDING.name)
+                                if (checkList.status == ApplicantDeclarationStatus.COMPLETED.name)
                                   Row(
                                     children: [
+                                      
                                       Expanded(
                                         child: OutlinedButton(
                                           style: OutlinedButton.styleFrom(
@@ -362,23 +390,48 @@ class _BureauCheckListState extends State<BureauCheckList> {
                 child: Column(
                   children: [
                     const SizedBox(height: 10,),
-                    SizedBox(
+                    Visibility(
+                      visible: pendingReports == true,
+                      replacement: SizedBox(
+                        width: double.infinity,
+                        height: 50,
+                        child: OutlinedButton(
+                          style: OutlinedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30.0),
+                            ),
+                            side: BorderSide(
+                              color: isDarkTheme ? Colors.blue : Colors.white, // Border color same as the solid button color
+                            ),
+                            padding: const EdgeInsets.symmetric(vertical: 16.0),
+                          ),
+                          onPressed: () {
+                            updateStage();
+                          },
+                          child: proceedLoading ? const SizedBox(
+                              width: 20.0,
+                              height: 20.0,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2.0,
+                                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                              ),
+                            )
+                            : Text("Proceed", style: TextStyle(fontSize: 16, color: isDarkTheme ? Colors.blue : Colors.white),),
+                        ),
+                      ),
+                      child: SizedBox(
                       width: double.infinity,
                       height: 50,
-                      child: OutlinedButton(
-                        style: OutlinedButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30.0),
-                          ),
-                          side: BorderSide(
-                            color: isDarkTheme ? Colors.blue : Colors.white, // Border color same as the solid button color
-                          ),
-                          padding: const EdgeInsets.symmetric(vertical: 16.0),
+                      child: MaterialButton(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30.0),
                         ),
+                        color: const Color.fromARGB(255, 2, 161, 23),
+                        textColor: Colors.white,
                         onPressed: () {
-                          updateStage();
+                          generateReports();
                         },
-                        child: proceedLoading ? const SizedBox(
+                        child: pendingReportsLoading ? const SizedBox(
                             width: 20.0,
                             height: 20.0,
                             child: CircularProgressIndicator(
@@ -386,8 +439,9 @@ class _BureauCheckListState extends State<BureauCheckList> {
                               valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                             ),
                           )
-                          : Text("Proceed", style: TextStyle(fontSize: 16, color: isDarkTheme ? Colors.blue : Colors.white),),
+                          : Text("Generate Reports", style: TextStyle(fontSize: 16, color: isDarkTheme ? Colors.blue : Colors.white),),
                       ),
+                    ),
                     ),
                     const SizedBox(height: 10,),
                     SizedBox(

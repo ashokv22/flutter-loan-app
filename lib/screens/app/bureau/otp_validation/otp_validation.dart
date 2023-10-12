@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:origination/models/bureau_check/declaration.dart';
 import 'package:origination/models/bureau_check/otp_verification/otp_request_dto.dart';
-import 'package:origination/models/bureau_check/otp_verification/otp_validation_dto.dart';
+// import 'package:origination/models/bureau_check/otp_verification/otp_validation_dto.dart';
 import 'package:origination/models/bureau_check/save_declaration_dto.dart';
 import 'package:origination/service/bureau_check_service.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
@@ -14,12 +14,12 @@ class OtpValidation extends StatefulWidget {
     required this.id,
     required this.mobile, 
     required this.declaration,
-    required this.secretKey,
+    // required this.secretKey,
   });
   final int id;
   final String mobile;
   final DeclarationMasterDTO declaration;
-  final String secretKey;
+  // final String secretKey;
 
   @override
   State<OtpValidation> createState() => _OtpValidationState();
@@ -39,7 +39,7 @@ class _OtpValidationState extends State<OtpValidation> {
     });
     
     try {
-      OtpRequestDTO dto = OtpRequestDTO(otp: verificationCode, secret_key: widget.secretKey);
+      // OtpRequestDTO dto = OtpRequestDTO(otp: verificationCode, secret_key: widget.secretKey);
       SaveDeclarationDTO saveDeclaration = SaveDeclarationDTO(
         entityType: "Lead",
         entityId: widget.id,
@@ -48,8 +48,8 @@ class _OtpValidationState extends State<OtpValidation> {
         status: "ACCEPTED",
         declarationMasterId: widget.declaration.id
       );
-      OtpValidationDTO validation = OtpValidationDTO(requestDTO: dto, declarationDTO: saveDeclaration);
-      OtpRequestDTO response = await bureauService.validateBureauCheckOtp(widget.id, validation);
+      // OtpValidationDTO validation = OtpValidationDTO(requestDTO: dto, declarationDTO: saveDeclaration);
+      OtpRequestDTO response = await bureauService.validateBureauCheckOtp(widget.id, int.parse(verificationCode), saveDeclaration);
       logger.d(response.toJson());
       otpValidated = true;
       Navigator.pushReplacement(

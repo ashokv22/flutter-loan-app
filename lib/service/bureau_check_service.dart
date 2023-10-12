@@ -2,11 +2,13 @@ import 'dart:convert';
 
 import 'package:logger/logger.dart';
 import 'package:origination/environments/environment.dart';
+import 'package:origination/models/applicant_dto.dart';
 import 'package:origination/models/bureau_check/bc_check_list_dto.dart';
 import 'package:origination/models/bureau_check/declaration.dart';
 import 'package:origination/models/bureau_check/individual.dart';
 import 'package:origination/models/bureau_check/otp_verification/otp_request_dto.dart';
-import 'package:origination/models/bureau_check/otp_verification/otp_validation_dto.dart';
+// import 'package:origination/models/bureau_check/otp_verification/otp_validation_dto.dart';
+import 'package:origination/models/bureau_check/save_declaration_dto.dart';
 import 'package:origination/screens/sign_in/auth_interceptor.dart';
 import 'package:http/http.dart' as http;
 import 'package:origination/service/auth_service.dart';
@@ -22,14 +24,12 @@ class BureauCheckService {
   // final String token = 'fad7850e-3e53-4d6c-9310-82ccaf54c996';
 
   // Init OTP
-  Future<OtpRequestDTO> initBureauCheck(int id) async {
+  Future<bool> initBureauCheck(int id) async {
     String endpoint = "api/application/bureauCheck/init?applicantId=$id";
     try {
       final response = await authInterceptor.get(Uri.parse(endpoint));
       if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        OtpRequestDTO request = OtpRequestDTO.fromJson(data);
-        return request;
+        return true;
       }
       else {
         throw Exception('Failed to init bureau check. Error code: ${response.statusCode}');
@@ -41,16 +41,16 @@ class BureauCheckService {
   }
 
   // Validate OTP
-  Future<OtpRequestDTO> validateBureauCheckOtp(int id, OtpValidationDTO request) async {
+  Future<OtpRequestDTO> validateBureauCheckOtp(int id, int otp, SaveDeclarationDTO declarationDTO) async {
     // String endpoint = "api/application/bureauCheck/validate?applicantId=$id";
     String token = await authService.getAccessToken();
     final response = await http.post(
-      Uri.parse('${apiUrl}api/application/bureauCheck/validate?applicantId=$id'),
+      Uri.parse('${apiUrl}api/application/bureauCheck/validate?applicantId=$id&otp=$otp'),
       headers: {
         'X-Auth-Token': token,
         'Content-Type': 'application/json',
       },
-      body: jsonEncode(request),
+      body: jsonEncode(declarationDTO),
     );
     // final response = await authInterceptor.post(Uri.parse(endpoint), body: request);
     if (response.statusCode == 200 || response.statusCode == 400) {
@@ -178,4 +178,36 @@ class BureauCheckService {
       throw Exception("An error occurred while fetching data!: $e");
     }
   }
+
+  Future<void> generateReports(int id) async {
+    String endpoint = "api/application/bureauCheck/generate/$id";
+    try {
+      final response = await authInterceptor.put(Uri.parse(endpoint));
+      if (response.statusCode != 200) {
+        throw Exception('Failed to generate bureau reports. Error code: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception("An error occurred while generating bureau reports data!: $e");
+    }
+  }
+
+  Future<ApplicantDTO> loginPending(int id) async {
+    String endpoint = "api/application/loanApplication/lead/loginPending/$id";
+    try {
+      final response = await authInterceptor.put(Uri.parse(endpoint));
+      if (response.statusCode == 200) {
+        final jsonResponse = json.decode(response.body);
+        ApplicantDTO applicant = ApplicantDTO.fromJson(jsonResponse);
+        return applicant;
+      }
+      else {
+        throw Exception('Failed to get data. Error code: ${response.statusCode}');
+      }
+    }
+    catch (e) {
+      throw  Exception('An error occurred while getting the data: $e');
+    }
+  }
+
+
 }

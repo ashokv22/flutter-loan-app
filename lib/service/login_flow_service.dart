@@ -58,14 +58,17 @@ class LoginPendingService {
     }
   }
 
-  Future<Section> getMainSectionDataForApplicantAndSection(int id, String sectionName) async {
+  Future<Section> getMainSectionDataForApplicantAndSection(int id, String section, String sectionName) async {
     logger.wtf("Getting data for id: $id and section: $sectionName");
-    String endpoint = "api/application/loanApplication/sectionsData/$id/Application/All?sectionName=$sectionName";
+    String endpoint = "api/application/loanApplication/sectionsData/$id/Application/$section?sectionName=$sectionName";
     try {
       final response = await authInterceptor.get(Uri.parse(endpoint));
       if (response.statusCode == 200) {
+        logger.wtf("Success");
         final data = json.decode(response.body);
+        logger.wtf("Converted to json");
         Section section = Section.fromJson(data);
+        logger.wtf("Converted to DTO");
         logger.d(section.toJson());
         return section;
       }

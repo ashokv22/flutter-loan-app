@@ -24,7 +24,7 @@ class LoanApplicationService {
     String token = await authService.getAccessToken();
     logger.d(token);
 
-    String endpoint = "api/application/loanApplication/lead";
+    String endpoint = "api/application/loanApplication/lead?product=Tractor";
 
     final fetchResponse = await http.post(Uri.parse(apiUrl + endpoint), headers: {
       'Content-type': 'application/json',
@@ -272,24 +272,6 @@ class LoanApplicationService {
     }
   }
 
-  Future<ApplicantDTO> loginPanding(int id) async {
-    String endpoint = "api/application/loanApplication/lead/loginPending/$id";
-    try {
-      final response = await authInterceptor.put(Uri.parse(endpoint));
-      if (response.statusCode == 200) {
-        final jsonResponse = json.decode(response.body);
-        ApplicantDTO applicant = ApplicantDTO.fromJson(jsonResponse);
-        return applicant;
-      }
-      else {
-        throw Exception('Failed to get data. Error code: ${response.statusCode}');
-      }
-    }
-    catch (e) {
-      throw  Exception('An error occurred while getting the data: $e');
-    }
-  }
-
   Future<Section> getSection(String sectionName) async {
     String endpoint = "api/application/entitySection/sectionName?sectionName=$sectionName";
     try {
@@ -361,6 +343,28 @@ class LoanApplicationService {
       }
       if (response.statusCode != 200) {
         throw Exception('Lead is not in Lead state. Error code: ${response.statusCode}');
+      }
+    }
+    catch (e) {
+      throw  Exception('An error occurred while getting the data: $e');
+    }
+  }
+
+  Future<void> saveSection(int applicantId, String sectionName, Section data) async {
+    String endpoint = "api/application/loanApplication/sectionsData/$applicantId/Application/All?sectionName=$sectionName";
+    try {
+      final response = await http.post(Uri.parse(apiUrl + endpoint), headers: {
+        'X-AUTH-TOKEN': await authService.getAccessToken(),
+        'Content-Type': 'application/json',
+        }, 
+        body: jsonEncode(data)
+      );
+      logger.d(response.statusCode);
+      if (response.statusCode == 200) {
+        logger.i(response.statusCode);
+      }
+      else {
+        throw Exception('There\'s a problem while saving Section $sectionName. Error code: ${response.statusCode}');
       }
     }
     catch (e) {

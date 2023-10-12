@@ -54,10 +54,10 @@ class _BureauCheckDeclarationState extends State<BureauCheckDeclaration> {
       isLoading = true;
     });
     try {
-      requestDTO = await bureauService.initBureauCheck(widget.id);
+      await bureauService.initBureauCheck(widget.id);
       setState(() {
         isLoading = false;
-        Navigator.push(context, MaterialPageRoute(builder: (context) => OtpValidation(id: widget.id, declaration: declaration,  mobile: widget.mobile, secretKey: requestDTO.secret_key!,)));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => OtpValidation(id: widget.id, declaration: declaration,  mobile: widget.mobile)));
       });
       // await Future.delayed(const Duration(seconds: 2));
     }
