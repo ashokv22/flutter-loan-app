@@ -26,7 +26,6 @@ class LoginPendingService {
         List<LoginPendingProductsDTO> list = [];
         for (var data in jsonResponse) {
           LoginPendingProductsDTO app = LoginPendingProductsDTO.fromJson(data);
-          logger.wtf(app.toJson());
           list.add(app);
         }
         return list;

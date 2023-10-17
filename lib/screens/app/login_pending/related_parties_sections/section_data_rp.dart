@@ -13,21 +13,23 @@ import 'package:origination/models/entity_configuration.dart';
 import 'package:origination/service/loan_application_service.dart';
 import 'package:origination/service/login_flow_service.dart';
 
-class SectionScreenEmpty extends StatefulWidget {
-  const SectionScreenEmpty({
+class SectionScreenRP extends StatefulWidget {
+  const SectionScreenRP({
     super.key,
     required this.id,
     required this.title,
+    required this.entitySubType,
   });
 
   final int id;
   final String title;
+  final String entitySubType;
 
   @override
-  _SectionScreenEmptyState createState() => _SectionScreenEmptyState();
+  _SectionScreenRPState createState() => _SectionScreenRPState();
 }
 
-class _SectionScreenEmptyState extends State<SectionScreenEmpty> {
+class _SectionScreenRPState extends State<SectionScreenRP> {
   final loginPendingService = LoginPendingService();
   final loanApplicationService = LoanApplicationService();
   late Future<Section> leadApplicationFuture;
@@ -38,7 +40,7 @@ class _SectionScreenEmptyState extends State<SectionScreenEmpty> {
   @override
   void initState() {
     super.initState();
-    leadApplicationFuture = loginPendingService.getMainSectionDataForApplicantAndSection(widget.id, "All", widget.title);
+    leadApplicationFuture = loginPendingService.getMainSectionDataForApplicantAndSection(widget.id, widget.entitySubType, widget.title);
   }
 
   void onSave(Section entity) async {
@@ -46,7 +48,7 @@ class _SectionScreenEmptyState extends State<SectionScreenEmpty> {
       isLoading = true;
     });
     try {
-      await loanApplicationService.saveSection(widget.id, widget.title, entity);
+      await loanApplicationService.saveSectionRP(widget.id, widget.entitySubType, widget.title, entity);
       final currentContext = context;
       Navigator.pushReplacementNamed(currentContext, '/');
     }

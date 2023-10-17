@@ -31,7 +31,6 @@ class _LoginPendingHomeState extends State<LoginPendingHome> {
   Future<void> refreshLeadsSummary() async {
     setState(() {
       pendingProductsFuture = loginPendingService.getPendingProducts();
-      logger.wtf(pendingProductsFuture.then((value) => value));
     });
   }
 
@@ -152,7 +151,7 @@ class _LoginPendingHomeState extends State<LoginPendingHome> {
 
                           return GestureDetector(
                             onTap: () {
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => SectionsData(id: product.id)));
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => MainSectionsData(id: product.id)));
                             },
                             child: Container(
                               margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),

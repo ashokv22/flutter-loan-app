@@ -5,8 +5,9 @@ import 'package:logger/logger.dart';
 import 'package:origination/core/widgets/custom/related_parties_dropdown.dart';
 import 'package:origination/models/bureau_check/bc_check_list_dto.dart';
 import 'package:origination/models/login_flow/sections/loan_application_entity.dart';
-import 'package:origination/screens/app/login_pending/main_sections/section_data.dart';
 import 'package:origination/screens/app/login_pending/related_parties_sections/primary_kyc/primary_kyc_home.dart';
+import 'package:origination/screens/app/login_pending/related_parties_sections/secondary_kyc/secondary_kyc_home.dart';
+import 'package:origination/screens/app/login_pending/related_parties_sections/section_data_rp.dart';
 import 'package:origination/service/bureau_check_service.dart';
 import 'package:origination/service/login_flow_service.dart';
 
@@ -38,16 +39,16 @@ class _RelatedPartiesState extends State<RelatedParties> {
   @override
   void initState() {
     super.initState();
-    initializeApplicantsAndSections();
+    // initializeApplicantsAndSections();
   }
 
-  Future<void> initializeApplicantsAndSections() async {
-    sectionsData = await _fetchLoanSection("MainSection");
-    setState(() {});
-  }
+  // Future<void> initializeApplicantsAndSections() async {
+  //   sectionsData = await _fetchLoanSection("MainSection");
+  //   setState(() {});
+  // }
 
   Future<LoanApplicationEntity> _fetchLoanSection(String sectionName) async {
-    return await loginPendingService.getSectionMaster(widget.id, selectedType);
+    return await loginPendingService.getSectionMaster(relatedPartyId, selectedType);
   }
 
   Future<List<CheckListDTO>> initializeApplicants() async {
@@ -142,8 +143,11 @@ class _RelatedPartiesState extends State<RelatedParties> {
                     if (section.sectionName == "PrimaryKYC") {
                       Navigator.push(context, MaterialPageRoute(builder: (context) => PrimaryKycHome(applicationId: widget.id, relatedPartyId: relatedPartyId,)));
                     }
+                    else if (section.sectionName == "SecondaryKYC") {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => SecondaryKycHome(relatedPartyId: relatedPartyId,)));
+                    }
                     else{
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => SectionScreenEmpty(id: widget.id, title: section.sectionName,)));
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => SectionScreenRP(id: widget.id, entitySubType: selectedType, title: section.sectionName,)));
                     }
                   },
                 child: Container(
@@ -173,9 +177,14 @@ class _RelatedPartiesState extends State<RelatedParties> {
                           fontWeight: FontWeight.w600,
                         ),
                       ),
-                      Icon(
-                        CupertinoIcons.chevron_right_circle_fill,
-                        color: Theme.of(context).iconTheme.color,)
+                      if (section.status == "COMPLETED")
+                        const Icon(
+                          CupertinoIcons.checkmark_alt_circle_fill,
+                          color: Color.fromARGB(255, 0, 152, 58),)
+                      else
+                        Icon(
+                          CupertinoIcons.chevron_right_circle_fill,
+                          color: Theme.of(context).iconTheme.color,)
                     ],
                   ),
                 ),

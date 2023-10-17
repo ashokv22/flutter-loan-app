@@ -10,8 +10,8 @@ import 'package:origination/screens/app/login_pending/main_sections/section_data
 import 'package:origination/screens/app/login_pending/typeahead_test.dart';
 import 'package:origination/service/login_flow_service.dart';
 
-class SectionsData extends StatefulWidget {
-  const SectionsData({
+class MainSectionsData extends StatefulWidget {
+  const MainSectionsData({
     super.key,
     required this.id,
   });
@@ -19,10 +19,10 @@ class SectionsData extends StatefulWidget {
   final int id;
 
   @override
-  State<SectionsData> createState() => _SectionsDataState();
+  State<MainSectionsData> createState() => _MainSectionsDataState();
 }
 
-class _SectionsDataState extends State<SectionsData> {
+class _MainSectionsDataState extends State<MainSectionsData> {
 
   final loginPendingService = LoginPendingService();
   var logger = Logger();
