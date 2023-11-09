@@ -50,6 +50,7 @@ dependencies:
   toggle_switch: ^2.1.0
   flutter_speed_dial: ^7.0.0
   flutter_typeahead: ^4.6.2
+  flutter_web_frame: ^1.0.0
 
 dev_dependencies:
   flutter_test:

@@ -17,6 +17,8 @@ import 'screens/pages/application_form.dart';
 import 'screens/pages/branch_manager_table.dart';
 import 'screens/widgets/side_menu.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_web_frame/flutter_web_frame.dart';
+import 'package:flutter/foundation.dart';
 // import 'themes.dart';
 
 void main() {
@@ -43,59 +45,67 @@ class _SideMenuAppState extends State<SideMenuApp> {
     final AuthService authService = AuthService();
     // final Brightness brightness = MediaQuery.of(context).platformBrightness;
     final themeProvider = context.watch<MyTheme>();
-    return MaterialApp(
-      title: 'Origination',
-      theme: ThemeData(
-        colorSchemeSeed: const Color.fromARGB(255, 3, 71, 244),
-        useMaterial3: true,
-        brightness: Brightness.light,
-      ),
-      darkTheme: ThemeData(
-        colorSchemeSeed: const Color.fromARGB(255, 3, 71, 244),
-        useMaterial3: true,
-        brightness: Brightness.dark,
-      ),
-      // theme: getSystemDefaultTheme(brightness),
-      themeMode: themeProvider.currentThemeMode,
-      home: const Home(),
-      debugShowCheckedModeBanner: false,
-      routes: {
-        '/home': (context) => FutureBuilder<bool>(
-              future: authService.isLoggedIn(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const SizedBox(
-                    width: double.infinity,
-                    height: double.infinity,
-                    child: Center(
-                      child: CircularProgressIndicator()
-                      )
-                  );
-                } else {
-                  if (snapshot.hasData && snapshot.data == true) {
-                    return const LeadDashboard();
-                  } else {
-                    return const SignIn();
-                  }
-                }
-              },
-            ),
-        // Authentication
-        '/sign-in': (context) => const SignIn(),
-        '/forgotPassword': (context) => const ForgotPassword(),
-        '/reset-password': (context) => const ResetPassword(),
-        // Flowable
-        '/application': (context) => const ApplicationForm(),
-        '/branch_manager': (context) => const BranchManagerTable(),
-        '/supervisor': (context) => const SupervisorTable(),
-        '/claimed': (context) => const ClaimedTasks(),
-        '/completed': (context) => CompletedTasks(),
-        // DCB
-        '/leads/home': (context) => const LeadDashboard(),
-        '/lead/add': (context) => const NewLead(),
-        '/lead/search': (context) => SearchPage(),
-        '/profile': (context) => const ProfileScreen(),
-      }
+    return FlutterWebFrame(
+      builder: (context) {
+        return MaterialApp(
+          title: 'Origination',
+          theme: ThemeData(
+            colorSchemeSeed: const Color.fromARGB(255, 3, 71, 244),
+            useMaterial3: true,
+            brightness: Brightness.light,
+          ),
+          darkTheme: ThemeData(
+            colorSchemeSeed: const Color.fromARGB(255, 3, 71, 244),
+            useMaterial3: true,
+            brightness: Brightness.dark,
+          ),
+          // theme: getSystemDefaultTheme(brightness),
+          themeMode: themeProvider.currentThemeMode,
+          home: const Home(),
+          debugShowCheckedModeBanner: false,
+          routes: {
+            '/home': (context) => FutureBuilder<bool>(
+                  future: authService.isLoggedIn(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const SizedBox(
+                        width: double.infinity,
+                        height: double.infinity,
+                        child: Center(
+                          child: CircularProgressIndicator()
+                          )
+                      );
+                    } else {
+                      if (snapshot.hasData && snapshot.data == true) {
+                        return const LeadDashboard();
+                      } else {
+                        return const SignIn();
+                      }
+                    }
+                  },
+                ),
+            // Authentication
+            '/sign-in': (context) => const SignIn(),
+            '/forgotPassword': (context) => const ForgotPassword(),
+            '/reset-password': (context) => const ResetPassword(),
+            // Flowable
+            '/application': (context) => const ApplicationForm(),
+            '/branch_manager': (context) => const BranchManagerTable(),
+            '/supervisor': (context) => const SupervisorTable(),
+            '/claimed': (context) => const ClaimedTasks(),
+            '/completed': (context) => CompletedTasks(),
+            // DCB
+            '/leads/home': (context) => const LeadDashboard(),
+            '/lead/add': (context) => const NewLead(),
+            '/lead/search': (context) => SearchPage(),
+            '/profile': (context) => const ProfileScreen(),
+          }
+        );
+      },
+      clipBehavior: Clip.hardEdge,
+      maximumSize: const Size(475.0, 812.0), // Maximum size
+      enabled: kIsWeb, // default is enable, when disable content is full size
+      backgroundColor: Colors.black,
     );
   }
 }
