@@ -10,7 +10,7 @@ class Individual {
   String? product;
   String? enquiryPurpose;
   int? internalRefNumber;
-  int? loanAmount;
+  double? loanAmount;
   String? firstName;
   String? middleName;
   String? lastName;

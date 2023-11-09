@@ -180,8 +180,8 @@ class _LoginPendingHomeState extends State<LoginPendingHome> {
                                       Column(
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
-                                          const Text("Product",
-                                            style: TextStyle(
+                                          Text("Product: ${product.id}",
+                                            style: const TextStyle(
                                               fontSize: 16,
                                               fontWeight: FontWeight.w600
                                             ),

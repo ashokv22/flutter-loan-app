@@ -76,7 +76,7 @@ class _CoApplicantGuarantorState extends State<CoApplicantGuarantor> {
       product: product.text,
       enquiryPurpose: enquiry.text,
       internalRefNumber: int.parse(internalRefNo.text),
-      loanAmount: int.parse(loanAMount.text),
+      loanAmount: double.parse(loanAMount.text),
       firstName: firstName.text,
       middleName: middleName.text,
       lastName: lastName.text,

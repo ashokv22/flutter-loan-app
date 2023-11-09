@@ -12,7 +12,7 @@ Individual _$IndividualFromJson(Map<String, dynamic> json) => Individual(
       product: json['product'] as String?,
       enquiryPurpose: json['enquiryPurpose'] as String?,
       internalRefNumber: json['internalRefNumber'] as int?,
-      loanAmount: json['loanAmount'] as int?,
+      loanAmount: (json['loanAmount'] as num?)?.toDouble(),
       firstName: json['firstName'] as String?,
       middleName: json['middleName'] as String?,
       lastName: json['lastName'] as String?,

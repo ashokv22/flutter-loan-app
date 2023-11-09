@@ -285,7 +285,7 @@ class _BureauCheckListState extends State<BureauCheckList> {
                                       )
                                   ],
                                 ), 
-                                if (checkList.status == ApplicantDeclarationStatus.COMPLETED.name)
+                                if (checkList.status == ApplicantDeclarationStatus.PENDING.name)
                                   Row(
                                     children: [
                                       

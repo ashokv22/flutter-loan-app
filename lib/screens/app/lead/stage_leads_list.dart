@@ -23,9 +23,25 @@ class StageLeadList extends StatefulWidget {
 class _StageLeadListState extends State<StageLeadList> {
 
   Logger logger = Logger();
-
   LoanApplicationService applicationService = LoanApplicationService();
   
+  Set<int> selectedIds = Set<int>();
+
+  void toggleSelection(int id) {
+    setState(() {
+      if (selectedIds.contains(id)) {
+        selectedIds.remove(id);
+      } else {
+        selectedIds.add(id);
+      }
+    });
+  }
+
+  // Helper function to check if an item is selected
+  bool isItemSelected(int id) {
+    return selectedIds.contains(id);
+  }
+
   int getRandomNumber() {
     int min = 1;
     int max = 20;
@@ -118,7 +134,6 @@ class _StageLeadListState extends State<StageLeadList> {
                     itemBuilder: (context, index) {
                       LeadsListDTO applicant = summaries[index];
                       int randomNumber = getRandomNumber();
-                      logger.i('${applicant.applicantId}, ${applicant.name}');
                       return Dismissible(
                         direction: DismissDirection.endToStart,
                         key: Key(applicant.toString()),
@@ -143,6 +158,9 @@ class _StageLeadListState extends State<StageLeadList> {
                             ),
                           ),
                         child: GestureDetector(
+                          onLongPress: () {
+                            toggleSelection(applicant.id);
+                          },
                           onTap: () {
                             if (applicant.status == ApplicationStage.REJECTED.name) {
                               ScaffoldMessenger.of(context).showSnackBar(
@@ -162,7 +180,9 @@ class _StageLeadListState extends State<StageLeadList> {
                           },
                           child: Container(
                             // margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
+                            margin: const EdgeInsets.symmetric(horizontal: 1.0, vertical: 2.0),
                             padding: const EdgeInsets.all(12.0),
+                            color: selectedIds.contains(applicant.id) ? Colors.blue.withOpacity(0.3) : null,
                             // decoration: BoxDecoration(
                             //   color: Theme.of(context).cardColor,
                             //   border: isDarkTheme
@@ -184,13 +204,39 @@ class _StageLeadListState extends State<StageLeadList> {
                               children: [
                                 Row(
                                   children: [
-                                    SizedBox(
-                                      width: 60,
-                                      height: 60,
-                                      child: ClipRRect(
-                                        borderRadius: BorderRadius.circular(50),
-                                        child: Image.asset('assets/images/female-${randomNumber.toString().padLeft(2, '0')}.jpg', fit: BoxFit.cover,)),
-                                    ),
+                                    if (!isItemSelected(applicant.id))
+                                      GestureDetector(
+                                        onTap: () {
+                                          toggleSelection(applicant.id);
+                                        },
+                                        child: SizedBox(
+                                          width: 60,
+                                          height: 60,
+                                          child: ClipRRect(
+                                            borderRadius: BorderRadius.circular(50),
+                                            child: Image.asset('assets/images/female-${randomNumber.toString().padLeft(2, '0')}.jpg', fit: BoxFit.cover,)),
+                                        ),
+                                      )
+                                    else
+                                      Positioned(
+                                        bottom: 0,
+                                        right: 0,
+                                        child: SizedBox(
+                                          width: 60,
+                                          height: 60,
+                                          child: Container(
+                                            padding: const EdgeInsets.all(4.0),
+                                            decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              color: isDarkTheme ? Colors.blueAccent[400] : const Color.fromARGB(255, 3, 71, 244),
+                                            ),
+                                            child: const Icon(
+                                              Icons.check,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
                                     const SizedBox(width: 10),
                                     Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,

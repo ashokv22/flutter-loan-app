@@ -1,5 +1,11 @@
 import 'package:flutter/cupertino.dart';
+import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
+import 'package:origination/core/widgets/datepicker.dart';
+import 'package:origination/core/widgets/number_input.dart';
+import 'package:origination/core/widgets/text_input.dart';
+import 'package:origination/models/login_flow/sections/related_party/primary_kyc_dto.dart';
 
 class PrimaryKycHome extends StatefulWidget {
   const PrimaryKycHome({
@@ -16,7 +22,35 @@ class PrimaryKycHome extends StatefulWidget {
 }
 
 class _PrimaryKycHomeState extends State<PrimaryKycHome> {
-  bool _value = false;
+  Logger logger = Logger();
+  bool isLoading = false;
+  TextEditingController aadhaarNumberController = TextEditingController();
+  TextEditingController nameController = TextEditingController();
+  TextEditingController fatherNameController = TextEditingController();
+  TextEditingController dobController = TextEditingController();
+  TextEditingController addressController = TextEditingController();
+  late DateTime _selectedDate;
+
+  void handleDateChanged(String newValue) {
+    DateTime selectedDateTime = DateFormat('yyyy-MM-dd').parse(newValue);
+    setState(() {
+      _selectedDate = selectedDateTime;
+    });
+  }
+
+  void save() {
+    PrimaryKycDTO dto = PrimaryKycDTO(
+      relatedPartyId: widget.relatedPartyId, 
+      adharNumber: aadhaarNumberController.text, 
+      name: nameController.text, 
+      fatherName: fatherNameController.text, 
+      dateOfBirth: _selectedDate, 
+      address: addressController.text
+    );
+    logger.d(dto.toJson());
+    Navigator.pop(context);
+  }
+
   @override
   Widget build(BuildContext context) {
     final isDarkTheme = Theme.of(context).brightness == Brightness.dark;
@@ -48,41 +82,78 @@ class _PrimaryKycHomeState extends State<PrimaryKycHome> {
             padding: const EdgeInsets.all(8.0),
             child: Column(
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                const Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text("Aadhar", style: Theme.of(context).textTheme.headlineSmall),
-                    CupertinoSwitch(
-                      value: _value,
-                      onChanged: (value) {
-                        setState(() {
-                          _value = value;
-                        });
-                      },
-                    ),
-                    Text("Voter Id", style: Theme.of(context).textTheme.headlineSmall),
+                    Text("Primary KYC", style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),),
+                    Text("Mode: Adhar OCR", style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),),
+                  ],
+                ),
+                const SizedBox(height: 30,),
+                Column(
+                  children: [
+                    NumberInput(label: "Adhar Number", controller: aadhaarNumberController, onChanged: (value) {}),
+                    const SizedBox(height: 10,),
+                    TextInput(label: "Name", controller: nameController, onChanged: (value) {}),
+                    const SizedBox(height: 10,),
+                    TextInput(label: "Father Name", controller: fatherNameController, onChanged: (value) {}),
+                    const SizedBox(height: 10,),
+                    DatePickerInput(label: "Date of birth", controller: dobController, onChanged: (newValue) => handleDateChanged(newValue)),
+                    const SizedBox(height: 10,),
+                    TextInput(label: "Address", controller: addressController, onChanged: (value) {}),
                   ],
                 ),
                 const Spacer(),
                 Align(
                   alignment: Alignment.bottomCenter,
-                  child: Container(
-                    height: 50,
-                    width: 50,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                    child: IconButton(
-                      icon: const Icon(Icons.chevron_right),
-                      onPressed: () {
-                          Future.delayed(Duration.zero, () {
-                            _showConfirmSheet(context);
-                          });
+                  child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: SizedBox(
+                      width: double.infinity,
+                      height: 50,
+                      child: MaterialButton(
+                        onPressed: () {
+                          save();
                         },
+                        color: const Color.fromARGB(255, 3, 71, 244),
+                        textColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(vertical: 16.0),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30.0),
+                        ),
+                        child: isLoading
+                          ? const SizedBox(
+                              width: 20.0,
+                              height: 20.0,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2.0,
+                                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                              ),
+                            )
+                          : const Text('Save'),
+                      ),
                     ),
                   ),
                 )
+                // Align(
+                //   alignment: Alignment.bottomCenter,
+                //   child: Container(
+                //     height: 50,
+                //     width: 50,
+                //     decoration: BoxDecoration(
+                //       color: Colors.white,
+                //       borderRadius: BorderRadius.circular(30),
+                //     ),
+                //     child: IconButton(
+                //       icon: const Icon(Icons.chevron_right),
+                //       onPressed: () {
+                //           Future.delayed(Duration.zero, () {
+                //             _showConfirmSheet(context);
+                //           });
+                //         },
+                //     ),
+                //   ),
+                // )
               ],
             ),
           ),
@@ -90,45 +161,45 @@ class _PrimaryKycHomeState extends State<PrimaryKycHome> {
     );
   }
   
-  void _showConfirmSheet(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      builder: (BuildContext context) {
-        return SizedBox(
-          height: 250,
-          child:  Center(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const SizedBox(height: 10),
-                  const Text("You have selected Aadhar", textAlign: TextAlign.center, style: TextStyle(fontSize: 20)),
-                  const Text("Once Kyc mode selected, it cannot be changed in future. Please confirm before going further!", textAlign: TextAlign.center, style: TextStyle(fontSize: 20)),
-                  const Spacer(),
-                  SizedBox(
-                    width: double.infinity,
-                    height: 50,
-                    child: MaterialButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      color: const Color.fromARGB(255, 3, 71, 244),
-                      textColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(vertical: 16.0),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      child: const Text('Continue'),
-                    ),
-                  )
-                ],
-              ),
-            ),
-          ),
-        );
-      }
-    );
-  }
+  // void _showConfirmSheet(BuildContext context) {
+  //   showModalBottomSheet(
+  //     context: context,
+  //     isScrollControlled: true,
+  //     builder: (BuildContext context) {
+  //       return SizedBox(
+  //         height: 250,
+  //         child:  Center(
+  //           child: Padding(
+  //             padding: const EdgeInsets.all(16.0),
+  //             child: Column(
+  //               mainAxisAlignment: MainAxisAlignment.center,
+  //               children: [
+  //                 const SizedBox(height: 10),
+  //                 const Text("You have selected Aadhar", textAlign: TextAlign.center, style: TextStyle(fontSize: 20)),
+  //                 const Text("Once Kyc mode selected, it cannot be changed in future. Please confirm before going further!", textAlign: TextAlign.center, style: TextStyle(fontSize: 20)),
+  //                 const Spacer(),
+  //                 SizedBox(
+  //                   width: double.infinity,
+  //                   height: 50,
+  //                   child: MaterialButton(
+  //                     onPressed: () {
+  //                       Navigator.push(context, MaterialPageRoute(builder: (context) => AdharForm(relatedPartyId: widget.relatedPartyId,)));
+  //                     },
+  //                     color: const Color.fromARGB(255, 3, 71, 244),
+  //                     textColor: Colors.white,
+  //                     padding: const EdgeInsets.symmetric(vertical: 16.0),
+  //                     shape: RoundedRectangleBorder(
+  //                       borderRadius: BorderRadius.circular(10.0),
+  //                     ),
+  //                     child: const Text('Continue'),
+  //                   ),
+  //                 )
+  //               ],
+  //             ),
+  //           ),
+  //         ),
+  //       );
+  //     }
+  //   );
+  // }
 }
