@@ -133,9 +133,9 @@ class _SecondaryKycFormState extends State<SecondaryKycForm> {
                       child: Column(
                         children: [
                           const SizedBox(height: 10,),
-                          TextInput(label: "Name", controller: nameController, onChanged: (value) {}),
+                          TextInput(label: "Name", controller: nameController, onChanged: (value) {}, isEditable: true, isReadable: false),
                           const SizedBox(height: 10,),
-                          TextInput(label: "Father Name", controller: fatherNameController, onChanged: (value) {}),
+                          TextInput(label: "Father Name", controller: fatherNameController, onChanged: (value) {}, isEditable: true, isReadable: false),
                           const SizedBox(height: 10,),
                           DatePickerInput(label: "Date of birth", controller: dobController, onChanged: (newValue) => handleDateChanged(newValue)),
                         ],

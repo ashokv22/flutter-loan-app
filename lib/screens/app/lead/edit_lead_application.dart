@@ -244,10 +244,10 @@ class _EditLeadState extends State<EditLead> {
     TextEditingController controller = textEditingControllerMap[fieldName]!;
   logger.wtf(field.fieldMeta?.fieldUiProperties?.uiComponentName);
     if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'TextBox' || field.fieldMeta?.fieldUiProperties?.uiComponentName == 'Number') {
-      return TextInput(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field));
+      return TextInput(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field), isEditable: field.isEditable!, isReadable: field.isReadOnly!);
     } 
     else if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'TextArea') {
-      return TextInput(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field));
+      return TextInput(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field), isEditable: field.isEditable!, isReadable: field.isReadOnly!);
     } 
     else if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'ReferenceCode' || field.fieldMeta?.fieldUiProperties?.uiComponentName!.toLowerCase() == 'dropdown') {
       return Referencecode(label: fieldName, referenceCode: field.fieldMeta!.referenceCodeClassifier!, controller: controller, onChanged: (newValue) => updateFieldValue(newValue!, field));
@@ -259,7 +259,7 @@ class _EditLeadState extends State<EditLead> {
       return DatePickerInput(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field),);
     } 
     else if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'TypeAhead') {
-      return TextInput(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field),);
+      return TextInput(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field), isEditable: field.isEditable!, isReadable: field.isReadOnly!);
     } 
     else if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'Phone') {
       return MobileInput(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field),);

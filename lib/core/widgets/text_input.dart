@@ -6,11 +6,15 @@ class TextInput extends StatefulWidget {
     required this.label,
     required this.controller,
     required this.onChanged,
+    required this.isReadable,
+    required this.isEditable,
   }) : super(key: key);
 
   final String label;
   final TextEditingController controller;
   final ValueChanged<String> onChanged;
+  final bool isReadable;
+  final bool isEditable;
 
   @override
   _TextInputState createState() => _TextInputState();
@@ -42,6 +46,8 @@ class _TextInputState extends State<TextInput> {
           border: const OutlineInputBorder(),
         ),
         onChanged: widget.onChanged,
+        enabled: true,
+        readOnly: true,
       ),
     );
   }
