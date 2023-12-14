@@ -53,7 +53,6 @@ class _StageLeadListState extends State<StageLeadList> {
     logger.e("Request to delete lead for id: $id");
     try {
       applicationService.deleteLead(id);
-      // Navigator.pop(context);
     }
     catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(

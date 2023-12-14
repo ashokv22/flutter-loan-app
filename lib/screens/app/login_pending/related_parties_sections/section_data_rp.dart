@@ -1,10 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
+import 'package:origination/core/widgets/address_fields.dart';
 import 'package:origination/core/widgets/check_box.dart';
 import 'package:origination/core/widgets/datepicker.dart';
 import 'package:origination/core/widgets/mobile_input.dart';
 import 'package:origination/core/widgets/number_input.dart';
+import 'package:origination/core/widgets/type_ahead.dart';
 import 'package:origination/core/widgets/reference_code.dart';
 import 'package:origination/core/widgets/section_title.dart';
 import 'package:origination/core/widgets/text_input.dart';
@@ -69,7 +71,7 @@ class _SectionScreenRPState extends State<SectionScreenRP> {
 
   @override
   Widget build(BuildContext context) {
-    // final isDarkTheme = Theme.of(context).brightness == Brightness.dark;
+    final isDarkTheme = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -79,110 +81,123 @@ class _SectionScreenRPState extends State<SectionScreenRP> {
           icon: const Icon(CupertinoIcons.arrow_left)),
         title: Text(widget.title),
       ),
-        body: SizedBox(
-          child: Column(children: [
-            Expanded(
-              child: FutureBuilder(
-                future: leadApplicationFuture,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const SizedBox(
-                      width: double.infinity,
-                      height: double.infinity,
-                      child: Center(child: CircularProgressIndicator()),
-                    );
-                  } else if (snapshot.hasError) {
-                    return Center(
-                      child: Text('Error: ${snapshot.error}'),
-                    );
-                  } else {
-                    Section section = snapshot.data!;
-                    if (section.sectionName == null) {
+        body: Container(
+          decoration: BoxDecoration(
+            gradient: isDarkTheme
+                ? null // No gradient for dark theme, use a single color
+                : const LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  Colors.white,
+                  Color.fromRGBO(193, 248, 245, 1),
+                ]),
+          ),
+          child: SizedBox(
+            child: Column(children: [
+              Expanded(
+                child: FutureBuilder(
+                  future: leadApplicationFuture,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
                       return const SizedBox(
                         width: double.infinity,
                         height: double.infinity,
-                        child: Center(
-                          child: Text(
-                            'No data found',
-                            style: TextStyle(
-                              fontSize: 20,
-                            ),
-                          )
-                        )
+                        child: Center(child: CircularProgressIndicator()),
                       );
-                    }
-                    return Flex(
-                      direction: Axis.vertical,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Expanded(
-                          child: SingleChildScrollView(
-                            child: Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  if (section.subSections != null)
-                                    for (var subSection in section.subSections!)
-                                      Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          if (subSection.displayTitle! != "Main Section")
-                                            SectionTitle(title: subSection.displayTitle!.isEmpty ? 'Main Section' : subSection.displayTitle!),
-                                          if (subSection.fields != null)
-                                            for (var field in subSection.fields!)
-                                              Column(
-                                                children: [
-                                                  buildFieldWidget(field),
-                                                  const SizedBox(height: 16.0),
-                                                ]
-                                              ),
-                                          const SizedBox(height: 20.0)
-                                        ],
-                                      ),
-                                  const SizedBox(height: 15.0),
-                                  Align(
-                                    alignment: Alignment.bottomCenter,
-                                    child: SizedBox(
-                                      width: double.infinity,
-                                      height: 50,
-                                      child: MaterialButton(
-                                        onPressed: () {
-                                          onSave(section);
-                                        },
-                                        color: const Color.fromARGB(255, 3, 71, 244),
-                                        textColor: Colors.white,
-                                        padding: const EdgeInsets.symmetric(vertical: 16.0),
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(30.0),
-                                        ),
-                                        child: isLoading
-                                            ? const SizedBox(
-                                                width: 20.0,
-                                                height: 20.0,
-                                                child: CircularProgressIndicator(
-                                                  strokeWidth: 2.0,
-                                                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                    } else if (snapshot.hasError) {
+                      return Center(
+                        child: Text('Error: ${snapshot.error}'),
+                      );
+                    } else {
+                      Section section = snapshot.data!;
+                      if (section.sectionName == null) {
+                        return const SizedBox(
+                          width: double.infinity,
+                          height: double.infinity,
+                          child: Center(
+                            child: Text(
+                              'No data found',
+                              style: TextStyle(
+                                fontSize: 20,
+                              ),
+                            )
+                          )
+                        );
+                      }
+                      return Flex(
+                        direction: Axis.vertical,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            child: SingleChildScrollView(
+                              child: Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    if (section.subSections != null)
+                                      for (var subSection in section.subSections!)
+                                        Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            if (subSection.displayTitle! != "Main Section")
+                                              SectionTitle(title: subSection.displayTitle!.isEmpty ? 'Main Section' : subSection.displayTitle!),
+                                            if (subSection.fields != null)
+                                              for (var field in subSection.fields!)
+                                                Column(
+                                                  children: [
+                                                    buildFieldWidget(field),
+                                                    const SizedBox(height: 16.0),
+                                                  ]
                                                 ),
-                                              )
-                                            : const Text('Save Changes'),
+                                            const SizedBox(height: 20.0)
+                                          ],
+                                        ),
+                                    const SizedBox(height: 15.0),
+                                    Align(
+                                      alignment: Alignment.bottomCenter,
+                                      child: SizedBox(
+                                        width: double.infinity,
+                                        height: 50,
+                                        child: MaterialButton(
+                                          onPressed: () {
+                                            onSave(section);
+                                          },
+                                          color: const Color.fromARGB(255, 3, 71, 244),
+                                          textColor: Colors.white,
+                                          padding: const EdgeInsets.symmetric(vertical: 16.0),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(30.0),
+                                          ),
+                                          child: isLoading
+                                              ? const SizedBox(
+                                                  width: 20.0,
+                                                  height: 20.0,
+                                                  child: CircularProgressIndicator(
+                                                    strokeWidth: 2.0,
+                                                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                                  ),
+                                                )
+                                              : const Text('Save Changes'),
+                                        ),
                                       ),
-                                    ),
-                                  )
-                                ],
+                                    )
+                                  ],
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
-                    );
+                        ],
+                      );
+                    }
                   }
-                }
+                )
               )
-            )
-          ]
+            ]
+          )
+              ),
         )
-      )
     );
   }
 
@@ -202,6 +217,9 @@ class _SectionScreenRPState extends State<SectionScreenRP> {
       }
     } 
     else if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'TextArea') {
+      if (field.fieldMeta?.dataType == 'Address') {
+        return AddressFields(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field), isEditable: field.isEditable!, isReadable: field.isReadOnly!);
+      }
       return TextInput(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field), isEditable: field.isEditable!, isReadable: field.isReadOnly!);
     } 
     else if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'Referencecode' || field.fieldMeta?.fieldUiProperties?.uiComponentName == 'DropDown') {
@@ -214,12 +232,15 @@ class _SectionScreenRPState extends State<SectionScreenRP> {
       return DatePickerInput(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field),);
     } 
     else if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'TypeAhead') {
-      return TextInput(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field), isEditable: field.isEditable!, isReadable: field.isReadOnly!);
+      return TypeAhead(label: fieldName, referenceCode: field.fieldMeta!.referenceCodeClassifier!, controller: controller, onChanged: (newValue) => updateFieldValue(newValue!, field));
     } 
     else if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'Phone') {
       return MobileInput(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field),);
     }
     else if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'RadioButton') {
+      return CustomCheckBox(label: fieldName, initialValue: false, onChanged: (newValue) => updateFieldValue(newValue.toString(), field),);
+    }
+    else if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'CheckBox') {
       return CustomCheckBox(label: fieldName, initialValue: false, onChanged: (newValue) => updateFieldValue(newValue.toString(), field),);
     }
     else if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'Switcher') {
