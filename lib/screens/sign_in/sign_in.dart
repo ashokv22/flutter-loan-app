@@ -168,7 +168,7 @@ class _SignInPageState extends State<SignIn> {
                           alignment: Alignment.bottomCenter,
                           child: SizedBox(
                             width: double.infinity,
-                            height: 50,
+                            height: 52,
                             child: MaterialButton(
                               onPressed: _handleLogin,
                               color: const Color.fromARGB(255, 3, 71, 244),

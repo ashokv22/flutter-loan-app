@@ -82,6 +82,10 @@ FieldMeta _$FieldMetaFromJson(Map<String, dynamic> json) => FieldMeta(
       fieldName: json['fieldName'] as String?,
       displayTitle: json['displayTitle'] as String?,
       dataType: json['dataType'] as String?,
+      addressDetails: json['addressDetails'] == null
+          ? null
+          : AddressDetails.fromJson(
+              json['addressDetails'] as Map<String, dynamic>),
       referenceCodeClassifier: json['referenceCodeClassifier'] as String?,
       apiForOptions: json['apiForOptions'] as String?,
       variable: json['variable'] as String?,
@@ -96,6 +100,7 @@ Map<String, dynamic> _$FieldMetaToJson(FieldMeta instance) => <String, dynamic>{
       'fieldName': instance.fieldName,
       'displayTitle': instance.displayTitle,
       'dataType': instance.dataType,
+      'addressDetails': instance.addressDetails,
       'referenceCodeClassifier': instance.referenceCodeClassifier,
       'apiForOptions': instance.apiForOptions,
       'variable': instance.variable,
@@ -199,4 +204,30 @@ Map<String, dynamic> _$MetaDataToJson(MetaData instance) => <String, dynamic>{
       'noOfFields': instance.noOfFields,
       'mandatory': instance.mandatory,
       'dataCaptured': instance.dataCaptured,
+    };
+
+AddressDetails _$AddressDetailsFromJson(Map<String, dynamic> json) =>
+    AddressDetails(
+      addressType: json['addressType'] as String,
+      addressLine1: json['addressLine1'] as String,
+      addressLine2: json['addressLine2'] as String?,
+      city: json['city'] as String,
+      taluk: json['taluk'] as String,
+      district: json['district'] as String,
+      state: json['state'] as String,
+      country: json['country'] as String,
+      pinCode: json['pinCode'] as String,
+    );
+
+Map<String, dynamic> _$AddressDetailsToJson(AddressDetails instance) =>
+    <String, dynamic>{
+      'addressType': instance.addressType,
+      'addressLine1': instance.addressLine1,
+      'addressLine2': instance.addressLine2,
+      'city': instance.city,
+      'taluk': instance.taluk,
+      'district': instance.district,
+      'state': instance.state,
+      'country': instance.country,
+      'pinCode': instance.pinCode,
     };

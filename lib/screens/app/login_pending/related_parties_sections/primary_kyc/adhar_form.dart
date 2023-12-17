@@ -5,6 +5,7 @@ import 'package:logger/logger.dart';
 import 'package:origination/core/widgets/datepicker.dart';
 import 'package:origination/core/widgets/text_input.dart';
 import 'package:origination/models/login_flow/sections/related_party/primary_kyc_dto.dart';
+import 'package:origination/service/kyc_service.dart';
 
 class AdharForm extends StatefulWidget {
   const AdharForm({
@@ -27,6 +28,7 @@ class _AdharFormState extends State<AdharForm> {
   TextEditingController dobController = TextEditingController();
   TextEditingController addressController = TextEditingController();
   late DateTime _selectedDate;
+  KycService kycService = KycService();
 
   void handleDateChanged(String newValue) {
     DateTime selectedDateTime = DateFormat('yyyy-MM-dd').parse(newValue);
@@ -35,7 +37,11 @@ class _AdharFormState extends State<AdharForm> {
     });
   }
 
-  void save() {
+  void save() async {
+    setState(() {
+      isLoading = true;
+    });
+
     PrimaryKycDTO dto = PrimaryKycDTO(
       relatedPartyId: widget.relatedPartyId, 
       adharNumber: aadhaarNumberController.text, 
@@ -45,6 +51,25 @@ class _AdharFormState extends State<AdharForm> {
       address: addressController.text
     );
     logger.d(dto.toJson());
+    try {
+      kycService.savePrimaryManualKyc(widget.relatedPartyId, dto);
+    } catch (e) {
+      setState(() {
+        isLoading = false;
+      });
+      logger.e('An error occurred while saving Aadhar KYC: $e');
+      showSnackBar('Unable to save KYC. Please try again!');
+    }
+    await Future.delayed(const Duration(seconds: 2));
+  }
+
+  void showSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+            content: Text(message),
+            duration: const Duration(seconds: 2),
+        ),
+    );
   }
 
   @override

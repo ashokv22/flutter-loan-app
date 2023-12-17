@@ -200,9 +200,9 @@ class _SectionScreenEmptyState extends State<SectionScreenEmpty> {
   }
 
   Widget buildFieldWidget(Field field) {
-    if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'HIDDEN') {
-    return const SizedBox(width: 0, height: 0);
-  }
+  //   if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'HIDDEN') {
+  //   return const SizedBox(width: 0, height: 0);
+  // }
     String fieldName = field.fieldMeta!.displayTitle!;
     if (!textEditingControllerMap.containsKey(fieldName)) {
       textEditingControllerMap[fieldName] = TextEditingController(text: field.value);
@@ -219,7 +219,13 @@ class _SectionScreenEmptyState extends State<SectionScreenEmpty> {
     } 
     else if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'TextArea') {
       if (field.fieldMeta?.dataType == 'Address') {
-        return AddressFields(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field), isEditable: field.isEditable!, isReadable: field.isReadOnly!);
+        return AddressFields(
+          label: fieldName, 
+          address: field.fieldMeta?.addressDetails ?? AddressDetails(addressType: '', addressLine1: '', city: '', taluk: '', district: '', state: '', country: '', pinCode: ''),
+          onChanged: (newValue) => updateFieldValue(newValue, field), 
+          isEditable: field.isEditable!, 
+          isReadable: field.isReadOnly!
+        );
       }
       return TextInput(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field), isEditable: field.isEditable!, isReadable: field.isReadOnly!);
     } 
@@ -247,6 +253,9 @@ class _SectionScreenEmptyState extends State<SectionScreenEmpty> {
     else if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'Switcher') {
       return SwitcherInput(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field),
         trueLabel: "Father", falseLabel: "Spouse");
+    }
+    else if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'HIDDEN') {
+      return Text("$fieldName value: ${field.value}");
     }
     return SizedBox(child: Text("${field.fieldMeta?.fieldUiProperties?.uiComponentName} is not handled"),);
   }

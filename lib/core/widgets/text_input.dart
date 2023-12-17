@@ -46,8 +46,8 @@ class _TextInputState extends State<TextInput> {
           border: const OutlineInputBorder(),
         ),
         onChanged: widget.onChanged,
-        enabled: true,
-        readOnly: true,
+        enabled: widget.isEditable,
+        readOnly: widget.isReadable,
       ),
     );
   }

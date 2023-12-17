@@ -85,6 +85,7 @@ class FieldMeta {
   String? fieldName;
   String? displayTitle;
   String? dataType;
+  AddressDetails? addressDetails;
   String? referenceCodeClassifier;
   String? apiForOptions;
   String? variable;
@@ -95,6 +96,7 @@ class FieldMeta {
     this.fieldName,
     this.displayTitle,
     this.dataType,
+    this.addressDetails,
     this.referenceCodeClassifier,
     this.apiForOptions,
     this.variable,
@@ -215,4 +217,35 @@ class MetaData {
     _$MetaDataFromJson(json);
 
   Map<String, dynamic> toJson() => _$MetaDataToJson(this);
+}
+
+@JsonSerializable()
+class AddressDetails {
+  String addressType;
+  String addressLine1;
+  String? addressLine2;
+  String city;
+  String taluk;
+  String district;
+  String state;
+  String country;
+  String pinCode;
+
+  AddressDetails({
+    required this.addressType,
+    required this.addressLine1,
+    this.addressLine2,
+    required this.city,
+    required this.taluk,
+    required this.district,
+    required this.state,
+    required this.country,
+    required this.pinCode
+  });
+
+    factory AddressDetails.fromJson(Map<String, dynamic> json) =>
+    _$AddressDetailsFromJson(json);
+
+  Map<String, dynamic> toJson() => _$AddressDetailsToJson(this);
+
 }
