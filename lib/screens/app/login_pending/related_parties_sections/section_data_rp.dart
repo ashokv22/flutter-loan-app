@@ -14,6 +14,7 @@ import 'package:origination/core/widgets/switcher_input.dart';
 import 'package:origination/models/entity_configuration.dart';
 import 'package:origination/service/loan_application_service.dart';
 import 'package:origination/service/login_flow_service.dart';
+import 'package:origination/service/util_service.dart';
 
 class SectionScreenRP extends StatefulWidget {
   const SectionScreenRP({
@@ -34,6 +35,7 @@ class SectionScreenRP extends StatefulWidget {
 class _SectionScreenRPState extends State<SectionScreenRP> {
   final loginPendingService = LoginPendingService();
   final loanApplicationService = LoanApplicationService();
+  final utilService = UtilService();
   late Future<Section> leadApplicationFuture;
   var logger = Logger();
   bool isLoading = false;
@@ -51,8 +53,7 @@ class _SectionScreenRPState extends State<SectionScreenRP> {
     });
     try {
       await loanApplicationService.saveSectionRP(widget.id, widget.entitySubType, widget.title, entity);
-      final currentContext = context;
-      Navigator.pushReplacementNamed(currentContext, '/');
+      Navigator.of(context).pop();
     }
     catch (e) {
       logger.e('An error occurred while saving section: $e');
@@ -154,7 +155,7 @@ class _SectionScreenRPState extends State<SectionScreenRP> {
                                             const SizedBox(height: 20.0)
                                           ],
                                         ),
-                                    const SizedBox(height: 15.0),
+                                    const SizedBox(height: 25.0),
                                     Align(
                                       alignment: Alignment.bottomCenter,
                                       child: SizedBox(
@@ -263,6 +264,31 @@ class _SectionScreenRPState extends State<SectionScreenRP> {
   void updateFieldValue(String newValue, Field field) {
     setState(() {
       field.value = newValue;
+      if (field.fieldMeta!.fieldName!.toLowerCase() == "ifsccode") {
+        if (newValue.length == 11) {
+          setBranchDetails(newValue, field);
+        }
+      }
+    });
+  }
+
+  void setBranchDetails(String ifscCode, Field field) async {
+    dynamic data = await utilService.searchByIfscCode(ifscCode.toUpperCase());
+    textEditingControllerMap.forEach((key, value) {
+      if (key.toLowerCase() == "branch") {
+        TextEditingController controller = textEditingControllerMap[key]!;
+        setState(() {
+          controller.text = data['BRANCH'];
+          field.value = controller.text;
+        });
+      }
+      if (key.toLowerCase() == "Name of Bank".toLowerCase()) {
+        TextEditingController controller = textEditingControllerMap[key]!;
+        setState(() {
+          controller.text = data['BANK'];
+          field.value = controller.text;
+        });
+      }
     });
   }
 }

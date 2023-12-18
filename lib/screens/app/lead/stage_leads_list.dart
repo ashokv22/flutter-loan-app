@@ -172,7 +172,9 @@ class _StageLeadListState extends State<StageLeadList> {
                                 ),
                               );
                             } else if (applicant.status == ApplicationStage.LOGIN_PENDING.name) {
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginPendingHome()));
+                              // Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginPendingHome()));
+                              // Edit Login Pending Leads
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => EditLead(id: applicant.id, applicantId: int.parse(applicant.applicantId))));
                             } else {
                               Navigator.push(context, MaterialPageRoute(builder: (context) => EditLead(id: applicant.id, applicantId: int.parse(applicant.applicantId))));
                             }

@@ -49,8 +49,7 @@ class _SectionScreenEmptyState extends State<SectionScreenEmpty> {
     });
     try {
       await loanApplicationService.saveSection(widget.id, widget.title, entity);
-      final currentContext = context;
-      Navigator.pushReplacementNamed(currentContext, '/');
+      Navigator.of(context).pop();
     }
     catch (e) {
       logger.e('An error occurred while saving section: $e');

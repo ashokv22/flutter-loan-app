@@ -51,6 +51,10 @@ dependencies:
   flutter_speed_dial: ^7.0.0
   flutter_typeahead: ^4.6.2
   flutter_web_frame: ^1.0.0
+  geolocator: ^10.1.0
+  location: ^5.0.3
+  permission_handler: ^11.0.1
+  geocoding: ^2.1.1
 
 dev_dependencies:
   flutter_test:

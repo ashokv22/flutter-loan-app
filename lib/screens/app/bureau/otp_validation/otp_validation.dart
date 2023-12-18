@@ -110,11 +110,11 @@ class _OtpValidationState extends State<OtpValidation> {
                   const SizedBox(height: 50,),
                   OtpTextField(
                     textStyle: const TextStyle(fontSize: 22),
-                    numberOfFields: 4,
+                    numberOfFields: 6,
                     borderColor: Colors.red,
                     showFieldAsBox: false,
-                    fieldWidth: 50,
-                    margin: const EdgeInsets.only(left: 20, right: 20),
+                    fieldWidth: 40,
+                    margin: const EdgeInsets.only(left: 15, right: 15),
                     onCodeChanged: (String code) {
                       if (code.isEmpty) {
                         verificationCode = '';

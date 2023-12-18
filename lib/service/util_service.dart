@@ -28,7 +28,21 @@ class UtilService {
         return AddressDTO.fromJson(jsonDecode(response.body));
       }
     } catch (e) {
-      throw Exception("An error occurred while generating bureau reports data!: $e");
+      throw Exception("An error occurred while getting pin code data!: $e");
+    }
+  }
+
+  Future<Object> searchByIfscCode(String ifsc) async {
+    String endpoint = "https://bank-apis.justinclicks.com/API/V1/IFSC/$ifsc";
+    try {
+      final response = await http.get(Uri.parse(endpoint));
+      if (response.statusCode != 200) {
+        throw Exception('Failed to get data for IFSC code: $ifsc');
+      } else {
+        return jsonDecode(response.body);
+      }
+    } catch (e) {
+      throw Exception("An error occurred while generating ifsc data!: $e");
     }
   }
 

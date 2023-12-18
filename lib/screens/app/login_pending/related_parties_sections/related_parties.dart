@@ -146,8 +146,8 @@ class _RelatedPartiesState extends State<RelatedParties> {
                     else if (section.sectionName == "SecondaryKYC") {
                       Navigator.push(context, MaterialPageRoute(builder: (context) => SecondaryKycHome(relatedPartyId: relatedPartyId,)));
                     }
-                    else{
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => SectionScreenRP(id: widget.id, entitySubType: selectedType, title: section.sectionName,)));
+                    else {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => SectionScreenRP(id: relatedPartyId, entitySubType: selectedType, title: section.sectionName,)));
                     }
                   },
                 child: Container(
