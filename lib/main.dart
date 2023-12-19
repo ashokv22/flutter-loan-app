@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:origination/my_theme.dart';
 import 'package:origination/screens/app/lead/new_lead.dart';
 import 'package:origination/screens/app/lead/search_new.dart';
-import 'package:origination/screens/app/lead_dashbaord.dart';
+import 'package:origination/screens/app/lead_dashboard/lead_dashbaord.dart';
 import 'package:origination/screens/pages/profile/profile_screen.dart';
 import 'package:origination/screens/sign_in/forgot_password.dart';
 import 'package:origination/screens/sign_in/reset_password.dart';

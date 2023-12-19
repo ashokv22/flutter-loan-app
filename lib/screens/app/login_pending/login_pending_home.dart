@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:origination/core/utils/loan_amount_formatter.dart';
+import 'package:origination/core/utils/products_shared_utils.dart';
 import 'package:origination/models/bureau_check/individual.dart';
 import 'package:origination/models/login_flow/login_pending_products_dto.dart';
 import 'package:origination/screens/app/login_pending/main_sections/main_sections_data.dart';
@@ -21,17 +22,24 @@ class _LoginPendingHomeState extends State<LoginPendingHome> {
   final loginPendingService = LoginPendingService();
   var logger = Logger();
   late Future<List<LoginPendingProductsDTO>> pendingProductsFuture;
+  late ProductsSharedUtilService _productsSharedUtilService = ProductsSharedUtilService();
 
   @override
   void initState() {
     super.initState();
-    refreshLeadsSummary(); // Fetch leads summary on widget initialization
+    // refreshLeadsSummary(); // Fetch leads summary on widget initialization
+    _initializeServices();
   }
 
   Future<void> refreshLeadsSummary() async {
     setState(() {
       pendingProductsFuture = loginPendingService.getPendingProducts();
     });
+  }
+
+  Future<void> _initializeServices() async {
+    await _productsSharedUtilService.initSharedPreferences();
+    refreshLeadsSummary(); // Fetch leads summary after initializing SharedPreferences
   }
 
   String getNamesByType(List<Individual> applicants, IndividualType type) {
@@ -42,6 +50,11 @@ class _LoginPendingHomeState extends State<LoginPendingHome> {
 
     return names.join(', ');
   }
+
+  setProductToShared(int productId, String applicantName) async {
+    logger.i("Adding $productId and $applicantName to Shared prefs");
+    await _productsSharedUtilService.addPendingProduct(productId: productId, applicantName: applicantName);
+  } 
 
   @override
   Widget build(BuildContext context) {
@@ -71,45 +84,6 @@ class _LoginPendingHomeState extends State<LoginPendingHome> {
           ),
           child: Column(
             children: [
-              // Container(
-              //   decoration: const BoxDecoration(
-              //     gradient: LinearGradient(
-              //       begin: Alignment.topLeft,
-              //       end: Alignment.bottomRight,
-              //       colors: [
-              //         Color.fromARGB(255, 40, 39, 39),
-              //         Color.fromARGB(255, 53, 51, 51),
-              //         Color.fromARGB(255, 40, 38, 38),
-              //         Color.fromARGB(255, 20, 18, 18),
-              //       ]
-              //     ),
-              //   ),
-              //   child: const Row(
-              //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              //     children: [
-              //       Padding(
-              //         padding: EdgeInsets.all(16.0),
-              //         child: Text(
-              //           'Hello Ashok\nDCB00123',
-              //           style: TextStyle(
-              //             color: Colors.white, 
-              //             fontSize: 20),
-              //         ),
-              //       ),
-              //       Padding(
-              //         padding: EdgeInsets.all(16.0),
-              //         child: Text(
-              //           textAlign: TextAlign.right,
-              //           'Jayanagar Branch\nKarnataka',
-              //           style: TextStyle(
-              //             color: Colors.white,
-              //             fontSize: 20,
-              //           ),
-              //         ),
-              //       ),
-              //     ],
-              //   ),
-              // ),
               Expanded(
                 child: FutureBuilder<List<LoginPendingProductsDTO>>(
                   future: pendingProductsFuture,
@@ -151,6 +125,7 @@ class _LoginPendingHomeState extends State<LoginPendingHome> {
 
                           return GestureDetector(
                             onTap: () {
+                              setProductToShared(product.id, applicantName);
                               Navigator.push(context, MaterialPageRoute(builder: (context) => MainSectionsData(id: product.id)));
                             },
                             child: Container(

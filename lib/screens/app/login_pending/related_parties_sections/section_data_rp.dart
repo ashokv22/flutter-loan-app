@@ -143,7 +143,7 @@ class _SectionScreenRPState extends State<SectionScreenRP> {
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
                                             if (subSection.displayTitle! != "Main Section")
-                                              SectionTitle(title: subSection.displayTitle!.isEmpty ? 'Main Section' : subSection.displayTitle!),
+                                              SectionTitle(title: subSection.displayTitle!.isEmpty ? '' : subSection.displayTitle!),
                                             if (subSection.fields != null)
                                               for (var field in subSection.fields!)
                                                 Column(
