@@ -56,17 +56,21 @@ class _TypeaheadTestState extends State<TypeaheadTest> {
             ),
           child: Column(
             children: [
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  children: [
-                    const SizedBox(height: 20,),
-                    CustomYearPicker(label: "Year", controller: _controller, onChanged: (value) => updateFieldValue(value) , isReadable: true, isEditable: true),
-                    const SizedBox(height: 20,),
-                    AddressFields(label: "Address", address: address, onChanged: (value) {}, isReadable: false, isEditable: true),
-                    const SizedBox(height: 20,),
-                    const LocationWidget(),
-                  ],
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      children: [
+                        const SizedBox(height: 20,),
+                        CustomYearPicker(label: "Year", controller: _controller, onChanged: (value) => updateFieldValue(value) , isReadable: true, isEditable: true),
+                        const SizedBox(height: 20,),
+                        AddressFields(label: "Address", address: address, onChanged: (value) {}, isReadable: false, isEditable: true),
+                        const SizedBox(height: 20,),
+                        const LocationWidget(),
+                      ],
+                    ),
+                  ),
                 ),
               ),
             ],

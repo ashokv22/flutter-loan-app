@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:origination/core/utils/loan_amount_formatter.dart';
+import 'package:origination/core/utils/products_shared_utils.dart';
 import 'package:origination/models/stage.dart';
 import 'package:origination/models/summaries/dashboard_summary.dart';
 import 'package:origination/screens/app/lead/stage_leads_list.dart';
@@ -24,17 +25,23 @@ class _LeadDashboardState extends State<LeadDashboard> {
   late Future<List<DashBoardSummaryDTO>> leadsSummaryFuture;
   final AuthService athService = AuthService();
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  late ProductsSharedUtilService productUtilService = ProductsSharedUtilService();
 
   @override
   void initState() {
     super.initState();
-    refreshLeadsSummary();
+    _initializeServices();
+    // refreshLeadsSummary();
+  }
+
+  Future<void> _initializeServices() async {
+    await productUtilService.initSharedPreferences();
+    await refreshLeadsSummary();
   }
 
   Future<void> refreshLeadsSummary() async {
     setState(() {
-      leadsSummaryFuture =
-          applicationService.getLeadsSummary();
+      leadsSummaryFuture = applicationService.getLeadsSummary();
     });
   }
 
@@ -138,12 +145,9 @@ class _LeadDashboardState extends State<LeadDashboard> {
                           width: double.infinity,
                           height: double.infinity,
                           child: Center(
-                              child: Text(
-                            'No data found',
-                            style: TextStyle(
-                              fontSize: 20,
-                            ),
-                          )));
+                              child: Text('No data found', style: TextStyle(fontSize: 20,))
+                          ),
+                        );
                       }
                       return ListView.builder(
                         itemCount: summaries.length,
@@ -167,7 +171,7 @@ class _LeadDashboardState extends State<LeadDashboard> {
                   },
                 ),
               ),
-              const RecentProductsWidget(),
+              RecentProductsWidget(productUtilService: productUtilService),
             ],
           ),
         ),

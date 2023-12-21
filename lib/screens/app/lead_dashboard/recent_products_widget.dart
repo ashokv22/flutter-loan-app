@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:origination/screens/app/login_pending/main_sections/main_sections_data.dart';
 import 'package:origination/core/utils/products_shared_utils.dart';
+import 'package:percent_indicator/percent_indicator.dart';
 
 class RecentProductsWidget extends StatefulWidget {
-  const RecentProductsWidget({super.key});
+  const RecentProductsWidget({
+    super.key, 
+    required this.productUtilService
+  });
+
+  final ProductsSharedUtilService productUtilService;
 
   @override
   State<RecentProductsWidget> createState() => _RecentProductsWidgetState();
 }
 
 class _RecentProductsWidgetState extends State<RecentProductsWidget> {
-  ProductsSharedUtilService productUtilService = ProductsSharedUtilService();
-
   
   @override
   void initState() {
@@ -20,7 +24,7 @@ class _RecentProductsWidgetState extends State<RecentProductsWidget> {
   }
 
   Future<void> _initializeServices() async {
-    await productUtilService.initSharedPreferences();
+    await widget.productUtilService.initSharedPreferences();
   }
 
   @override
@@ -47,7 +51,7 @@ class _RecentProductsWidgetState extends State<RecentProductsWidget> {
             ),
             Expanded(
               child: FutureBuilder<List<Map<String, dynamic>>>(
-                future: Future.value(productUtilService.getLastInteractedProducts()), // Wrap the result in Future.value
+                future: Future.value(widget.productUtilService.getLastInteractedProducts()), // Wrap the result in Future.value
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Padding(
@@ -81,51 +85,72 @@ class _RecentProductsWidgetState extends State<RecentProductsWidget> {
                         final product = lastInteractedProducts[index];
                         return Container(
                           height: 100,
-                          width: 250,
+                          width: 350,
+                          decoration: BoxDecoration (
+                            borderRadius: BorderRadius.circular(8.0),
+                            color: Colors.white,
+                            // gradient: isDarkTheme
+                            //   ? null : const LinearGradient (
+                            //   begin: Alignment(-0.99, 0.16),
+                            //   end: Alignment(0.99, -0.16),
+                            //   colors: [Color(0xFF0029FF), Color.fromARGB(255, 57, 76, 246)],
+                            // ),
+                            border: isDarkTheme
+                              ? Border.all(color: Colors.white12, width: 1.0) // Outlined border for dark theme
+                              : null,
+                            boxShadow: isDarkTheme
+                              ? null : [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.5), //color of shadow
+                                spreadRadius: 2, //spread radius
+                                blurRadius: 6, // blur radius
+                                offset: const Offset(2, 3),
+                              )
+                            ],
+                          ),
                           margin: const EdgeInsets.all(5),
-                          child: Container(
-                            decoration: BoxDecoration (
-                              borderRadius: BorderRadius.circular(8.0),
-                              gradient: isDarkTheme
-                                ? null : const LinearGradient (
-                                begin: Alignment(-0.99, 0.16),
-                                end: Alignment(0.99, -0.16),
-                                colors: [Color(0xFF0029FF), Color.fromARGB(255, 57, 76, 246)],
-                              ),
-                              border: isDarkTheme
-                                ? Border.all(color: Colors.white12, width: 1.0) // Outlined border for dark theme
-                                : null,
-                              boxShadow: isDarkTheme
-                                ? null : [
-                                BoxShadow(
-                                  color: Colors.grey.withOpacity(0.5), //color of shadow
-                                  spreadRadius: 2, //spread radius
-                                  blurRadius: 6, // blur radius
-                                  offset: const Offset(2, 3),
-                                )
-                              ],
-                            ),
-                            child: ListTile(
-                              title: Text(
-                                "Product: ${product['productId']}", 
-                                style: TextStyle(
-                                  // color: Colors.white,
-                                  color: isDarkTheme ? Colors.blueAccent[400] : Colors.white,
-                                  fontSize: 18
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Expanded(
+                                child: ListTile(
+                                  title: Text(
+                                    "Product id: ${product['productId']}", 
+                                    style: TextStyle(
+                                      // color: Colors.white,
+                                      color: isDarkTheme ? Colors.blueAccent[400] : const Color.fromARGB(255, 3, 71, 244),
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 18
+                                    ),
+                                  ),
+                                  subtitle: Text(
+                                    "Applicant: ${product['applicantName']}", 
+                                    style: TextStyle(
+                                      color: isDarkTheme ? Colors.blueAccent[400] : const Color.fromARGB(255, 3, 71, 244),
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 16
+                                    ),
+                                  ),
+                                  onTap: () {
+                                    Navigator.push(context, MaterialPageRoute(builder: (context) => MainSectionsData(id: product['productId'])));
+                                  },
                                 ),
-                              ),
-                              subtitle: Text(
-                                "Applicant: ${product['applicantName']}", 
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16
+                            ),
+                              Container(
+                                width: 50, // Adjust the width as needed
+                                margin: const EdgeInsets.only(right: 20),
+                                child: CircularPercentIndicator(
+                                  percent: 0.7,
+                                  radius: 32, // Adjust the radius as needed
+                                  animation: true,
+                                  circularStrokeCap: CircularStrokeCap.round,
+                                  progressColor: const Color(0xFF00861D),
+                                  lineWidth: 6.0,
+                                  center: const Text("70%", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0),)
                                 ),
-                              ),
-                              onTap: () {
-                                Navigator.push(context, MaterialPageRoute(builder: (context) => MainSectionsData(id: product['productId'])));
-                              },
-                            ),
-                            ),
+                              )
+                            ],
+                          ),
                         );
                       },
                     );

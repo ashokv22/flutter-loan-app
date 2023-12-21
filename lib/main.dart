@@ -61,29 +61,30 @@ class _SideMenuAppState extends State<SideMenuApp> {
           ),
           // theme: getSystemDefaultTheme(brightness),
           themeMode: themeProvider.currentThemeMode,
-          home: const Home(),
+          home: FutureBuilder<bool>(
+            future: authService.isLoggedIn(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const SizedBox(
+                  width: double.infinity,
+                  height: double.infinity,
+                  child: Center(
+                    child: CircularProgressIndicator()
+                    )
+                );
+              } else {
+                if (snapshot.hasData && snapshot.data == true) {
+                  return const LeadDashboard();
+                } else {
+                  // If user data is null or user is not logged in, navigate to SignIn
+                  return snapshot.hasData ? const SignIn() : const SignIn();
+                }
+              }
+            },
+          ),
           debugShowCheckedModeBanner: false,
           routes: {
-            '/home': (context) => FutureBuilder<bool>(
-                  future: authService.isLoggedIn(),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const SizedBox(
-                        width: double.infinity,
-                        height: double.infinity,
-                        child: Center(
-                          child: CircularProgressIndicator()
-                          )
-                      );
-                    } else {
-                      if (snapshot.hasData && snapshot.data == true) {
-                        return const LeadDashboard();
-                      } else {
-                        return const SignIn();
-                      }
-                    }
-                  },
-                ),
+            '/home': (context) => const LeadDashboard(),
             // Authentication
             '/sign-in': (context) => const SignIn(),
             '/forgotPassword': (context) => const ForgotPassword(),
@@ -97,7 +98,7 @@ class _SideMenuAppState extends State<SideMenuApp> {
             // DCB
             '/leads/home': (context) => const LeadDashboard(),
             '/lead/add': (context) => const NewLead(),
-            '/lead/search': (context) => SearchPage(),
+            '/lead/search': (context) => const SearchPage(),
             '/profile': (context) => const ProfileScreen(),
           }
         );

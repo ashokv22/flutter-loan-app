@@ -353,6 +353,7 @@ class LoanApplicationService {
   Future<void> saveSection(int applicantId, String sectionName, Section data) async {
     String endpoint = "api/application/loanApplication/sectionsData/$applicantId/Application/All?sectionName=$sectionName";
     try {
+      logger.wtf(endpoint);
       final response = await http.post(Uri.parse(apiUrl + endpoint), headers: {
         'X-AUTH-TOKEN': await authService.getAccessToken(),
         'Content-Type': 'application/json',

@@ -22,7 +22,8 @@ class _LoginPendingHomeState extends State<LoginPendingHome> {
   final loginPendingService = LoginPendingService();
   var logger = Logger();
   late Future<List<LoginPendingProductsDTO>> pendingProductsFuture;
-  late ProductsSharedUtilService _productsSharedUtilService = ProductsSharedUtilService();
+  final ProductsSharedUtilService _productsSharedUtilService = ProductsSharedUtilService();
+  final TextEditingController _searchController = TextEditingController();
 
   @override
   void initState() {
@@ -84,6 +85,40 @@ class _LoginPendingHomeState extends State<LoginPendingHome> {
           ),
           child: Column(
             children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextField(
+                  controller: _searchController,
+                  decoration: InputDecoration(
+                  hintText: 'Search...',
+                  suffixIcon: _searchController.text.isNotEmpty ? IconButton(
+                        icon: const Icon(Icons.clear),
+                        onPressed: () {
+                          setState(() {
+                            _searchController.clear(); // Clear the search text
+                          });
+                        }
+                      ): null,
+                      // Add a search icon or button to the search bar
+                      prefixIcon: IconButton(
+                        icon: const Icon(Icons.search),
+                        onPressed: () {},
+                      ),
+                  contentPadding: const EdgeInsets.all(15),
+                  border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(30))),
+                  onChanged: (value) {
+                    setState(() {
+                      _searchController.value = _searchController.value.copyWith(
+                        text: value,
+                        selection: TextSelection.fromPosition(
+                          TextPosition(offset: value.length),
+                        ),
+                      );
+                    });
+                  },
+                ),
+              ),
               Expanded(
                 child: FutureBuilder<List<LoginPendingProductsDTO>>(
                   future: pendingProductsFuture,
@@ -102,6 +137,8 @@ class _LoginPendingHomeState extends State<LoginPendingHome> {
                       );
                     } else if (snapshot.hasData) {
                       List<LoginPendingProductsDTO> products = snapshot.data!;
+                      List<LoginPendingProductsDTO> filteredList = [];
+
                       if (products.isEmpty) {
                         return const SizedBox(
                           width: double.infinity,
@@ -114,11 +151,38 @@ class _LoginPendingHomeState extends State<LoginPendingHome> {
                           )
                         );
                       }
+
+                      // Filter products based on search input
+                      if (_searchController.text.isNotEmpty) {
+                        String searchTerm = _searchController.text.toLowerCase();
+                        filteredList = products.where((product) {
+                          List<String> firstNames = product.applicants.map((applicant) => applicant.firstName ?? '').toList();
+                          return firstNames.any((name) => name.toLowerCase().contains(searchTerm.toLowerCase()));
+                        }).toList();
+                      } else {
+                        filteredList = List.from(products);
+                      }
+
+                      if (filteredList.isEmpty) {
+                        return const SizedBox(
+                          width: double.infinity,
+                          height: double.infinity,
+                          child: Center(
+                            child: Text(
+                              'No matching products found',
+                              style: TextStyle(
+                                fontSize: 20,
+                              ),
+                            ),
+                          ),
+                        );
+                      }
+                      
                       return ListView.builder(
-                        itemCount: products.length,
+                        itemCount: filteredList.length,
                         itemBuilder: (context, index) {
                           // Data
-                          LoginPendingProductsDTO product = products[index];
+                          LoginPendingProductsDTO product = filteredList[index];
                           String applicantName = getNamesByType(product.applicants, IndividualType.APPLICANT);
                           String coApplicantNames = getNamesByType(product.applicants, IndividualType.CO_APPLICANT);
                           String guarantorNames = getNamesByType(product.applicants, IndividualType.GUARANTOR);
