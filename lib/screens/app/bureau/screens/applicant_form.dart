@@ -151,9 +151,9 @@ void onChange(String value, TextEditingController controller) {
                     const SizedBox(height: 20),
                     Row(
                       children: [
-                        Expanded(child: NumberInput(label: "Internal Ref No", controller: internalRefNo, onChanged: (newValue) {})),
+                        Expanded(child: NumberInput(label: "Internal Ref No", controller: internalRefNo, onChanged: (newValue) {}, isEditable: true, isReadable: false)),
                         const SizedBox(width: 10,),
-                        Expanded(child: NumberInput(label: "Loan Amount", controller: loanAMount, onChanged: (newValue) {})),
+                        Expanded(child: NumberInput(label: "Loan Amount", controller: loanAMount, onChanged: (newValue) {}, isEditable: true, isReadable: false)),
                       ],
                     ),
                     const SizedBox(height: 20),
@@ -171,9 +171,9 @@ void onChange(String value, TextEditingController controller) {
                     const SizedBox(height: 20),
                     Row(
                       children: [
-                        Expanded(child: MobileInput(label: "Mobile No", controller: mobile, onChanged: (newValue) {})),
+                        Expanded(child: MobileInput(label: "Mobile No", controller: mobile, onChanged: (newValue) {}, isEditable: true, isReadable: false)),
                         const SizedBox(width: 10,),
-                        Expanded(child: DatePickerInput(label: "Date of Birth", controller: dob, onChanged: (newValue) => handleDateChanged(newValue))),
+                        Expanded(child: DatePickerInput(label: "Date of Birth", controller: dob, onChanged: (newValue) => handleDateChanged(newValue), isEditable: true, isReadable: false)),
                       ],
                     ),
                     const SizedBox(height: 20),
@@ -185,7 +185,7 @@ void onChange(String value, TextEditingController controller) {
                       ],
                     ),
                     const SizedBox(height: 20),
-                    MobileInput(label: "Alternate Mobile No", controller: alternateMobile, onChanged: (newValue) {}),
+                    MobileInput(label: "Alternate Mobile No", controller: alternateMobile, onChanged: (newValue) {}, isEditable: true, isReadable: false),
                     const SizedBox(height: 20),
                     TextInput(label: "Address Line 1", controller: address1, onChanged: (newValue) {}, isEditable: true, isReadable: false),
                     const SizedBox(height: 20),
@@ -193,7 +193,7 @@ void onChange(String value, TextEditingController controller) {
                     const SizedBox(height: 20),
                     Row(
                       children: [
-                        Expanded(child: NumberInput(label: "Pincode", controller: pincode, onChanged: (newValue) {},)),
+                        Expanded(child: NumberInput(label: "Pincode", controller: pincode, onChanged: (newValue) {}, isEditable: true, isReadable: false)),
                         const SizedBox(width: 10,),
                         Expanded(child: TextInput(label: "Landmark", controller: landMark, onChanged: (newValue) {}, isEditable: true, isReadable: false)),
                       ],

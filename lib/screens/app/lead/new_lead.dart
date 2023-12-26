@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
+import 'package:origination/core/widgets/address_fields.dart';
 import 'package:origination/core/widgets/number_input.dart';
 import 'package:origination/core/widgets/text_input.dart';
 import 'package:origination/core/widgets/reference_code.dart';
@@ -198,6 +199,15 @@ class _NewLeadState extends State<NewLead> {
     
     TextEditingController controller = textEditingControllerMap[fieldName]!;
     if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'TextBox') {
+      if (field.fieldMeta?.dataType == 'Address') {
+        return AddressFields(
+          label: fieldName, 
+          address: field.fieldMeta?.addressDetails ?? AddressDetails(addressType: '', addressLine1: '', city: '', taluk: '', district: '', state: '', country: '', pinCode: ''),
+          onChanged: (newValue) => updateFieldValue(newValue, field), 
+          isEditable: field.isEditable!, 
+          isReadable: field.isReadOnly!
+        );
+      }
       return TextInput(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field), isEditable: field.isEditable!, isReadable: field.isReadOnly!);
     } 
     else if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'TextArea') {
@@ -207,16 +217,16 @@ class _NewLeadState extends State<NewLead> {
       return Referencecode(label: fieldName, referenceCode: field.fieldMeta!.referenceCodeClassifier!, controller: controller, onChanged: (newValue) => updateFieldValue(newValue!, field));
     } 
     else if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'DatePicker') {
-      return DatePickerInput(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field),);
+      return DatePickerInput(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field), isEditable: field.isEditable!, isReadable: field.isReadOnly!);
     } 
     else if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'TypeAhead') {
       return TypeAhead(label: fieldName, referenceCode: field.fieldMeta!.referenceCodeClassifier!, controller: controller, onChanged: (newValue) => updateFieldValue(newValue!, field),);
     } 
     else if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'Phone') {
-      return MobileInput(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field),);
+      return MobileInput(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field), isEditable: field.isEditable!, isReadable: field.isReadOnly!);
     }
     else if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'Number') {
-      return NumberInput(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field),);
+      return NumberInput(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field), isEditable: field.isEditable!, isReadable: field.isReadOnly!);
     }
     return const SizedBox();
   }

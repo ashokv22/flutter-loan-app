@@ -92,13 +92,13 @@ class _PrimaryKycHomeState extends State<PrimaryKycHome> {
                 const SizedBox(height: 30,),
                 Column(
                   children: [
-                    NumberInput(label: "Adhar Number", controller: aadhaarNumberController, onChanged: (value) {}),
+                    NumberInput(label: "Adhar Number", controller: aadhaarNumberController, onChanged: (value) {}, isEditable: true, isReadable: false),
                     const SizedBox(height: 10,),
                     TextInput(label: "Name", controller: nameController, onChanged: (value) {}, isEditable: true, isReadable: false),
                     const SizedBox(height: 10,),
                     TextInput(label: "Father Name", controller: fatherNameController, onChanged: (value) {}, isEditable: true, isReadable: false),
                     const SizedBox(height: 10,),
-                    DatePickerInput(label: "Date of birth", controller: dobController, onChanged: (newValue) => handleDateChanged(newValue)),
+                    DatePickerInput(label: "Date of birth", controller: dobController, onChanged: (newValue) => handleDateChanged(newValue), isReadable: false, isEditable: true,),
                     const SizedBox(height: 10,),
                     TextInput(label: "Address", controller: addressController, onChanged: (value) {}, isEditable: true, isReadable: false),
                   ],

@@ -100,7 +100,7 @@ class _SecondaryKycFormState extends State<SecondaryKycForm> {
                   children: [
                     Row(
                       children: [
-                        Expanded(child: NumberInput(label: "PAN", controller: panNumberController, onChanged: (value) {})),
+                        Expanded(child: NumberInput(label: "PAN", controller: panNumberController, onChanged: (value) {}, isEditable: true, isReadable: false)),
                         const SizedBox(width: 5,),
                         Container(
                           height: 50,
@@ -137,7 +137,7 @@ class _SecondaryKycFormState extends State<SecondaryKycForm> {
                           const SizedBox(height: 10,),
                           TextInput(label: "Father Name", controller: fatherNameController, onChanged: (value) {}, isEditable: true, isReadable: false),
                           const SizedBox(height: 10,),
-                          DatePickerInput(label: "Date of birth", controller: dobController, onChanged: (newValue) => handleDateChanged(newValue)),
+                          DatePickerInput(label: "Date of birth", controller: dobController, onChanged: (newValue) => handleDateChanged(newValue), isEditable: true, isReadable: false),
                         ],
                       ),
                     ),

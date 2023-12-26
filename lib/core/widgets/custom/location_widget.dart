@@ -5,7 +5,20 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:geocoding/geocoding.dart' as geocoder;
 
 class LocationWidget extends StatefulWidget {
-  const LocationWidget({super.key});
+  const LocationWidget({
+    super.key,
+    required this.label,
+    required this.controller,
+    required this.onChanged,
+    required this.isReadable,
+    required this.isEditable,
+  });
+
+  final String label;
+  final TextEditingController controller;
+  final ValueChanged<String> onChanged;
+  final bool isReadable;
+  final bool isEditable;
 
   @override
   State<LocationWidget> createState() => _LocationWidgetState();
@@ -40,6 +53,7 @@ class _LocationWidgetState extends State<LocationWidget> {
       LocationData locationData = await _location.getLocation();
       setState(() {
         _currentLocation = locationData;
+        widget.controller.text = "${_currentLocation!.latitude}, ${_currentLocation!.longitude}";
         // _getAddressFromLatLng();
       });
     } catch (e) {
@@ -76,14 +90,10 @@ class _LocationWidgetState extends State<LocationWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Display location name (replace 'Your Location' with actual location)
-            Padding(
+        Padding(
           padding: const EdgeInsets.all(8.0),
           child: Text(
             _currentLocation != null
@@ -92,25 +102,28 @@ class _LocationWidgetState extends State<LocationWidget> {
             style: const TextStyle(fontSize: 16),
           ),
         ),
-        // Latitude and Longitude
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text(
-            _currentLocation != null
-                ? "Lat: ${_currentLocation!.latitude}, Long: ${_currentLocation!.longitude}"
-                : "Lat: N/A, Long: N/A",
-            style: const TextStyle(fontSize: 16),
+        SizedBox(
+          height: 48,
+          child: TextFormField(
+            controller: widget.controller,
+            decoration: InputDecoration(
+              labelText: widget.label,
+              border: const OutlineInputBorder(),
+            ),
+            onChanged: widget.onChanged,
+            enabled: widget.isEditable,
+            readOnly: widget.isReadable,
           ),
-        )
-          ],
         ),
-        IconButton(
-          icon: const Icon(Icons.location_on),
-          onPressed: () => {
-            _getLocation(),
-            _getAddressFromLatLng()
-          },
-        ),
+        // Padding(
+        //   padding: const EdgeInsets.all(8.0),
+        //   child: Text(
+        //     _currentLocation != null
+        //         ? "Lat: ${_currentLocation!.latitude}, Long: ${_currentLocation!.longitude}"
+        //         : "Lat: N/A, Long: N/A",
+        //     style: const TextStyle(fontSize: 16),
+        //   ),
+        // )
       ],
     );
   }

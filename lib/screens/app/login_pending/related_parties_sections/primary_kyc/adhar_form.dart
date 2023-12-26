@@ -119,7 +119,7 @@ class _AdharFormState extends State<AdharForm> {
                     const SizedBox(height: 10,),
                     TextInput(label: "Father Name", controller: fatherNameController, onChanged: (value) {}, isEditable: true, isReadable: false),
                     const SizedBox(height: 10,),
-                    DatePickerInput(label: "Date of birth", controller: dobController, onChanged: (newValue) => handleDateChanged(newValue)),
+                    DatePickerInput(label: "Date of birth", controller: dobController, onChanged: (newValue) => handleDateChanged(newValue), isEditable: true, isReadable: false,),
                     const SizedBox(height: 10,),
                     TextInput(label: "Address", controller: addressController, onChanged: (value) {}, isEditable: true, isReadable: false),
                   ],

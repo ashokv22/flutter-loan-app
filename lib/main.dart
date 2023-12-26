@@ -74,7 +74,7 @@ class _SideMenuAppState extends State<SideMenuApp> {
                 );
               } else {
                 if (snapshot.hasData && snapshot.data == true) {
-                  return const LeadDashboard();
+                  return const Home();
                 } else {
                   // If user data is null or user is not logged in, navigate to SignIn
                   return snapshot.hasData ? const SignIn() : const SignIn();

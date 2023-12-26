@@ -5,12 +5,16 @@ class DatePickerInput extends StatefulWidget {
   final String label;
   final TextEditingController controller;
   final ValueChanged<String> onChanged;
+  final bool isReadable;
+  final bool isEditable;
 
   const DatePickerInput({
     Key? key,
     required this.label,
     required this.controller,
     required this.onChanged,
+    required this.isReadable,
+    required this.isEditable,
   }) : super(key: key);
   
   @override
@@ -65,6 +69,7 @@ class _DatePickerInputState extends State<DatePickerInput> {
               border: const OutlineInputBorder(),
             ),
             readOnly: true,
+            enabled: widget.isEditable,
             onTap: () async {
               await _selectDate(context);
             },

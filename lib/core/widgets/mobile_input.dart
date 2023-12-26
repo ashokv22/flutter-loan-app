@@ -6,11 +6,15 @@ class MobileInput extends StatefulWidget {
     required this.label,
     required this.controller,
     required this.onChanged,
+    required this.isReadable,
+    required this.isEditable,
   }) : super(key: key);
 
   final String label;
   final TextEditingController controller;
   final ValueChanged<String> onChanged;
+  final bool isReadable;
+  final bool isEditable;
 
     @override
   _MobileInputState createState() => _MobileInputState();
@@ -45,6 +49,8 @@ class _MobileInputState extends State<MobileInput> {
           border: const OutlineInputBorder(),
         ),
         onChanged: widget.onChanged,
+        readOnly: widget.isReadable,
+        enabled: widget.isEditable,
       ),
     );
   }

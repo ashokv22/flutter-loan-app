@@ -6,11 +6,15 @@ class NumberInput extends StatefulWidget {
     required this.label,
     required this.controller,
     required this.onChanged,
+    required this.isReadable,
+    required this.isEditable,
   }) : super(key: key);
 
   final String label;
   final TextEditingController controller;
   final ValueChanged<String> onChanged;
+  final bool isReadable;
+  final bool isEditable;
 
   @override
   State<NumberInput> createState() => _NumberInputState();
@@ -42,6 +46,8 @@ class _NumberInputState extends State<NumberInput> {
           border: const OutlineInputBorder(),
         ),
         onChanged: widget.onChanged,
+        enabled: widget.isEditable,
+        readOnly: widget.isReadable,
       ),
     );
   }
