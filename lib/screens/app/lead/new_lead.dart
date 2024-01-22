@@ -199,16 +199,16 @@ class _NewLeadState extends State<NewLead> {
     
     TextEditingController controller = textEditingControllerMap[fieldName]!;
     if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'TextBox') {
-      if (field.fieldMeta?.dataType == 'Address') {
-        return AddressFields(
-          label: fieldName, 
-          address: field.fieldMeta?.addressDetails ?? AddressDetails(addressType: '', addressLine1: '', city: '', taluk: '', district: '', state: '', country: '', pinCode: ''),
-          onChanged: (newValue) => updateFieldValue(newValue, field), 
-          isEditable: field.isEditable!, 
-          isReadable: field.isReadOnly!
-        );
-      }
       return TextInput(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field), isEditable: field.isEditable!, isReadable: field.isReadOnly!);
+    }
+    else if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'Address') {
+      return AddressFields(
+        label: fieldName, 
+        address: field.fieldMeta?.addressDetails ?? AddressDetails(addressType: '', addressLine1: '', city: '', taluk: '', district: '', state: '', country: '', pinCode: ''),
+        onChanged: (newValue) => updateFieldValue(newValue, field), 
+        isEditable: field.isEditable!, 
+        isReadable: field.isReadOnly!
+      );
     } 
     else if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'TextArea') {
       return TextInput(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field), isEditable: field.isEditable!, isReadable: field.isReadOnly!);

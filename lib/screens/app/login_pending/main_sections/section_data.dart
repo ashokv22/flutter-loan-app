@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:origination/core/widgets/address_fields.dart';
 import 'package:origination/core/widgets/check_box.dart';
+import 'package:origination/core/widgets/custom/location_widget.dart';
 import 'package:origination/core/widgets/datepicker.dart';
 import 'package:origination/core/widgets/mobile_input.dart';
 import 'package:origination/core/widgets/number_input.dart';
@@ -252,6 +253,18 @@ class _SectionScreenEmptyState extends State<SectionScreenEmpty> {
     else if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'Switcher') {
       return SwitcherInput(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field),
         trueLabel: "Father", falseLabel: "Spouse");
+    }
+    else if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'Address') {
+      return AddressFields(
+        label: fieldName, 
+        address: field.fieldMeta?.addressDetails ?? AddressDetails(addressType: '', addressLine1: '', city: '', taluk: '', district: '', state: '', country: '', pinCode: ''),
+        onChanged: (newValue) => updateFieldValue(newValue, field), 
+        isEditable: field.isEditable!, 
+        isReadable: field.isReadOnly!
+      );
+    } 
+    else if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'Location') {
+      return LocationWidget(label: "Lat and Long", controller: controller, onChanged: (value) => updateFieldValue(value, field), isEditable: true, isReadable: true,);
     }
     else if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'HIDDEN') {
       return Text("$fieldName value: ${field.value}");

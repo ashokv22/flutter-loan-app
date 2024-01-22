@@ -112,7 +112,7 @@ class _LocationWidgetState extends State<LocationWidget> {
             ),
             onChanged: widget.onChanged,
             enabled: widget.isEditable,
-            readOnly: widget.isReadable,
+            // readOnly: widget.isReadable,
           ),
         ),
         // Padding(

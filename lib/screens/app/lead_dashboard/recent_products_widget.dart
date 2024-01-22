@@ -42,7 +42,7 @@ class _RecentProductsWidgetState extends State<RecentProductsWidget> {
               child: Row(
                 children: [
                   Text(
-                    "Recent Products",  
+                    "Top Applications",  
                     style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.bold),),
                   SizedBox(width: 5,),
                   Icon(Icons.history)

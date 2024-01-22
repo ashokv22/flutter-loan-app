@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
+import 'package:origination/core/widgets/address_fields.dart';
 import 'package:origination/core/widgets/datepicker.dart';
 // import 'package:origination/core/widgets/dropdown.dart';
 import 'package:origination/core/widgets/mobile_input.dart';
@@ -242,9 +243,18 @@ class _EditLeadState extends State<EditLead> {
     }
     
     TextEditingController controller = textEditingControllerMap[fieldName]!;
-  logger.wtf(field.fieldMeta?.fieldUiProperties?.uiComponentName);
+    logger.wtf(field.fieldMeta?.fieldUiProperties?.uiComponentName);
     if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'TextBox' || field.fieldMeta?.fieldUiProperties?.uiComponentName == 'Number') {
       return TextInput(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field), isEditable: field.isEditable!, isReadable: field.isReadOnly!);
+    } 
+    else if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'Address') {
+      return AddressFields(
+        label: fieldName, 
+        address: field.fieldMeta?.addressDetails ?? AddressDetails(addressType: '', addressLine1: '', city: '', taluk: '', district: '', state: '', country: '', pinCode: ''),
+        onChanged: (newValue) => updateFieldValue(newValue, field), 
+        isEditable: field.isEditable!, 
+        isReadable: field.isReadOnly!
+      );
     } 
     else if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'TextArea') {
       return TextInput(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field), isEditable: field.isEditable!, isReadable: field.isReadOnly!);
