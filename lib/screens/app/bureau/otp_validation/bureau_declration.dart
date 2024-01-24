@@ -129,7 +129,7 @@ class _BureauCheckDeclarationState extends State<BureauCheckDeclaration> {
                         "Declaration", 
                         textAlign: TextAlign.left, 
                         style: TextStyle(
-                          fontSize: 24, 
+                          fontSize: 20, 
                           fontWeight: FontWeight.bold,
                           color: Color.fromARGB(255, 3, 71, 244)
                         ),
@@ -140,20 +140,24 @@ class _BureauCheckDeclarationState extends State<BureauCheckDeclaration> {
                       declaration.declarationContent,
                       textAlign: TextAlign.center,
                       style: const TextStyle(
-                        fontSize: 18
+                        fontSize: 12
                       ),
                     ),
-                    const SizedBox(height: 60.0),
-                    TextField(
-                      decoration: const InputDecoration(
-                        labelText: 'Mobile',
-                        border: OutlineInputBorder(),
-                        counter: Offstage()
+                    const SizedBox(height: 10.0),
+                    SizedBox(
+                      height: 60,
+                      child: TextField(
+                        decoration: const InputDecoration(
+                          labelText: 'Mobile',
+                          border: OutlineInputBorder(),
+                          counter: Offstage()
+                        ),
+                        style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                        controller: _mobileController,
+                        keyboardType: TextInputType.phone,
+                        maxLength: 10,
+                        readOnly: true,
                       ),
-                      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                      controller: _mobileController,
-                      keyboardType: TextInputType.phone,
-                      maxLength: 10,
                     ),
                     const SizedBox(height: 30.0),
                     Padding(
@@ -162,14 +166,13 @@ class _BureauCheckDeclarationState extends State<BureauCheckDeclaration> {
                         alignment: Alignment.bottomCenter,
                         child: SizedBox(
                           width: double.infinity,
-                          height: 60,
                           child: MaterialButton(
                             onPressed: () => generateOTP(context, declaration),
                             color: const Color.fromARGB(255, 3, 71, 244),
                             textColor: Colors.white,
                             padding: const EdgeInsets.symmetric(vertical: 16.0),
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.0),
+                              borderRadius: BorderRadius.circular(30.0),
                             ),
                             child: isLoading ? const SizedBox(
                               width: 20.0,
@@ -179,7 +182,7 @@ class _BureauCheckDeclarationState extends State<BureauCheckDeclaration> {
                                 valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                               ),
                             )
-                            : const Text('Send OTP', style: TextStyle(fontSize: 18),),
+                            : const Text('Send OTP', style: TextStyle(fontSize: 14),),
                           ),
                         ),
                       ),

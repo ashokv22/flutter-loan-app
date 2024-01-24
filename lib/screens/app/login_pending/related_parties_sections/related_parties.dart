@@ -61,7 +61,7 @@ class _RelatedPartiesState extends State<RelatedParties> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(onPressed: () {Navigator.pop(context);}, icon: const Icon(CupertinoIcons.arrow_left)),
-        title: const Text("Related Parties"),
+        title: const Text("Related Parties", style: TextStyle(fontSize: 16),),
       ),
       body: Container(
         decoration: BoxDecoration(
@@ -172,19 +172,23 @@ class _RelatedPartiesState extends State<RelatedParties> {
                         section.displayTitle,
                         style: TextStyle(
                           color: Theme.of(context).textTheme.displayMedium!.color,
-                          fontSize: 18,
+                          fontSize: 16,
                           fontFamily: 'Inter',
-                          fontWeight: FontWeight.w600,
+                          fontWeight: FontWeight.w500,
                         ),
                       ),
                       if (section.status == "COMPLETED")
                         const Icon(
                           CupertinoIcons.checkmark_alt_circle_fill,
-                          color: Color.fromARGB(255, 0, 152, 58),)
+                          color: Color.fromARGB(255, 0, 152, 58),
+                          size: 22,  
+                        )
                       else
                         Icon(
-                          CupertinoIcons.chevron_right_circle_fill,
-                          color: Theme.of(context).iconTheme.color,)
+                          CupertinoIcons.chevron_right_circle,
+                          color: Theme.of(context).iconTheme.color,
+                          size: 22,  
+                        )
                     ],
                   ),
                 ),

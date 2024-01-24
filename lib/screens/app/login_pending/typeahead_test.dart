@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
+import 'package:origination/core/widgets/custom/multi_select_dropdown.dart';
 import 'package:origination/core/widgets/custom/yearpicker.dart';
 import 'package:origination/core/widgets/address_fields.dart';
 // import 'package:origination/core/widgets/check_box.dart';
@@ -21,7 +22,10 @@ class _TypeaheadTestState extends State<TypeaheadTest> {
   Logger logger = Logger();
   int selectedYear = DateTime.now().year;
   final TextEditingController _controller = TextEditingController();
+  final TextEditingController _latLongController = TextEditingController();
+  final TextEditingController _multiSelectController = TextEditingController();
   AddressDetails address = AddressDetails(addressLine1: '', addressType: '', city: '', country: '', district: '', taluk: '', state: '', pinCode: '');
+  Field field = Field(value: "Vegetable");
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +71,9 @@ class _TypeaheadTestState extends State<TypeaheadTest> {
                         const SizedBox(height: 20,),
                         AddressFields(label: "Address", address: address, onChanged: (value) {}, isReadable: false, isEditable: true),
                         const SizedBox(height: 20,),
-                        const LocationWidget(),
+                        LocationWidget(label: "Lat and Long", controller: _latLongController, onChanged: (value) => updateFieldValue(value), isEditable: true, isReadable: true,),
+                        const SizedBox(height: 20,),
+                        MultiSelectDropDown(label: "Crops", controller: _multiSelectController, referenceCode: "crop_name", onChanged: (value) => updateFieldValue2(value, field), isReadable: false, isEditable: true,),
                       ],
                     ),
                   ),
@@ -82,6 +88,13 @@ class _TypeaheadTestState extends State<TypeaheadTest> {
   void updateFieldValue(String newValue) {
     setState(() {
       _controller.text = newValue;
+      logger.i("Value: ${_multiSelectController.text}");
+    });
+  }
+
+  void updateFieldValue2(String newValue, Field field) {
+    setState(() {
+      field.value = newValue;
     });
   }
 }

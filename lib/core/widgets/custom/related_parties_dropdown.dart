@@ -87,7 +87,17 @@ class _RelatedPartiedsDropdownState extends State<RelatedPartiedsDropdown> {
                     ...relatedParties.map((option) {
                       return DropdownMenuItem<String>(
                         value: "${option.type.name} - ${option.id}",
-                        child: Text("${option.type.name} - ${option.name} - ${option.id}"),
+                        child: SizedBox(
+                          width: 280,
+                          child: Text(
+                            "${option.type.name} - ${option.name} - ${option.id}",
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                            style: const TextStyle(
+                              fontSize: 14,
+                            ),
+                          ),
+                        ),
                       );
                     }).toList(),
                 ],

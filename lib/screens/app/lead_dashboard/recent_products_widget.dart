@@ -43,7 +43,7 @@ class _RecentProductsWidgetState extends State<RecentProductsWidget> {
                 children: [
                   Text(
                     "Top Applications",  
-                    style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.bold),),
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
                   SizedBox(width: 5,),
                   Icon(Icons.history)
                 ],
@@ -84,8 +84,8 @@ class _RecentProductsWidgetState extends State<RecentProductsWidget> {
                       itemBuilder: (context, index) {
                         final product = lastInteractedProducts[index];
                         return Container(
-                          height: 100,
-                          width: 350,
+                          height: 50,
+                          width: 300,
                           decoration: BoxDecoration (
                             borderRadius: BorderRadius.circular(8.0),
                             color: Colors.white,
@@ -137,16 +137,16 @@ class _RecentProductsWidgetState extends State<RecentProductsWidget> {
                                 ),
                             ),
                               Container(
-                                width: 50, // Adjust the width as needed
+                                width: 40, // Adjust the width as needed
                                 margin: const EdgeInsets.only(right: 20),
                                 child: CircularPercentIndicator(
                                   percent: 0.7,
-                                  radius: 32, // Adjust the radius as needed
+                                  radius: 28, // Adjust the radius as needed
                                   animation: true,
                                   circularStrokeCap: CircularStrokeCap.round,
                                   progressColor: const Color(0xFF00861D),
                                   lineWidth: 6.0,
-                                  center: const Text("70%", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0),)
+                                  center: const Text("70%", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14.0),)
                                 ),
                               )
                             ],

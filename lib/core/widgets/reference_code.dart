@@ -79,7 +79,16 @@ class _ReferencecodeState extends State<Referencecode> {
                     ...refernceCodes!.map((option) {
                       return DropdownMenuItem<String>(
                         value: option.code,
-                        child: Text(option.name!),
+                        child: SizedBox(
+                          width: 280,
+                          child: Text(
+                            option.name!,
+                            style: const TextStyle(
+                              fontSize: 14
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                          )
+                        ),
                       );
                     }).toList(),
                 ],

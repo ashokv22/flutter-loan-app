@@ -50,8 +50,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   Stack(
                     children: [
                       SizedBox(
-                        width: 120,
-                        height: 120,
+                        width: 100,
+                        height: 100,
                         child: ClipRRect(
                             borderRadius: BorderRadius.circular(100), child: const Image(image: AssetImage('assets/images/female-04.jpg'))),
                       ),
@@ -73,7 +73,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   const SizedBox(height: 10),
                   Text("Hi $name", 
                     style: TextStyle(
-                      fontSize: 26, 
+                      fontSize: 24, 
                       color: Theme.of(context).textTheme.displaySmall!.color,
                       fontWeight: FontWeight.w400
                     )
@@ -93,7 +93,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       child: const Text("Edit Profile", style: TextStyle(color: Colors.white)),
                     ),
                   ),
-                  const SizedBox(height: 30),
+                  const SizedBox(height: 10),
                   const Divider(),
                   const SizedBox(height: 10),
 

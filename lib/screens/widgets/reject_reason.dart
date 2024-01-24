@@ -65,7 +65,10 @@ class _RejectReasonState extends State<RejectReason> {
         children: [
           AppBar(
             automaticallyImplyLeading: false,
-            title: const Text('Reject reason'),
+            title: const Text(
+              'Reject reason',
+              style: TextStyle(fontSize: 16),
+              ),
             actions: [
               IconButton(
                 icon: const Icon(Icons.close),
@@ -88,7 +91,7 @@ class _RejectReasonState extends State<RejectReason> {
           const Expanded(child: SizedBox()), // Add an expanded widget to fill remaining space
           Container(
             width: double.infinity,
-            height: 80.0,
+            // height: 80.0,
             padding: const EdgeInsets.all(16.0),
             child: ElevatedButton(
               onPressed: () {

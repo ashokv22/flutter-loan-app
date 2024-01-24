@@ -181,8 +181,8 @@ class _StageLeadListState extends State<StageLeadList> {
                           },
                           child: Container(
                             // margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
-                            margin: const EdgeInsets.symmetric(horizontal: 1.0, vertical: 2.0),
-                            padding: const EdgeInsets.all(12.0),
+                            margin: const EdgeInsets.symmetric(horizontal: 1.0, vertical: 0.0),
+                            padding: const EdgeInsets.all(8.0),
                             color: selectedIds.contains(applicant.id) ? Colors.blue.withOpacity(0.3) : null,
                             // decoration: BoxDecoration(
                             //   color: Theme.of(context).cardColor,
@@ -223,8 +223,8 @@ class _StageLeadListState extends State<StageLeadList> {
                                         bottom: 0,
                                         right: 0,
                                         child: SizedBox(
-                                          width: 60,
-                                          height: 60,
+                                          width: 55,
+                                          height: 55,
                                           child: Container(
                                             padding: const EdgeInsets.all(4.0),
                                             decoration: BoxDecoration(
@@ -246,7 +246,7 @@ class _StageLeadListState extends State<StageLeadList> {
                                           applicant.name,
                                           style: TextStyle(
                                             fontSize: 16,
-                                            fontWeight: FontWeight.w700,
+                                            fontWeight: FontWeight.w500,
                                             color: isDarkTheme ? Colors.blueAccent[400] : const Color.fromARGB(255, 3, 71, 244),
                                             // color: Color.fromARGB(255, 3, 71, 244),
                                           ),
@@ -254,17 +254,17 @@ class _StageLeadListState extends State<StageLeadList> {
                                         Text(applicant.mobile,
                                           style: TextStyle(
                                             color: Theme.of(context).textTheme.displayMedium!.color,
-                                            fontSize: 14,
-                                            // fontWeight: FontWeight.w500,
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w400,
                                           ),
                                         ),
                                         SizedBox(
                                           width: 150,
                                           child: Text(applicant.dsaName,
                                             style: TextStyle(
-                                              fontSize: 14,
+                                              fontSize: 12,
                                               color: Theme.of(context).textTheme.displayMedium!.color,
-                                              // fontWeight: FontWeight.w500,
+                                              fontWeight: FontWeight.w400,
                                             ),
                                             maxLines: 1,
                                             softWrap: false,
@@ -283,17 +283,17 @@ class _StageLeadListState extends State<StageLeadList> {
                                       "${applicant.createdDate.year.toString()}-${applicant.createdDate.month.toString().padLeft(2,'0')}-${applicant.createdDate.day.toString().padLeft(2,'0')}",
                                       style: TextStyle(
                                         color: Theme.of(context).textTheme.displayMedium!.color,
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w600
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w500
                                       ),
                                     ),
                                     // const SizedBox(height: 10),
                                     Text(
                                       applicant.model,
                                       style: TextStyle(
-                                        fontSize: 14,
+                                        fontSize: 12,
                                         color: Theme.of(context).textTheme.displayMedium!.color,
-                                        // fontWeight: FontWeight.w500,
+                                        fontWeight: FontWeight.w300,
                                       ),
                                       maxLines: 1,
                                       softWrap: false,
@@ -319,7 +319,7 @@ class _StageLeadListState extends State<StageLeadList> {
                                           applicant.status,
                                           style: const TextStyle(
                                             color: Colors.white,
-                                            fontSize: 10,
+                                            fontSize: 8,
                                             fontWeight: FontWeight.w600
                                           ),
                                         ),

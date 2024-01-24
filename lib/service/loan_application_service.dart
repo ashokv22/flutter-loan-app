@@ -314,8 +314,8 @@ class LoanApplicationService {
     }
   }
 
-  Future<String> approveCibil(int id, String type) async {
-    String endpoint = "api/application/bureauCheck/approveIndividual?id=$id&type=$type";
+  Future<String> approveCibil(int id, String type, int cibilScore) async {
+    String endpoint = "api/application/bureauCheck/approveIndividual?id=$id&type=$type&cibilScore=$cibilScore";
     try {
       final response = await authInterceptor.patch(Uri.parse(endpoint));
       if (response.statusCode == 200) {

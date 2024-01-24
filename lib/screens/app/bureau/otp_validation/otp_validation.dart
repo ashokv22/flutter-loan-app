@@ -114,7 +114,7 @@ class _OtpValidationState extends State<OtpValidation> {
                     borderColor: Colors.red,
                     showFieldAsBox: false,
                     fieldWidth: 40,
-                    margin: const EdgeInsets.only(left: 15, right: 15),
+                    margin: const EdgeInsets.only(left: 10, right: 10),
                     onCodeChanged: (String code) {
                       if (code.isEmpty) {
                         verificationCode = '';
@@ -128,8 +128,8 @@ class _OtpValidationState extends State<OtpValidation> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text("Din't recieve the OTP?", style: TextStyle(fontSize: 18),),
-                      TextButton(onPressed: () {}, child: const Text("RESEND OTP", style: TextStyle(fontSize: 19),))
+                      const Text("Din't recieve the OTP?", style: TextStyle(fontSize: 16),),
+                      TextButton(onPressed: () {}, child: const Text("RESEND OTP", style: TextStyle(fontSize: 18),))
                     ],
                   ),
                   const SizedBox(height: 20,),
@@ -137,7 +137,6 @@ class _OtpValidationState extends State<OtpValidation> {
                     alignment: Alignment.bottomCenter,
                     child: SizedBox(
                       width: double.infinity,
-                      height: 60,
                       child: MaterialButton(
                         onPressed: () => {
                           validateOtp(verificationCode),
@@ -146,7 +145,7 @@ class _OtpValidationState extends State<OtpValidation> {
                         textColor: Colors.white,
                         padding: const EdgeInsets.symmetric(vertical: 16.0),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.0),
+                          borderRadius: BorderRadius.circular(30.0),
                         ),
                         child: isLoading ? const SizedBox(
                           width: 20.0,
@@ -156,7 +155,7 @@ class _OtpValidationState extends State<OtpValidation> {
                             valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                           ),
                         )
-                        : const Text('VERIFY', style: TextStyle(fontSize: 20),),
+                        : const Text('VERIFY', style: TextStyle(fontSize: 14),),
                       ),
                     ),
                   ),

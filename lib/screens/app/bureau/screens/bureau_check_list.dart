@@ -91,7 +91,7 @@ class _BureauCheckListState extends State<BureauCheckList> {
       setState(() {
         approveLoading = true;
       });
-      await loanApplicationService.approveCibil(id, type.name);
+      await loanApplicationService.approveCibil(id, type.name, 800);
       setState(() {
         approveLoading = false;
       });
@@ -421,7 +421,6 @@ class _BureauCheckListState extends State<BureauCheckList> {
                       ),
                       child: SizedBox(
                       width: double.infinity,
-                      height: 50,
                       child: MaterialButton(
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30.0),
@@ -446,7 +445,6 @@ class _BureauCheckListState extends State<BureauCheckList> {
                     const SizedBox(height: 10,),
                     SizedBox(
                       width: double.infinity,
-                      height: 50,
                       child: MaterialButton(
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30.0),

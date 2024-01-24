@@ -128,30 +128,37 @@ class _SignInPageState extends State<SignIn> {
                           Text(
                             'Log in',
                             style: TextStyle(
-                              fontSize: 36,
-                              fontWeight: FontWeight.w900,
+                              fontSize: 32,
+                              fontWeight: FontWeight.w700,
+                              fontFamily: 'Open Sans',
                             ),
                           ),
                         ],
                       ),
                       const SizedBox(height: 60.0),
-                      TextField(
-                        controller: userNameController,
-                        focusNode: _userNameFocusNode,
-                        decoration: const InputDecoration(
-                          labelText: 'Username',
-                          border: OutlineInputBorder(),
+                      SizedBox(
+                        height: 50,
+                        child: TextField(
+                          controller: userNameController,
+                          focusNode: _userNameFocusNode,
+                          decoration: const InputDecoration(
+                            labelText: 'Username',
+                            border: OutlineInputBorder(),
+                          ),
                         ),
                       ),
                       const SizedBox(height: 20.0),
-                      TextField(
-                        controller: passwordController,
-                        focusNode: _passwordFocusNode,
-                        decoration: const InputDecoration(
-                          labelText: 'Password',
-                          border: OutlineInputBorder(),
+                      SizedBox(
+                        height: 50,
+                        child: TextField(
+                          controller: passwordController,
+                          focusNode: _passwordFocusNode,
+                          decoration: const InputDecoration(
+                            labelText: 'Password',
+                            border: OutlineInputBorder(),
+                          ),
+                          obscureText: true,
                         ),
-                        obscureText: true,
                       ),
                       const SizedBox(height: 16.0),
                       Align(
@@ -162,32 +169,28 @@ class _SignInPageState extends State<SignIn> {
                         ),
                       ),
                       const SizedBox(height: 16.0),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 10),
-                        child: Align(
-                          alignment: Alignment.bottomCenter,
-                          child: SizedBox(
-                            width: double.infinity,
-                            height: 52,
-                            child: MaterialButton(
-                              onPressed: _handleLogin,
-                              color: const Color.fromARGB(255, 3, 71, 244),
-                              textColor: Colors.white,
-                              padding: const EdgeInsets.symmetric(vertical: 16.0),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                              ),
-                              child: _isLoading
-                                  ? const SizedBox(
-                                width: 20.0,
-                                height: 20.0,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2.0,
-                                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                                ),
-                              )
-                                  : const Text('Log In'),
+                      Align(
+                        alignment: Alignment.bottomCenter,
+                        child: SizedBox(
+                          width: double.infinity,
+                          child: MaterialButton(
+                            onPressed: _handleLogin,
+                            color: const Color.fromARGB(255, 3, 71, 244),
+                            textColor: Colors.white,
+                            padding: const EdgeInsets.symmetric(vertical: 16.0),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30.0),
                             ),
+                            child: _isLoading
+                                ? const SizedBox(
+                              width: 20.0,
+                              height: 20.0,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2.0,
+                                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                              ),
+                            )
+                                : const Text('Log In'),
                           ),
                         ),
                       ),

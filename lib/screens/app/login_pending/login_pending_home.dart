@@ -87,36 +87,39 @@ class _LoginPendingHomeState extends State<LoginPendingHome> {
             children: [
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: TextField(
-                  controller: _searchController,
-                  decoration: InputDecoration(
-                  hintText: 'Search...',
-                  suffixIcon: _searchController.text.isNotEmpty ? IconButton(
-                        icon: const Icon(Icons.clear),
-                        onPressed: () {
-                          setState(() {
-                            _searchController.clear(); // Clear the search text
-                          });
-                        }
-                      ): null,
-                      // Add a search icon or button to the search bar
-                      prefixIcon: IconButton(
-                        icon: const Icon(Icons.search),
-                        onPressed: () {},
-                      ),
-                  contentPadding: const EdgeInsets.all(15),
-                  border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(30))),
-                  onChanged: (value) {
-                    setState(() {
-                      _searchController.value = _searchController.value.copyWith(
-                        text: value,
-                        selection: TextSelection.fromPosition(
-                          TextPosition(offset: value.length),
+                child: SizedBox(
+                  height: 45,
+                  child: TextField(
+                    controller: _searchController,
+                    decoration: InputDecoration(
+                    hintText: 'Search...',
+                    suffixIcon: _searchController.text.isNotEmpty ? IconButton(
+                          icon: const Icon(Icons.clear),
+                          onPressed: () {
+                            setState(() {
+                              _searchController.clear(); // Clear the search text
+                            });
+                          }
+                        ): null,
+                        // Add a search icon or button to the search bar
+                        prefixIcon: IconButton(
+                          icon: const Icon(Icons.search),
+                          onPressed: () {},
                         ),
-                      );
-                    });
-                  },
+                    contentPadding: const EdgeInsets.all(15),
+                    border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30))),
+                    onChanged: (value) {
+                      setState(() {
+                        _searchController.value = _searchController.value.copyWith(
+                          text: value,
+                          selection: TextSelection.fromPosition(
+                            TextPosition(offset: value.length),
+                          ),
+                        );
+                      });
+                    },
+                  ),
                 ),
               ),
               Expanded(
@@ -221,14 +224,14 @@ class _LoginPendingHomeState extends State<LoginPendingHome> {
                                         children: [
                                           Text("Product: ${product.id}",
                                             style: const TextStyle(
-                                              fontSize: 16,
+                                              fontSize: 14,
                                               fontWeight: FontWeight.w600
                                             ),
                                           ),
                                           Text(
                                             product.product,
                                             style: TextStyle(
-                                              fontSize: 18,
+                                              fontSize: 16,
                                               fontWeight: FontWeight.w700,
                                               color: isDarkTheme ? Colors.blueAccent[400] : const Color.fromARGB(255, 3, 71, 244),
                                             ),
@@ -240,14 +243,14 @@ class _LoginPendingHomeState extends State<LoginPendingHome> {
                                         children: [
                                           const Text("Loan Amount",
                                             style: TextStyle(
-                                              fontSize: 16,
+                                              fontSize: 14,
                                               fontWeight: FontWeight.w600
                                             ),
                                           ),
                                           Text(
                                             '₹${LoanAmountFormatter.transform(product.loanAmount)}',
                                             style: TextStyle(
-                                              fontSize: 20,
+                                              fontSize: 16,
                                               fontWeight: FontWeight.w900,
                                               color: isDarkTheme ? Colors.blueAccent[400] : const Color.fromARGB(255, 3, 71, 244),
                                             ),
@@ -271,7 +274,7 @@ class _LoginPendingHomeState extends State<LoginPendingHome> {
                                               Text("Applicant:",
                                                 style: TextStyle(
                                                   color: Theme.of(context).textTheme.displayMedium!.color,
-                                                  fontSize: 16,
+                                                  fontSize: 14,
                                                   fontFamily: 'Inter',
                                                   fontWeight: FontWeight.w400,
                                                 ),
@@ -282,7 +285,7 @@ class _LoginPendingHomeState extends State<LoginPendingHome> {
                                                 child: Text(
                                                   applicantName,
                                                   style: TextStyle(
-                                                    fontSize: 18,
+                                                    fontSize: 16,
                                                     fontFamily: 'Inter',
                                                     fontWeight: FontWeight.w600,
                                                     color: isDarkTheme ? Colors.blueAccent[400] : const Color.fromARGB(255, 3, 71, 244),
@@ -301,7 +304,7 @@ class _LoginPendingHomeState extends State<LoginPendingHome> {
                                               Text("Co Applicant",
                                                 style: TextStyle(
                                                   color: Theme.of(context).textTheme.displayMedium!.color,
-                                                  fontSize: 16,
+                                                  fontSize: 14,
                                                   fontFamily: 'Inter',
                                                   fontWeight: FontWeight.w400,
                                                 ),
@@ -312,7 +315,7 @@ class _LoginPendingHomeState extends State<LoginPendingHome> {
                                                 child: Text(
                                                   coApplicantNames,
                                                   style: TextStyle(
-                                                    fontSize: 18,
+                                                    fontSize: 16,
                                                     fontFamily: 'Inter',
                                                     fontWeight: FontWeight.w600,
                                                     color: isDarkTheme ? Colors.blueAccent[400] : const Color.fromARGB(255, 3, 71, 244),
@@ -331,7 +334,7 @@ class _LoginPendingHomeState extends State<LoginPendingHome> {
                                               Text("Guarantor",
                                                 style: TextStyle(
                                                   color: Theme.of(context).textTheme.displayMedium!.color,
-                                                  fontSize: 16,
+                                                  fontSize: 14,
                                                   fontFamily: 'Inter',
                                                   fontWeight: FontWeight.w400,
                                                 ),
@@ -343,7 +346,7 @@ class _LoginPendingHomeState extends State<LoginPendingHome> {
                                                 Text(
                                                   guarantorNames,
                                                   style: TextStyle(
-                                                    fontSize: 18,
+                                                    fontSize: 16,
                                                     fontFamily: 'Inter',
                                                     fontWeight: FontWeight.w600,
                                                     color: isDarkTheme ? Colors.blueAccent[400] : const Color.fromARGB(255, 3, 71, 244),

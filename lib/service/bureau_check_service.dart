@@ -155,7 +155,7 @@ class BureauCheckService {
   }
 
   Future<List<CheckListDTO>> getAllCheckLists(int id) async {
-    String endpoint = "api/application/bureauCheck/getAllBureauChecks/$id";
+    String endpoint = "api/application/bureauCheck/all/$id";
     try {
       final response = await authInterceptor.get(Uri.parse(endpoint));
       if (response.statusCode == 200) {
