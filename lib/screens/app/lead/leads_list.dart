@@ -126,6 +126,16 @@ class _LeadsListState extends State<LeadsList> {
                                 duration: Duration(seconds: 2),
                               ),
                             );
+                          } else if (applicant.status == "SUBMITTED") {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                showCloseIcon: true,
+                                elevation: 1,
+                                backgroundColor: Colors.black,
+                                content: Text('Lead is Submitted.'),
+                                duration: Duration(seconds: 2),
+                              ),
+                            );
                           } else {
                             Navigator.push(context, MaterialPageRoute(builder: (context) => EditLead(id: applicant.id, applicantId: int.parse(applicant.applicantId))));
                           }

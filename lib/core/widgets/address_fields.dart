@@ -80,7 +80,9 @@ class _AddressFieldsState extends State<AddressFields> {
 
   Future<void> getAddressByPinCode(String pinCode) async {
     try {
+      logger.i("Getting address by pin code...");
         AddressDTO addressDTO = await utilService.getAddressByPincode(_pinCode.text);
+        logger.d("Address: ${addressDTO.toJson()}");
         setState(() {
           _city.text = addressDTO.city!;
           _district.text = addressDTO.district!;

@@ -21,6 +21,7 @@ class UtilService {
     String endpoint = "http://13.127.65.162/flask/getAddress?pincode=$pinCode";
     try {
       final response = await http.get(Uri.parse(endpoint));
+      logger.wtf("Getting address for $pinCode:  ${response.body}");
       if (response.statusCode != 200) {
         throw Exception('Failed to generate bureau reports. Error code: ${response.statusCode}');
       }

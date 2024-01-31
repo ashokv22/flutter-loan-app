@@ -6,7 +6,7 @@ import 'package:origination/models/stage.dart';
 import 'package:origination/models/summaries/leads_list_dto.dart';
 import 'package:origination/screens/app/lead/edit_lead_application.dart';
 import 'package:origination/screens/app/lead/search_new.dart';
-import 'package:origination/screens/app/login_pending/login_pending_home.dart';
+// import 'package:origination/screens/app/login_pending/login_pending_home.dart';
 import 'package:origination/service/loan_application_service.dart';
 
 class StageLeadList extends StatefulWidget {
@@ -163,15 +163,13 @@ class _StageLeadListState extends State<StageLeadList> {
                           onTap: () {
                             if (applicant.status == ApplicationStage.REJECTED.name) {
                               ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  showCloseIcon: true,
-                                  elevation: 1,
-                                  backgroundColor: Colors.black,
-                                  content: Text('Lead is Rejected ${applicant.id}'),
-                                  duration: const Duration(seconds: 2),
-                                ),
+                                customSnackBar(isDarkTheme, "Lead is Rejected ${applicant.id}"),
                               );
-                            } else if (applicant.status == ApplicationStage.LOGIN_PENDING.name) {
+                            } else if (applicant.status == "SUBMITTED") {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                customSnackBar(isDarkTheme, "Lead is Submitted ${applicant.id}"),
+                              );
+                          } else if (applicant.status == ApplicationStage.LOGIN_PENDING.name) {
                               // Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginPendingHome()));
                               // Edit Login Pending Leads
                               Navigator.push(context, MaterialPageRoute(builder: (context) => EditLead(id: applicant.id, applicantId: int.parse(applicant.applicantId))));
@@ -306,6 +304,8 @@ class _StageLeadListState extends State<StageLeadList> {
                                           colors: [Color(0xFF00CA2C), Color(0xFF00861D)],
                                         ) : applicant.status == "REJECTED" ? const LinearGradient(
                                           colors: [Colors.red, Colors.redAccent]
+                                        ) : applicant.status == "SUBMITTED" ? const LinearGradient(
+                                          colors: [Colors.deepPurple, Colors.deepPurpleAccent]
                                         ) : const LinearGradient(
                                           colors: [Colors.blue, Colors.blueAccent]
                                         ),
@@ -342,6 +342,27 @@ class _StageLeadListState extends State<StageLeadList> {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  SnackBar customSnackBar(bool isDarkTheme, String text) {
+    return SnackBar(
+      showCloseIcon: true,
+      elevation: 1,
+      content: Row(
+        children: <Widget>[
+          Icon(Icons.info_outline, color: isDarkTheme ? Colors.black : Colors.white,),
+          const SizedBox(width: 5,),
+          Text(text),
+        ],
+      ),
+      duration: const Duration(seconds: 2),
+      backgroundColor: isDarkTheme ? Colors.white.withOpacity(0.8) : Colors.black.withOpacity(0.7),
+      // Set the behavior to floating
+      behavior: SnackBarBehavior.floating,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15),
       ),
     );
   }
