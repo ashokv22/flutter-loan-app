@@ -347,23 +347,32 @@ class _StageLeadListState extends State<StageLeadList> {
   }
 
   SnackBar customSnackBar(bool isDarkTheme, String text) {
-    return SnackBar(
-      showCloseIcon: true,
-      elevation: 1,
-      content: Row(
-        children: <Widget>[
-          Icon(Icons.info_outline, color: isDarkTheme ? Colors.black : Colors.white,),
-          const SizedBox(width: 5,),
-          Text(text),
-        ],
-      ),
-      duration: const Duration(seconds: 2),
-      backgroundColor: isDarkTheme ? Colors.white.withOpacity(0.8) : Colors.black.withOpacity(0.7),
-      // Set the behavior to floating
-      behavior: SnackBarBehavior.floating,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
-      ),
+    final animationController = AnimationController(
+      vsync: ScaffoldMessenger.of(context),
+      duration: const Duration(milliseconds: 500),
     );
+    animationController.forward();
+    return SnackBar(
+    showCloseIcon: true,
+    elevation: 1,
+    content: AnimatedBuilder(
+      animation: animationController,
+      builder: (context, child) {
+        return Row(
+          children: <Widget>[
+            Icon(Icons.info_outline, color: isDarkTheme ? Colors.black : Colors.white,),
+            const SizedBox(width: 5,),
+            Text(text),
+          ],
+        );
+      },
+    ),
+    duration: const Duration(seconds: 2),
+    backgroundColor: isDarkTheme ? Colors.white.withOpacity(0.8) : Colors.black.withOpacity(0.7),
+    behavior: SnackBarBehavior.floating,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(10),
+    ),
+  );
   }
 }

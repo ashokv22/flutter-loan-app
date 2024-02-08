@@ -34,6 +34,7 @@ class _SectionScreenEmptyState extends State<SectionScreenEmpty> {
   final loginPendingService = LoginPendingService();
   final loanApplicationService = LoanApplicationService();
   late Future<Section> leadApplicationFuture;
+  bool loadError = false;
   var logger = Logger();
   bool isLoading = false;
   Map<String, TextEditingController> textEditingControllerMap = {};
@@ -41,7 +42,17 @@ class _SectionScreenEmptyState extends State<SectionScreenEmpty> {
   @override
   void initState() {
     super.initState();
-    leadApplicationFuture = loginPendingService.getMainSectionDataForApplicantAndSection(widget.id, "All", widget.title);
+    getMainSectionsData();
+  }
+
+  void getMainSectionsData() async {
+    try {
+      leadApplicationFuture = loginPendingService.getMainSectionDataForApplicantAndSection(widget.id, "All", widget.title);
+    } catch(e) {
+      setState(() {
+        loadError = true;
+      });
+    }
   }
 
   void onSave(Section entity) async {
@@ -79,7 +90,7 @@ class _SectionScreenEmptyState extends State<SectionScreenEmpty> {
           icon: const Icon(CupertinoIcons.arrow_left)),
         title: Text(widget.title),
       ),
-        body: Container(
+        body: loadError ? _buildErrorBody(isDarkTheme) : Container(
           decoration: BoxDecoration(
             gradient: isDarkTheme
                 ? null // No gradient for dark theme, use a single color
@@ -278,4 +289,23 @@ class _SectionScreenEmptyState extends State<SectionScreenEmpty> {
       field.value = newValue;
     });
   }
+
+  Widget _buildErrorBody(bool isDarkTheme) {
+  return Container(
+    decoration: BoxDecoration(
+      gradient: isDarkTheme
+        ? null // No gradient for dark theme, use a single color
+        : const LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Colors.white,
+              Color.fromRGBO(193, 248, 245, 1),
+            ]),
+    ),
+    child: const Center(
+      child: Text('There\'s something wrong! We till we make a snap 🫰.'),
+    ),
+  );
+}
 }

@@ -36,6 +36,16 @@ class _ReferencecodeState extends State<Referencecode> {
         refernceCodes = filteredOptions.isEmpty ? null : filteredOptions; // Set referenceCodes to null if the filteredOptions is empty
         isLoading = false;
       });
+      // Check if the selectedValue is present in the fetched options
+      if (selectedValue != null && refernceCodes != null) {
+        final selectedExists = refernceCodes!.any((option) => option.code == selectedValue);
+        if (!selectedExists) {
+          // Set selectedValue to null if it's not present in the fetched options
+          setState(() {
+            selectedValue = null;
+          });
+        }
+      }
     } catch(e) {
       logger.e(e);
       setState(() {

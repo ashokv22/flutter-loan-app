@@ -38,16 +38,22 @@ class _TextInputState extends State<TextInput> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 48,
       child: TextFormField(
         controller: widget.controller,
         decoration: InputDecoration(
           labelText: widget.label,
           border: const OutlineInputBorder(),
+          contentPadding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
         ),
         onChanged: widget.onChanged,
         enabled: widget.isEditable,
         readOnly: widget.isReadable,
+        // validator: (value) {
+        //   if (value == null || value.isEmpty) {
+        //     return 'This field is required';
+        //   } 
+        //   return null;
+        // }
       ),
     );
   }
