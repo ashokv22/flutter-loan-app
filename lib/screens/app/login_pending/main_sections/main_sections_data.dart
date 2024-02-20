@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:origination/models/login_flow/sections/loan_application_entity.dart';
 import 'package:origination/screens/app/bureau/screens/bureau_check_list.dart';
-import 'package:origination/screens/app/login_pending/main_sections/document_upload.dart';
+// import 'package:origination/screens/app/login_pending/main_sections/document_upload.dart';
 // import 'package:origination/screens/app/login_pending/main_sections/land_and_crop_details.dart';
 // import 'package:origination/screens/app/login_pending/number_advanced.dart';
 import 'package:origination/screens/app/login_pending/related_parties_sections/related_parties.dart';
 import 'package:origination/screens/app/login_pending/main_sections/section_data.dart';
-// import 'package:origination/screens/app/login_pending/typeahead_test.dart';
+import 'package:origination/screens/app/login_pending/typeahead_test.dart';
 import 'package:origination/service/login_flow_service.dart';
 import 'package:swipeable_button_view/swipeable_button_view.dart';
 import '../consent/consent_screen.dart';
@@ -131,12 +131,12 @@ class _MainSectionsDataState extends State<MainSectionsData> {
                                       if (section.sectionName == "Applicant") {
                                         Navigator.push(context, MaterialPageRoute(builder: (context) => RelatedParties(id: widget.id,)));
                                       }
-                                      // else if (section.sectionName == "DocumentUpload") {
-                                      //   Navigator.push(context, MaterialPageRoute(builder: (context) => const TypeaheadTest()));  
-                                      // } 
                                       else if (section.sectionName == "DocumentUpload") {
-                                        Navigator.push(context, MaterialPageRoute(builder: (context) => const DocumentUpload()));  
+                                        Navigator.push(context, MaterialPageRoute(builder: (context) => const TypeaheadTest()));  
                                       } 
+                                      // else if (section.sectionName == "DocumentUpload") {
+                                      //   Navigator.push(context, MaterialPageRoute(builder: (context) => const DocumentUpload()));  
+                                      // } 
                                       else if (section.sectionName == "CheckList") {
                                         Navigator.push(context, MaterialPageRoute(builder: (context) => BureauCheckList(id: widget.id,)));  
                                       }

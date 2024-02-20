@@ -1,9 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:origination/core/widgets/datepicker.dart';
-import 'package:origination/core/widgets/number_input.dart';
-import 'package:origination/core/widgets/text_input.dart';
+import 'package:origination/models/login_flow/sections/related_party/pan_request_dto.dart';
+import 'package:origination/service/kyc_service.dart';
+
+import 'PanCardWidget.dart';
 
 class SecondaryKycForm extends StatefulWidget {
   const SecondaryKycForm({
@@ -18,167 +19,185 @@ class SecondaryKycForm extends StatefulWidget {
 }
 
 class _SecondaryKycFormState extends State<SecondaryKycForm> {
-
   bool isLoading = false;
-  TextEditingController panNumberController = TextEditingController();
+
+  // Controllers
+  TextEditingController panNumberController =
+      TextEditingController(text: "BZFPV4605P");
   TextEditingController nameController = TextEditingController();
   TextEditingController fatherNameController = TextEditingController();
   TextEditingController dobController = TextEditingController();
-  late DateTime _selectedDate;
+
+  final GlobalKey<FormState> _formKey = GlobalKey();
   bool isPanValidated = false;
   bool validateLoading = false;
 
-    void handleDateChanged(String newValue) {
-    DateTime selectedDateTime = DateFormat('yyyy-MM-dd').parse(newValue);
-    setState(() {
-      _selectedDate = selectedDateTime;
-    });
-  }
+  KycService kycService = KycService();
+  late Future<PanRequestDTO> panRequestFuture;
 
   void checkPan() async {
     setState(() {
       validateLoading = true;
     });
-    await Future.delayed(const Duration(seconds: 2));
+    panRequestFuture =
+        kycService.validatePan(widget.relatedPartyId, panNumberController.text);
     setState(() {
       validateLoading = false;
     });
-    setData();                     
+    panRequestFuture.then((value) => {setData(value)});
   }
 
-  void setData() {
+  void setData(PanRequestDTO panData) {
     setState(() {
       if (panNumberController.text.length == 10) {
-        nameController.text = "Ashok V";
+        nameController.text = "${panData.firstname} ${panData.lastname}";
         fatherNameController.text = "Venkateshappa";
         dobController.text = DateFormat('yyyy-MM-dd').format(DateTime.now());
         isPanValidated = true;
       }
-    }); 
+    });
   }
-  
+
   @override
   Widget build(BuildContext context) {
     final isDarkTheme = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(onPressed: () {Navigator.pop(context);}, icon: const Icon(CupertinoIcons.arrow_left)),
-        title: const Text("PAN", style: TextStyle(fontSize: 18)),
-      ),
-      body: Container(
-        decoration: BoxDecoration(
-          border: isDarkTheme
-          ? Border.all(color: Colors.white12, width: 1.0)
-          : null,
-          gradient: isDarkTheme
-            ? null
-            : const LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Colors.white,
-              Color.fromRGBO(193, 248, 245, 1),
-              Color.fromRGBO(184, 182, 253, 1),
-              Color.fromRGBO(62, 58, 250, 1),
-            ]
-          ),
-          color: isDarkTheme ? Colors.black38 : null
+        appBar: AppBar(
+          leading: IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: const Icon(CupertinoIcons.arrow_left)),
+          title: const Text("PAN", style: TextStyle(fontSize: 18)),
         ),
-        child: Padding(
+        body: Container(
+          decoration: BoxDecoration(
+              border: isDarkTheme
+                  ? Border.all(color: Colors.white12, width: 1.0)
+                  : null,
+              gradient: isDarkTheme
+                  ? null
+                  : const LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [
+                          Colors.white,
+                          Color.fromRGBO(193, 248, 245, 1),
+                          Color.fromRGBO(184, 182, 253, 1),
+                          Color.fromRGBO(62, 58, 250, 1),
+                        ]),
+              color: isDarkTheme ? Colors.black38 : null),
+          child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Column(
               children: [
-                const Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text("Secondary KYC", style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),),
-                    Text("Mode: Manual", style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),),
-                  ],
+                const SizedBox(
+                  height: 30,
                 ),
-                const SizedBox(height: 30,),
                 Column(
                   children: [
-                    Row(
-                      children: [
-                        Expanded(child: NumberInput(label: "PAN", controller: panNumberController, onChanged: (value) {}, isEditable: true, isReadable: false)),
-                        const SizedBox(width: 5,),
-                        Container(
-                          height: 50,
-                          width: 50,
-                          decoration: BoxDecoration(
-                            color: const Color.fromARGB(255, 3, 71, 244),
-                            borderRadius: BorderRadius.circular(30),
-                          ),
-                          child: IconButton(
-                            icon: validateLoading
-                              ? const SizedBox(
-                              width: 20.0,
-                              height: 20.0,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2.0,
-                                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                              ),
-                            )
-                          : const Icon(Icons.search, color: Colors.white,),
-                            onPressed: () {
-                              checkPan();
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                    Visibility(
-                      visible: isPanValidated == true,
-                      replacement: Container(),
-                      child: Column(
+                    Form(
+                      key: _formKey,
+                      child: Row(
                         children: [
-                          const SizedBox(height: 10,),
-                          TextInput(label: "Name", controller: nameController, onChanged: (value) {}, isEditable: true, isReadable: false),
-                          const SizedBox(height: 10,),
-                          TextInput(label: "Father Name", controller: fatherNameController, onChanged: (value) {}, isEditable: true, isReadable: false),
-                          const SizedBox(height: 10,),
-                          DatePickerInput(label: "Date of birth", controller: dobController, onChanged: (newValue) => handleDateChanged(newValue), isEditable: true, isReadable: false),
+                          Expanded(
+                              child: TextFormField(
+                            controller: panNumberController,
+                            keyboardType: TextInputType.text,
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(30),
+                              ),
+                              contentPadding: const EdgeInsets.symmetric(
+                                  vertical: 10.0, horizontal: 10.0),
+                              hintText: "Pan Number",
+                              hintStyle:
+                                  TextStyle(color: Theme.of(context).hintColor),
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'This field is required';
+                              }
+                              return null;
+                            },
+                          )),
+                          const SizedBox(
+                            width: 5,
+                          ),
+                          Container(
+                            height: 45,
+                            width: 45,
+                            decoration: BoxDecoration(
+                              color: const Color.fromARGB(255, 3, 71, 244),
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                            child: IconButton(
+                              icon: validateLoading
+                                  ? const SizedBox(
+                                      width: 20.0,
+                                      height: 20.0,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2.0,
+                                        valueColor:
+                                            AlwaysStoppedAnimation<Color>(
+                                                Colors.white),
+                                      ),
+                                    )
+                                  : const Icon(
+                                      Icons.search,
+                                      color: Colors.white,
+                                    ),
+                              onPressed: () {
+                                if (_formKey.currentState?.validate() ??
+                                    false) {
+                                  checkPan();
+                                }
+                              },
+                            ),
+                          ),
                         ],
                       ),
                     ),
                   ],
                 ),
-                const Spacer(),
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Align(
-                    alignment: Alignment.bottomCenter,
-                    child: SizedBox(
-                      width: double.infinity,
-                      height: 50,
-                      child: MaterialButton(
-                        onPressed: () {
-                          // save();
-                        },
-                        color: const Color.fromARGB(255, 3, 71, 244),
-                        textColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(vertical: 16.0),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30.0),
-                        ),
-                        child: isLoading
-                          ? const SizedBox(
-                              width: 20.0,
-                              height: 20.0,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2.0,
-                                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                              ),
-                            )
-                          : const Text('Save'),
-                      ),
-                    ),
-                  ),
-                )
+                const SizedBox(height: 150),
+                isPanValidated
+                    ? FutureBuilder(
+                        future: panRequestFuture,
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const SizedBox(
+                              width: double.infinity,
+                              height: double.infinity,
+                              child: Center(child: CircularProgressIndicator()),
+                            );
+                          } else if (snapshot.hasError) {
+                            return Center(
+                              child: Text('Error: ${snapshot.error}'),
+                            );
+                          } else if (snapshot.hasData) {
+                            PanRequestDTO panData = snapshot.data!;
+                            if (panData.exist.toLowerCase() == "e") {
+                              return PanCardWidget(
+                                panData: panData,
+                                isLoading: isLoading,
+                              );
+                            } else if (panData.exist.toLowerCase() == "n") {
+                              return Container(
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: Colors.red[300]),
+                                child: const Text("Invalid Pan Number"),
+                              );
+                            }
+                          }
+                          return Container();
+                        })
+                    : Container(),
               ],
             ),
           ),
-      )
-    );
+        ));
   }
 }

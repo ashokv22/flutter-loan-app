@@ -62,26 +62,29 @@ class _SecondaryKycHomeState extends State<SecondaryKycHome> {
           padding: const EdgeInsets.all(8.0),
           child: Column(
             children: [
-              Text("Select KYC Type", style: Theme.of(context).textTheme.headlineSmall,),
+              Text("Select KYC Type", style: Theme.of(context).textTheme.titleLarge,),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text("PAN", style: Theme.of(context).textTheme.headlineSmall,),
+                    Text("PAN", style: Theme.of(context).textTheme.titleMedium,),
                     CupertinoSwitch(
                       value: _value, 
+                      activeColor: Colors.green,
+                      trackColor: Colors.green,
                       onChanged: (value) {
                         setState(() {
                           _value = value;
                           // print(_value == false ? "PAN":"Form 60");
                         });
-                      }),
-                    Text("Form 60", style: Theme.of(context).textTheme.headlineSmall,),
+                      }
+                    ),
+                    Text("Form 60", style: Theme.of(context).textTheme.titleMedium,),
                   ],
                 ),
               ),
-            const Text("Once Kyc mode selected, it cannot be changed in future. Please confirm before going further!", textAlign: TextAlign.center, style: TextStyle(fontSize: 20)),
+            const Text("Once Kyc mode selected, it cannot be changed in future. Please confirm before going further!", textAlign: TextAlign.center, style: TextStyle(fontSize: 14)),
             const Spacer(),
             Align(
                   alignment: Alignment.bottomCenter,

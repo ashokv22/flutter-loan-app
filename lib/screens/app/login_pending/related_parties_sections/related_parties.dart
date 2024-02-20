@@ -6,6 +6,7 @@ import 'package:origination/core/widgets/custom/related_parties_dropdown.dart';
 import 'package:origination/models/bureau_check/bc_check_list_dto.dart';
 import 'package:origination/models/login_flow/sections/loan_application_entity.dart';
 import 'package:origination/screens/app/login_pending/related_parties_sections/primary_kyc/primary_kyc_home.dart';
+import 'package:origination/screens/app/login_pending/related_parties_sections/secondary_kyc/secondary_kyc_completed.dart';
 import 'package:origination/screens/app/login_pending/related_parties_sections/secondary_kyc/secondary_kyc_home.dart';
 import 'package:origination/screens/app/login_pending/related_parties_sections/section_data_rp.dart';
 import 'package:origination/service/bureau_check_service.dart';
@@ -144,7 +145,11 @@ class _RelatedPartiesState extends State<RelatedParties> {
                       Navigator.push(context, MaterialPageRoute(builder: (context) => PrimaryKycHome(applicationId: widget.id, relatedPartyId: relatedPartyId,)));
                     }
                     else if (section.sectionName == "SecondaryKYC") {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => SecondaryKycHome(relatedPartyId: relatedPartyId,)));
+                      if (section.status == "COMPLETED") {
+                        Navigator.push(context, MaterialPageRoute(builder: ((context) => SecondaryKycCompleted(relatedPartyId: relatedPartyId))));
+                      } else {
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => SecondaryKycHome(relatedPartyId: relatedPartyId,)));
+                      }
                     }
                     else {
                       Navigator.push(context, MaterialPageRoute(builder: (context) => SectionScreenRP(id: relatedPartyId, entitySubType: selectedType, title: section.sectionName,)));

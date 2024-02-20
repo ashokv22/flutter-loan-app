@@ -8,6 +8,7 @@ import 'package:origination/core/widgets/mobile_input.dart';
 import 'package:origination/core/widgets/reference_code.dart';
 import 'package:origination/core/widgets/section_title.dart';
 import 'package:origination/core/widgets/text_input.dart';
+import 'package:origination/core/widgets/type_ahead.dart';
 import 'package:origination/models/applicant_dto.dart';
 import 'package:origination/models/entity_configuration.dart';
 import 'package:origination/screens/app/bureau/otp_validation/bureau_declration.dart';
@@ -147,6 +148,7 @@ class _EditLeadState extends State<EditLead> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
+                                  Text("ID: ${widget.id}, ApplicantId: ${widget.applicantId}"),
                                   if (entity.sections != null)
                                      for (var section in entity.sections!)
                                         if (section.subSections != null)
@@ -269,7 +271,7 @@ class _EditLeadState extends State<EditLead> {
       return DatePickerInput(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field), isEditable: field.isEditable!, isReadable: field.isReadOnly!);
     } 
     else if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'TypeAhead') {
-      return TextInput(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field), isEditable: field.isEditable!, isReadable: field.isReadOnly!);
+      return TypeAhead(label: fieldName, referenceCode: field.fieldMeta!.referenceCodeClassifier!, controller: controller, onChanged: (newValue) => updateFieldValue(newValue!, field),);
     } 
     else if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'Phone') {
       return MobileInput(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field), isEditable: field.isEditable!, isReadable: field.isReadOnly!);

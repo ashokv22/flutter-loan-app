@@ -20,6 +20,7 @@ class SignInServiceImpl implements SignInService {
   @override
   Future<void> signIn(String userName, String password) async {
     final url = Uri.parse('${apiUrl}api/user-management/sign-in');
+    logger.i("Loggging in....$url");
     final headers = {
       'Content-Type': 'application/json',
     };

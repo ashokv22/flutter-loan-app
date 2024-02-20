@@ -88,7 +88,7 @@ class _RecentProductsWidgetState extends State<RecentProductsWidget> {
                           width: 300,
                           decoration: BoxDecoration (
                             borderRadius: BorderRadius.circular(8.0),
-                            color: Colors.white,
+                            color: isDarkTheme ? Colors.black54 : Colors.white,
                             // gradient: isDarkTheme
                             //   ? null : const LinearGradient (
                             //   begin: Alignment(-0.99, 0.16),
@@ -96,7 +96,7 @@ class _RecentProductsWidgetState extends State<RecentProductsWidget> {
                             //   colors: [Color(0xFF0029FF), Color.fromARGB(255, 57, 76, 246)],
                             // ),
                             border: isDarkTheme
-                              ? Border.all(color: Colors.white12, width: 1.0) // Outlined border for dark theme
+                              ? Border.all(color: Colors.white30, width: 1.0) // Outlined border for dark theme
                               : null,
                             boxShadow: isDarkTheme
                               ? null : [
@@ -114,22 +114,52 @@ class _RecentProductsWidgetState extends State<RecentProductsWidget> {
                             children: [
                               Expanded(
                                 child: ListTile(
-                                  title: Text(
-                                    "Product id: ${product['productId']}", 
-                                    style: TextStyle(
-                                      // color: Colors.white,
-                                      color: isDarkTheme ? Colors.blueAccent[400] : const Color.fromARGB(255, 3, 71, 244),
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: 18
-                                    ),
+                                  title: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "Product id:", 
+                                        style: TextStyle(
+                                          color: isDarkTheme ? Colors.white70 : Colors.black87,
+                                          fontWeight: FontWeight.w700,
+                                          fontSize: 18
+                                        ),
+                                      ),
+                                      const SizedBox(width: 5),
+                                      Text(
+                                        "${product['productId']}", 
+                                        style: TextStyle(
+                                          color: isDarkTheme ? Colors.blueAccent[400] : const Color.fromARGB(255, 3, 71, 244),
+                                          fontWeight: FontWeight.w700,
+                                          fontSize: 18
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                  subtitle: Text(
-                                    "Applicant: ${product['applicantName']}", 
-                                    style: TextStyle(
-                                      color: isDarkTheme ? Colors.blueAccent[400] : const Color.fromARGB(255, 3, 71, 244),
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 16
-                                    ),
+                                  subtitle: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "Applicant:", 
+                                        style: TextStyle(
+                                          color: isDarkTheme ? Colors.white70 : Colors.black87,
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 16
+                                        ),
+                                      ),
+                                      const SizedBox(width: 20),
+                                      Flexible(
+                                        child: Text(
+                                          "${product['applicantName']}", 
+                                          style: TextStyle(
+                                            color: isDarkTheme ? Colors.blueAccent[400] : const Color.fromARGB(255, 3, 71, 244),
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 16
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                   onTap: () {
                                     Navigator.push(context, MaterialPageRoute(builder: (context) => MainSectionsData(id: product['productId'])));
