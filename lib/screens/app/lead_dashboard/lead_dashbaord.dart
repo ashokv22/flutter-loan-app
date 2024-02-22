@@ -24,7 +24,7 @@ class _LeadDashboardState extends State<LeadDashboard> {
   var logger = Logger();
   late Future<List<DashBoardSummaryDTO>> leadsSummaryFuture;
   final AuthService athService = AuthService();
-  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   late ProductsSharedUtilService productUtilService = ProductsSharedUtilService();
 
   @override
@@ -170,6 +170,74 @@ class _LeadDashboardState extends State<LeadDashboard> {
                     }
                   },
                 ),
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.only(left: 10.0, bottom: 5),
+                    child: Row(
+                      children: [
+                        Text(
+                          "New Lead",  
+                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
+                        SizedBox(width: 5,),
+                        Icon(Icons.history, size: 30, color: Color.fromARGB(255, 29, 4, 253),)
+                      ],
+                    ),
+                  ),
+                  Container(
+                    width: 120,
+                    height: 100,
+                    margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                    // padding: const EdgeInsets.all(8.0),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).cardColor,
+                      borderRadius: BorderRadius.circular(8.0),
+                      border: isDarkTheme
+                        ? Border.all(
+                            color: Colors.white12,
+                            width: 1.0) // Outlined border for dark theme
+                        : null,
+                      boxShadow: isDarkTheme
+                        ? null
+                        : [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.5), //color of shadow
+                              spreadRadius: 2, //spread radius
+                              blurRadius: 6, // blur radius
+                              offset: const Offset(2, 3),
+                            )
+                          ],
+                    ),
+                    child: Stack(
+                      children: [
+                        Positioned(
+                          top: 0,
+                          right: 0,
+                          child: Image.asset(
+                            'assets/new.png',
+                            height: 35,
+                            width: 35,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("Ashok V", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),),
+                              Text("Atom", style: TextStyle(fontSize: 12, fontWeight: FontWeight.w400)),
+                              Text("9916315365", style: TextStyle(fontSize: 12, fontWeight: FontWeight.w400)),
+                              Text("₹ 8.6L", style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
               RecentProductsWidget(productUtilService: productUtilService),
             ],

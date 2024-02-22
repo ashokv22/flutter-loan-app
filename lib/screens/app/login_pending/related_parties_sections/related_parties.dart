@@ -5,11 +5,12 @@ import 'package:logger/logger.dart';
 import 'package:origination/core/widgets/custom/related_parties_dropdown.dart';
 import 'package:origination/models/bureau_check/bc_check_list_dto.dart';
 import 'package:origination/models/login_flow/sections/loan_application_entity.dart';
+import 'package:origination/models/login_flow/sections/related_party/secondary_kyc_dto.dart';
 import 'package:origination/screens/app/login_pending/related_parties_sections/primary_kyc/primary_kyc_home.dart';
-import 'package:origination/screens/app/login_pending/related_parties_sections/secondary_kyc/secondary_kyc_completed.dart';
 import 'package:origination/screens/app/login_pending/related_parties_sections/secondary_kyc/secondary_kyc_home.dart';
 import 'package:origination/screens/app/login_pending/related_parties_sections/section_data_rp.dart';
 import 'package:origination/service/bureau_check_service.dart';
+import 'package:origination/service/kyc_service.dart';
 import 'package:origination/service/login_flow_service.dart';
 
 class RelatedParties extends StatefulWidget {
@@ -36,6 +37,7 @@ class _RelatedPartiesState extends State<RelatedParties> {
   // List<CheckListDTO> applicantsData = [];
   late LoanApplicationEntity sectionsData;
   late List<String> options = [];
+  KycService kycService = KycService();
 
   @override
   void initState() {
@@ -54,6 +56,10 @@ class _RelatedPartiesState extends State<RelatedParties> {
 
   Future<List<CheckListDTO>> initializeApplicants() async {
     return await bureauCheckService.getAllCheckLists(widget.id);
+  }
+
+  Future<SecondaryKYCDTO> getSecondaryKyc(int relatedPartyId) async {
+    return await kycService.getSecondaryKyc(relatedPartyId.toString());
   }
 
   @override
@@ -146,7 +152,7 @@ class _RelatedPartiesState extends State<RelatedParties> {
                     }
                     else if (section.sectionName == "SecondaryKYC") {
                       if (section.status == "COMPLETED") {
-                        Navigator.push(context, MaterialPageRoute(builder: ((context) => SecondaryKycCompleted(relatedPartyId: relatedPartyId))));
+                        panCardSheet(context, section);
                       } else {
                         Navigator.push(context, MaterialPageRoute(builder: (context) => SecondaryKycHome(relatedPartyId: relatedPartyId,)));
                       }
@@ -204,6 +210,95 @@ class _RelatedPartiesState extends State<RelatedParties> {
       }
       return Container();
     }
+    );
+  }
+
+  Future<dynamic> panCardSheet(BuildContext context, LoanSection section) {
+    return showModalBottomSheet(
+      isScrollControlled: true,
+      context: context, 
+      builder: (context) {
+        return SizedBox(
+          height: 250,
+          child: FutureBuilder(
+            future: getSecondaryKyc(relatedPartyId),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return SizedBox(
+                  width: double.infinity,
+                  height: double.infinity,
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text("Sit tight while we fetch the Data for PAN no: ${section.id!}"),
+                        const SizedBox(height: 10),
+                        const CircularProgressIndicator(),
+                      ],
+                    )
+                  ),
+                );
+              } else if (snapshot.hasError) {
+                return Center(child: Text('Error: ${snapshot.error}'));
+              } else if (snapshot.hasData) {
+              SecondaryKYCDTO result = snapshot.data!;
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                child: Column(
+                  children: [
+                    const Text(
+                      "Pan Details",
+                      style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontFamily: 'Lucida Sans',
+                          fontSize: 20),
+                    ),
+                    const SizedBox(height: 10),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text("Name:", style: TextStyle(fontWeight: FontWeight.w300, fontSize: 16),),
+                        const SizedBox(width: 5),
+                        Text(result.name, style: const TextStyle(fontWeight: FontWeight.w400, fontSize: 18)),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text("Father Name:", style: TextStyle(fontWeight: FontWeight.w300, fontSize: 16),),
+                        const SizedBox(width: 5),
+                        Text(result.fatherName!, style: const TextStyle(fontWeight: FontWeight.w400, fontSize: 18)),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text("Date of Birth:", style: TextStyle(fontWeight: FontWeight.w300, fontSize: 16),),
+                        const SizedBox(width: 5),
+                        Text('${result.dateOfBirth.year}/${result.dateOfBirth.month}/${result.dateOfBirth.day}', style: const TextStyle(fontWeight: FontWeight.w400, fontSize: 18)),
+                      ],
+                    ),
+                      const SizedBox(height: 10),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text("Is Verified:", style: TextStyle(fontWeight: FontWeight.w300, fontSize: 16),),
+                        const SizedBox(width: 5),
+                        Text(result.isVerified.toString().toUpperCase(), style: const TextStyle(fontWeight: FontWeight.w400, fontSize: 18)),
+                      ],
+                    ),
+                  ],
+                ),
+              );
+              } else {
+                return Container();
+              }
+            }
+          ),
+        );
+      }
     );
   }
 

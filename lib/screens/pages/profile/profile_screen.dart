@@ -30,7 +30,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
       body: SingleChildScrollView(
         child: Container(
-          padding: const EdgeInsets.all(10.0),
+          padding: const EdgeInsets.symmetric(vertical: 5.0),
           child: FutureBuilder(
             future: authService.getLoggedUser(),
             builder: (context, snapshot) {
@@ -79,26 +79,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     )
                   ),
                   Text(email, style: Theme.of(context).textTheme.bodyLarge),
-                  // const SizedBox(height: 20),
-
-                  // /// -- BUTTON
-                  SizedBox(
-                    width: 200,
-                    child: ElevatedButton(
-                      onPressed: () => {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => const UpdateProfileScreen()))
-                      },
-                      style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.blue, side: BorderSide.none, shape: const StadiumBorder()),
-                      child: const Text("Edit Profile", style: TextStyle(color: Colors.white)),
-                    ),
-                  ),
                   const SizedBox(height: 10),
-                  const Divider(),
                   const SizedBox(height: 10),
-
-                  // /// -- MENU
-                  ProfileMenuWidget(title: "Account", icon: LineAwesomeIcons.key, onPress: () {}),
+                  ProfileMenuWidget(title: "Account", icon: LineAwesomeIcons.key, onPress: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => const UpdateProfileScreen()));
+                  }),
                   ProfileMenuWidget(title: "Settings", icon: LineAwesomeIcons.cog, onPress: () {}),
                   ProfileMenuWidget(title: "Theme", icon: LineAwesomeIcons.adjust, onPress: () {
                     showDialog(
@@ -109,8 +94,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     );
                   }),
                   ProfileMenuWidget(title: "User Management", icon: LineAwesomeIcons.user_check, onPress: () {}),
-                  const Divider(),
-                  const SizedBox(height: 10),
                   ProfileMenuWidget(title: "Information", icon: Icons.info_outline, onPress: () {}),
                   ProfileMenuWidget(
                       title: "Logout",

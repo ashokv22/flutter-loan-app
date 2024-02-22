@@ -133,7 +133,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                                   backgroundColor: Colors.blue,
                                   side: BorderSide.none,
                                   shape: const StadiumBorder()),
-                              child: const Text("Edit profile", style: TextStyle(color: Colors.white)),
+                              child: const Text("Update", style: TextStyle(color: Colors.white)),
                             ),
                           ),
                           const SizedBox(height: 20),

@@ -37,15 +37,16 @@ class _RecentProductsWidgetState extends State<RecentProductsWidget> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Padding(
-              padding: EdgeInsets.all(10.0),
+            Padding(
+              padding: const EdgeInsets.all(10.0),
               child: Row(
                 children: [
-                  Text(
+                  const Text(
                     "Top Applications",  
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
                   SizedBox(width: 5,),
-                  Icon(Icons.history)
+                  // Icon(Icons.trending_up)
+                  Image.asset("assets/trend.png", fit: BoxFit.fill, width: 30, height: 30,),
                 ],
               ),
             ),
