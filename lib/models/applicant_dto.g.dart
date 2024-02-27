@@ -18,6 +18,8 @@ ApplicantDTO _$ApplicantDTOFromJson(Map<String, dynamic> json) => ApplicantDTO(
       dob: json['dob'] == null ? null : DateTime.parse(json['dob'] as String),
       gender: json['gender'] as String?,
       mobile: json['mobile'] as String?,
+      manufacturer: json['manufacturer'] as String?,
+      model: json['model'] as String?,
       nationality: json['nationality'] as String?,
       kycDate: json['kycDate'] == null
           ? null
@@ -28,6 +30,9 @@ ApplicantDTO _$ApplicantDTOFromJson(Map<String, dynamic> json) => ApplicantDTO(
       loanAmount: (json['loanAmount'] as num?)?.toDouble(),
       declaration: $enumDecodeNullable(
           _$ApplicantDeclarationStatusEnumMap, json['declaration']),
+      createdDate: json['createdDate'] == null
+          ? null
+          : DateTime.parse(json['createdDate'] as String),
     );
 
 Map<String, dynamic> _$ApplicantDTOToJson(ApplicantDTO instance) =>
@@ -43,12 +48,15 @@ Map<String, dynamic> _$ApplicantDTOToJson(ApplicantDTO instance) =>
       'dob': instance.dob?.toIso8601String(),
       'gender': instance.gender,
       'mobile': instance.mobile,
+      'manufacturer': instance.manufacturer,
+      'model': instance.model,
       'nationality': instance.nationality,
       'kycDate': instance.kycDate?.toIso8601String(),
       'kycDoneStatus': instance.kycDoneStatus,
       'applicantId': instance.applicantId,
       'custStatus': instance.custStatus,
       'loanAmount': instance.loanAmount,
+      'createdDate': instance.createdDate?.toIso8601String(),
       'declaration': _$ApplicantDeclarationStatusEnumMap[instance.declaration],
     };
 

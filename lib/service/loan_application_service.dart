@@ -395,4 +395,39 @@ class LoanApplicationService {
     }
   }
 
+  Future<List<ApplicantDTO>> getLastApplicant() async {
+    String endpoint = "api/application/applicant";
+    int page = 0;
+    int size = 1;
+    try {
+      logger.d("Getting lastApplicant");
+      final response = await authInterceptor.get(Uri.parse(endpoint).replace(
+        queryParameters: {
+          'page': page.toString(),
+          'size': size.toString(),
+          'sort': "id,DESC"
+        }
+      ));
+      logger.d(response.body);
+      if (response.statusCode == 200) {
+        final List<dynamic> jsonResponse = jsonDecode(response.body);
+        List<ApplicantDTO> list = [];
+        for (var data in jsonResponse) {
+          ApplicantDTO app = ApplicantDTO.fromJson(data);
+          logger.i(app.toJson());
+          list.add(app);
+        }
+        return list;
+      }
+      else {
+        logger.i('Failed to get data. Error code: ${response.statusCode}');
+        throw Exception('There\'s a problem while saving Section getting Lead. Error code: ${response.statusCode}');
+      }
+    }
+    catch (e) {
+      logger.e('An error occurred while getting the data: $e');
+      throw Exception('An error occurred while getting the data: $e');
+    }
+  }
+
 } 

@@ -8,6 +8,7 @@ import 'package:origination/screens/app/lead/edit_lead_application.dart';
 import 'package:origination/screens/app/lead/search_new.dart';
 // import 'package:origination/screens/app/login_pending/login_pending_home.dart';
 import 'package:origination/service/loan_application_service.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 class StageLeadList extends StatefulWidget {
   final String stage;
@@ -280,7 +281,7 @@ class _StageLeadListState extends State<StageLeadList> {
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
-                                      "${applicant.createdDate.year.toString()}-${applicant.createdDate.month.toString().padLeft(2,'0')}-${applicant.createdDate.day.toString().padLeft(2,'0')}",
+                                      timeago.format(applicant.createdDate, allowFromNow: true),
                                       style: TextStyle(
                                         color: Theme.of(context).textTheme.displayMedium!.color,
                                         fontSize: 12,

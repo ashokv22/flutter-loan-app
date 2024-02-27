@@ -15,12 +15,15 @@ class ApplicantDTO {
   DateTime? dob;
   String? gender;
   String? mobile;
+  String? manufacturer;
+  String? model;
   String? nationality;
   DateTime? kycDate;
   String? kycDoneStatus;
   String? applicantId;
   String? custStatus;
   double? loanAmount;
+  DateTime? createdDate;
   ApplicantDeclarationStatus? declaration;
 
 
@@ -36,6 +39,8 @@ class ApplicantDTO {
     this.dob,
     this.gender,
     this.mobile,
+    this.manufacturer,
+    this.model,
     this.nationality,
     this.kycDate,
     this.kycDoneStatus,
@@ -43,6 +48,7 @@ class ApplicantDTO {
     this.custStatus,
     this.loanAmount,
     this.declaration,
+    this.createdDate,
   });
 
   factory ApplicantDTO.fromJson(Map<String, dynamic> json) => _$ApplicantDTOFromJson(json);

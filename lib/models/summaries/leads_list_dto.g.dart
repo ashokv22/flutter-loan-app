@@ -14,6 +14,7 @@ LeadsListDTO _$LeadsListDTOFromJson(Map<String, dynamic> json) => LeadsListDTO(
       model: json['model'] as String,
       mobile: json['mobile'] as String,
       applicantId: json['applicantId'] as String,
+      loanAmount: (json['loanAmount'] as num?)?.toDouble(),
       createdDate: DateTime.parse(json['createdDate'] as String),
     );
 
@@ -26,5 +27,6 @@ Map<String, dynamic> _$LeadsListDTOToJson(LeadsListDTO instance) =>
       'model': instance.model,
       'mobile': instance.mobile,
       'applicantId': instance.applicantId,
+      'loanAmount': instance.loanAmount,
       'createdDate': instance.createdDate.toIso8601String(),
     };

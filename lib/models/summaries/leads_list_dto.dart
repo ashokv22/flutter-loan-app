@@ -11,6 +11,7 @@ class LeadsListDTO {
   String model;
   String mobile;
   String applicantId;
+  double? loanAmount;
   DateTime createdDate;
 
   LeadsListDTO({
@@ -21,6 +22,7 @@ class LeadsListDTO {
     required this.model,
     required this.mobile,
     required this.applicantId,
+    this.loanAmount,
     required this.createdDate,
   });
 
