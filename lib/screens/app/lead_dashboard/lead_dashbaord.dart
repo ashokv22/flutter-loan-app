@@ -36,7 +36,7 @@ class _LeadDashboardState extends State<LeadDashboard> {
   }
 
   Future<void> _initializeServices() async {
-    await productUtilService.initSharedPreferences();
+    // await productUtilService.initSharedPreferences();
     await refreshLeadsSummary();
   }
 

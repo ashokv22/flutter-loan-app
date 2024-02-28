@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:origination/core/utils/products_shared_utils.dart';
 import 'package:origination/my_theme.dart';
 import 'package:origination/screens/app/lead/new_lead.dart';
 import 'package:origination/screens/app/lead/search_new.dart';
@@ -21,8 +22,9 @@ import 'package:flutter_web_frame/flutter_web_frame.dart';
 import 'package:flutter/foundation.dart';
 // import 'themes.dart';
 
-void main() {
-  
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await ProductsSharedUtilService.initSharedPreferences();
   runApp(
     ChangeNotifierProvider(
       create: (_) => MyTheme(),

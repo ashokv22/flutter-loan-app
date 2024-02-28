@@ -24,7 +24,7 @@ class _RecentProductsWidgetState extends State<RecentProductsWidget> {
   }
 
   Future<void> _initializeServices() async {
-    await widget.productUtilService.initSharedPreferences();
+    // await widget.productUtilService.initSharedPreferences();
   }
 
   @override

@@ -41,7 +41,7 @@ class _LoginPendingHomeState extends State<LoginPendingHome> {
   }
 
   Future<void> _initializeServices() async {
-    await _productsSharedUtilService.initSharedPreferences();
+    // await _productsSharedUtilService.initSharedPreferences();
     refreshLeadsSummary(); // Fetch leads summary after initializing SharedPreferences
   }
 

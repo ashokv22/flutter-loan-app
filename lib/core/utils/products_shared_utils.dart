@@ -2,18 +2,19 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class ProductsSharedUtilService {
 
-  late SharedPreferences _prefs;
+  static SharedPreferences? _prefs;
+  static Future initSharedPreferences() async => _prefs = await SharedPreferences.getInstance();
 
-  Future<void> initSharedPreferences() async {
-    _prefs = await SharedPreferences.getInstance();
-  }
+  // Future<void> initSharedPreferences() async {
+  //   _prefs = await SharedPreferences.getInstance();
+  // }
 
   Future<int> getLastInteractedCardId() async {
-    return _prefs.getInt('lastInteractedProductId') ?? -1;
+    return _prefs!.getInt('lastInteractedProductId') ?? -1;
   }
 
   List<String> getPendingProducts() {
-    return _prefs.getStringList('pendingProducts') ?? <String>[];
+    return _prefs!.getStringList('pendingProducts') ?? <String>[];
   }
 
   Future<void> addPendingProduct({
@@ -32,7 +33,7 @@ class ProductsSharedUtilService {
 
     pendingProducts.insert(0, entry);
 
-    _prefs.setStringList('pendingProducts', pendingProducts);
+    _prefs!.setStringList('pendingProducts', pendingProducts);
   }
 
   List<Map<String, dynamic>> getLastInteractedProducts() {
