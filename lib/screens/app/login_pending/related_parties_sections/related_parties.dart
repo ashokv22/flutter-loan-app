@@ -5,6 +5,7 @@ import 'package:logger/logger.dart';
 import 'package:origination/core/widgets/custom/related_parties_dropdown.dart';
 import 'package:origination/models/bureau_check/bc_check_list_dto.dart';
 import 'package:origination/models/login_flow/sections/loan_application_entity.dart';
+import 'package:origination/models/login_flow/sections/related_party/primary_kyc_dto.dart';
 import 'package:origination/models/login_flow/sections/related_party/secondary_kyc_dto.dart';
 import 'package:origination/screens/app/login_pending/related_parties_sections/primary_kyc/primary_kyc_home.dart';
 import 'package:origination/screens/app/login_pending/related_parties_sections/secondary_kyc/secondary_kyc_home.dart';
@@ -60,6 +61,10 @@ class _RelatedPartiesState extends State<RelatedParties> {
 
   Future<SecondaryKYCDTO> getSecondaryKyc(int relatedPartyId) async {
     return await kycService.getSecondaryKyc(relatedPartyId.toString());
+  }
+
+  Future<PrimaryKycDTO> getPrimaryKyc(int relatedPartyId) async {
+    return await kycService.getPrimaryKyc(relatedPartyId.toString());
   }
 
   @override
@@ -148,7 +153,11 @@ class _RelatedPartiesState extends State<RelatedParties> {
                 return GestureDetector(
                   onTap: () {
                     if (section.sectionName == "PrimaryKYC") {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => PrimaryKycHome(applicationId: widget.id, relatedPartyId: relatedPartyId,)));
+                      if (section.status == "COMPLETED") {
+                        aadharCardSheet(context, section);
+                      } else {
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => PrimaryKycHome(applicationId: widget.id, relatedPartyId: relatedPartyId,)));
+                      }
                     }
                     else if (section.sectionName == "SecondaryKYC") {
                       if (section.status == "COMPLETED") {
@@ -241,57 +250,57 @@ class _RelatedPartiesState extends State<RelatedParties> {
               } else if (snapshot.hasError) {
                 return Center(child: Text('Error: ${snapshot.error}'));
               } else if (snapshot.hasData) {
-              SecondaryKYCDTO result = snapshot.data!;
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-                child: Column(
-                  children: [
-                    const Text(
-                      "Pan Details",
-                      style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontFamily: 'Lucida Sans',
-                          fontSize: 20),
-                    ),
-                    const SizedBox(height: 10),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text("Name:", style: TextStyle(fontWeight: FontWeight.w300, fontSize: 16),),
-                        const SizedBox(width: 5),
-                        Text(result.name, style: const TextStyle(fontWeight: FontWeight.w400, fontSize: 18)),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text("Father Name:", style: TextStyle(fontWeight: FontWeight.w300, fontSize: 16),),
-                        const SizedBox(width: 5),
-                        Text(result.fatherName!, style: const TextStyle(fontWeight: FontWeight.w400, fontSize: 18)),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text("Date of Birth:", style: TextStyle(fontWeight: FontWeight.w300, fontSize: 16),),
-                        const SizedBox(width: 5),
-                        Text('${result.dateOfBirth.year}/${result.dateOfBirth.month}/${result.dateOfBirth.day}', style: const TextStyle(fontWeight: FontWeight.w400, fontSize: 18)),
-                      ],
-                    ),
+                SecondaryKYCDTO result = snapshot.data!;
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                  child: Column(
+                    children: [
+                      const Text(
+                        "Pan Details",
+                        style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontFamily: 'Lucida Sans',
+                            fontSize: 20),
+                      ),
                       const SizedBox(height: 10),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text("Is Verified:", style: TextStyle(fontWeight: FontWeight.w300, fontSize: 16),),
-                        const SizedBox(width: 5),
-                        Text(result.isVerified.toString().toUpperCase(), style: const TextStyle(fontWeight: FontWeight.w400, fontSize: 18)),
-                      ],
-                    ),
-                  ],
-                ),
-              );
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text("Name:", style: TextStyle(fontWeight: FontWeight.w300, fontSize: 16),),
+                          const SizedBox(width: 5),
+                          Text(result.name, style: const TextStyle(fontWeight: FontWeight.w400, fontSize: 18)),
+                        ],
+                      ),
+                      const SizedBox(height: 10),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text("Father Name:", style: TextStyle(fontWeight: FontWeight.w300, fontSize: 16),),
+                          const SizedBox(width: 5),
+                          Text(result.fatherName!, style: const TextStyle(fontWeight: FontWeight.w400, fontSize: 18)),
+                        ],
+                      ),
+                      const SizedBox(height: 10),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text("Date of Birth:", style: TextStyle(fontWeight: FontWeight.w300, fontSize: 16),),
+                          const SizedBox(width: 5),
+                          Text('${result.dateOfBirth.year}/${result.dateOfBirth.month}/${result.dateOfBirth.day}', style: const TextStyle(fontWeight: FontWeight.w400, fontSize: 18)),
+                        ],
+                      ),
+                        const SizedBox(height: 10),
+                      result.isVerified != null ? Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text("Is Verified:", style: TextStyle(fontWeight: FontWeight.w300, fontSize: 16),),
+                          const SizedBox(width: 5),
+                          Text(result.isVerified.toString().toUpperCase(), style: const TextStyle(fontWeight: FontWeight.w400, fontSize: 18)),
+                        ],
+                      ) : Container(),
+                    ],
+                  ),
+                );
               } else {
                 return Container();
               }
@@ -301,6 +310,96 @@ class _RelatedPartiesState extends State<RelatedParties> {
       }
     );
   }
+
+  Future<dynamic> aadharCardSheet(BuildContext context, LoanSection section) {
+    return showModalBottomSheet(
+      isScrollControlled: true,
+      context: context, 
+      builder: (context) {
+        return SizedBox(
+          height: 250,
+          child: FutureBuilder(
+            future: getPrimaryKyc(relatedPartyId),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return SizedBox(
+                  width: double.infinity,
+                  height: double.infinity,
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text("Sit tight while we fetch the Data for PAN no: ${section.id!}"),
+                        const SizedBox(height: 10),
+                        const CircularProgressIndicator(),
+                      ],
+                    )
+                  ),
+                );
+              } else if (snapshot.hasError) {
+                return Center(child: Text('Error: ${snapshot.error}'));
+              } else if (snapshot.hasData) {
+                PrimaryKycDTO result = snapshot.data!;
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                  child: Column(
+                    children: [
+                      const Text(
+                        "Aadhaar Details Details",
+                        style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontFamily: 'Lucida Sans',
+                            fontSize: 20),
+                      ),
+                      const SizedBox(height: 10),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text("Name:", style: TextStyle(fontWeight: FontWeight.w300, fontSize: 16),),
+                          const SizedBox(width: 5),
+                          Text(result.name, style: const TextStyle(fontWeight: FontWeight.w400, fontSize: 18)),
+                        ],
+                      ),
+                      const SizedBox(height: 10),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text("Father Name:", style: TextStyle(fontWeight: FontWeight.w300, fontSize: 16),),
+                          const SizedBox(width: 5),
+                          Text(result.fatherName, style: const TextStyle(fontWeight: FontWeight.w400, fontSize: 18)),
+                        ],
+                      ),
+                      const SizedBox(height: 10),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text("Date of Birth:", style: TextStyle(fontWeight: FontWeight.w300, fontSize: 16),),
+                          const SizedBox(width: 5),
+                          Text('${result.dateOfBirth.year}/${result.dateOfBirth.month}/${result.dateOfBirth.day}', style: const TextStyle(fontWeight: FontWeight.w400, fontSize: 18)),
+                        ],
+                      ),
+                        const SizedBox(height: 10),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text("Address:", style: TextStyle(fontWeight: FontWeight.w300, fontSize: 16),),
+                          const SizedBox(width: 5),
+                          Flexible(child: Text(result.address, overflow: TextOverflow.visible, textAlign: TextAlign.end, style: const TextStyle(fontWeight: FontWeight.w400, fontSize: 18))),
+                        ],
+                      ),
+                    ],
+                  ),
+                );
+              } else {
+                return Container();
+              }
+            }
+          ),
+        );
+      }
+    );
+  }
+
 
   void updateFieldValue(String newValue) async {
     logger.i(newValue);

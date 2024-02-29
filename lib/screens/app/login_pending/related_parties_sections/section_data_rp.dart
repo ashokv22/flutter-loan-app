@@ -222,7 +222,7 @@ class _SectionScreenRPState extends State<SectionScreenRP> {
       if (field.fieldMeta?.dataType == 'Address') {
         return AddressFields(
           label: fieldName, 
-          address: field.fieldMeta?.addressDetails ?? AddressDetails(addressType: '', addressLine1: '', city: '', taluk: '', district: '', state: '', country: '', pinCode: ''),
+          address: field.fieldMeta?.addressDetails ?? AddressDetails(addressType: '', addressLine1: '', city: '', taluka: '', district: '', state: '', country: '', pinCode: ''),
           onChanged: (newValue) => updateFieldValue(newValue, field), 
           isEditable: field.isEditable!, 
           isReadable: field.isReadOnly!
@@ -264,7 +264,7 @@ class _SectionScreenRPState extends State<SectionScreenRP> {
     else if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'Address') {
       return AddressFields(
         label: fieldName, 
-        address: field.fieldMeta?.addressDetails ?? AddressDetails(addressType: '', addressLine1: '', city: '', taluk: '', district: '', state: '', country: '', pinCode: ''),
+        address: field.fieldMeta?.addressDetails ?? AddressDetails(addressType: '', addressLine1: '', city: '', taluka: '', district: '', state: '', country: '', pinCode: ''),
         onChanged: (newValue) => updateFieldValue(newValue, field), 
         isEditable: field.isEditable!, 
         isReadable: field.isReadOnly!

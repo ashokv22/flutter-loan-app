@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:origination/core/utils/loan_amount_formatter.dart';
 import 'package:origination/models/applicant_dto.dart';
-import 'package:origination/models/summaries/leads_list_dto.dart';
 import 'package:origination/service/loan_application_service.dart';
 import 'package:timeago/timeago.dart' as timeago;
 

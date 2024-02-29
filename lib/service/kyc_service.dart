@@ -49,13 +49,25 @@ class KycService {
         final data = json.decode(response.body);
         return PanRequestDTO.fromJson(data);
       }
-      else if (response.statusCode == 400) {
-        throw Exception('${response.statusCode}, ${response.body}');
-      }
-      else if (response.statusCode == 409) {
-        throw Exception('${response.statusCode}, ${response.body}');
+      throw Exception(response.body);
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  Future<PrimaryKycDTO> getPrimaryKyc(String relatedPartyId) async {
+    String endpoint = "api/application/primaryKyc/relatedPartyId/$relatedPartyId";
+    try {
+      final response = await authInterceptor.get(Uri.parse(endpoint));
+      logger.i("Response: ${response.body}");
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        if (data == null) {
+          logger.e("No record found");
+        }
+        return PrimaryKycDTO.fromJson(data);
       } else {
-        throw Exception(response.body);
+        throw Exception("Error: Status code:${response.statusCode}, ${response.body}");
       }
     } catch (e) {
       throw Exception(e);
@@ -66,7 +78,7 @@ class KycService {
     String endpoint = "api/application/secondaryKyc/relatedPartyId/$relatedPartyId";
     try {
       final response = await authInterceptor.get(Uri.parse(endpoint));
-      logger.i(response.body);
+      logger.i("Response: ${response.body}");
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         if (data == null) {

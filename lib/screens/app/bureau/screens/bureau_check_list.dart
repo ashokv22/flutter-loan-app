@@ -46,12 +46,9 @@ class _BureauCheckListState extends State<BureauCheckList> {
       checkListFuture.then((checkList) {
         if (checkList.any((check) => check.status == "PENDING")) {
           setState(() {
-            print("Before: $pendingReports");
             pendingReports = true;
-            print("After: $pendingReports");
           });
         } else {
-          print("No pending found: $pendingReports");
           pendingReports = false;
         }
       });
@@ -420,30 +417,32 @@ class _BureauCheckListState extends State<BureauCheckList> {
                         ),
                       ),
                       child: SizedBox(
-                      width: double.infinity,
-                      child: MaterialButton(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30.0),
+                        height: 45,
+                        width: double.infinity,
+                        child: MaterialButton(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30.0),
+                          ),
+                          color: const Color.fromARGB(255, 2, 161, 23),
+                          textColor: Colors.white,
+                          onPressed: () {
+                            generateReports();
+                          },
+                          child: pendingReportsLoading ? const SizedBox(
+                              width: 20.0,
+                              height: 20.0,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2.0,
+                                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                              ),
+                            )
+                            : Text("Generate Reports", style: TextStyle(fontSize: 16, color: isDarkTheme ? Colors.black : Colors.white),),
                         ),
-                        color: const Color.fromARGB(255, 2, 161, 23),
-                        textColor: Colors.white,
-                        onPressed: () {
-                          generateReports();
-                        },
-                        child: pendingReportsLoading ? const SizedBox(
-                            width: 20.0,
-                            height: 20.0,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2.0,
-                              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                            ),
-                          )
-                          : Text("Generate Reports", style: TextStyle(fontSize: 16, color: isDarkTheme ? Colors.blue : Colors.white),),
                       ),
-                    ),
                     ),
                     const SizedBox(height: 10,),
                     SizedBox(
+                      height: 45,
                       width: double.infinity,
                       child: MaterialButton(
                         shape: RoundedRectangleBorder(
@@ -451,7 +450,6 @@ class _BureauCheckListState extends State<BureauCheckList> {
                         ),
                         color: const Color.fromARGB(255, 249, 33, 33),
                         textColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(vertical: 16.0),
                         onPressed: () {
                           showDialog(
                             context: context,
@@ -477,13 +475,7 @@ class _BureauCheckListState extends State<BureauCheckList> {
                             }
                           );
                         },
-                        height: 50,
-                        child: const Text(
-                          "Reject Lead",
-                          style: TextStyle(
-                            fontSize: 16
-                          ),
-                          ),
+                        child: Text("Reject Lead", style: TextStyle(fontSize: 16, color: isDarkTheme ? Colors.black : Colors.white),),
                         ),
                     ),
                   ],
@@ -494,7 +486,7 @@ class _BureauCheckListState extends State<BureauCheckList> {
         ),
       ),
       floatingActionButton: Padding(
-        padding: const EdgeInsets.only(bottom: 130.0),
+        padding: const EdgeInsets.only(bottom: 120.0),
         child: SpeedDial(
           buttonSize: const Size(56, 56),
           icon: Icons.add,
