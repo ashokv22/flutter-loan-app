@@ -20,6 +20,7 @@ class ProductsSharedUtilService {
   Future<void> addPendingProduct({
     required int productId,
     required String applicantName,
+    required int completedSections
   }) async {
     List<String> pendingProducts = getPendingProducts();
 
@@ -47,6 +48,7 @@ class ProductsSharedUtilService {
         lastInteractedProducts.add({
           'productId': int.tryParse(parts[0]) ?? 0,
           'applicantName': parts[1],
+          'completedSections': int.tryParse(parts[0]) ?? 0,
         });
       }
     }

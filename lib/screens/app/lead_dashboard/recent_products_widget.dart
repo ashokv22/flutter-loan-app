@@ -163,7 +163,7 @@ class _RecentProductsWidgetState extends State<RecentProductsWidget> {
                                     ],
                                   ),
                                   onTap: () {
-                                    Navigator.push(context, MaterialPageRoute(builder: (context) => MainSectionsData(id: product['productId'])));
+                                    Navigator.push(context, MaterialPageRoute(builder: (context) => MainSectionsData(id: product['productId'], completedSections: product['completedSections'],)));
                                   },
                                 ),
                             ),

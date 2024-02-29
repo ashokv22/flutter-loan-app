@@ -16,10 +16,12 @@ import '../consent/consent_screen.dart';
 class MainSectionsData extends StatefulWidget {
   const MainSectionsData({
     super.key,
-    required this.id,
+    required this.id, 
+    required this.completedSections,
   });
 
   final int id;
+  final int completedSections;
 
   @override
   State<MainSectionsData> createState() => _MainSectionsDataState();
@@ -194,7 +196,8 @@ class _MainSectionsDataState extends State<MainSectionsData> {
                               ),
                             ),
                             // const Spacer(),
-                            isSectionsSaved ? Padding(
+                            Text("Completed sections: ${widget.completedSections}"),
+                            widget.completedSections >= 10 ? Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Align(
                                 alignment: Alignment.bottomCenter,

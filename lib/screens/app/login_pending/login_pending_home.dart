@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
@@ -54,14 +52,15 @@ class _LoginPendingHomeState extends State<LoginPendingHome> {
     return names.join(', ');
   }
 
-  setProductToShared(int productId, String applicantName) async {
+  setProductToShared(int productId, String applicantName, int completedSections) async {
     logger.i("Adding $productId and $applicantName to Shared prefs");
-    await _productsSharedUtilService.addPendingProduct(productId: productId, applicantName: applicantName);
+    await _productsSharedUtilService.addPendingProduct(productId: productId, applicantName: applicantName, completedSections: completedSections);
   } 
 
-  double randomPercentage() {
-    final Random random = Random();
-    return random.nextInt(101) / 100;
+  double getPercentage(int completedSections, int totalSections) {
+    // return (((completedSections.toDouble()/totalSections.toDouble()) * 100).floorToDouble()/100);
+    if (totalSections == 0) return 0.0; // Prevent division by zero
+    return (completedSections / totalSections * 100).roundToDouble() / 100;
   }
 
   @override
@@ -196,11 +195,11 @@ class _LoginPendingHomeState extends State<LoginPendingHome> {
                           String applicantName = getNamesByType(product.applicants, IndividualType.APPLICANT);
                           String coApplicantNames = getNamesByType(product.applicants, IndividualType.CO_APPLICANT);
                           String guarantorNames = getNamesByType(product.applicants, IndividualType.GUARANTOR);
-                          double percentage =  randomPercentage();
+                          double percentage =  getPercentage(product.completedSections, product.totalSections);
                           return GestureDetector(
                             onTap: () {
-                              setProductToShared(product.id, applicantName);
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => MainSectionsData(id: product.id)));
+                              setProductToShared(product.id, applicantName, product.completedSections);
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => MainSectionsData(id: product.id, completedSections: product.completedSections)));
                             },
                             child: Container(
                               margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
@@ -369,6 +368,9 @@ class _LoginPendingHomeState extends State<LoginPendingHome> {
                                                     ),
                                                   ],
                                                 ),
+                                                Text("Completed: ${product.completedSections}, Total: ${product.totalSections}", 
+                                                  style: const TextStyle(fontStyle: FontStyle.italic, fontWeight: FontWeight.w600),
+                                                ),
                                               ],
                                             )
                                           ],
@@ -379,14 +381,14 @@ class _LoginPendingHomeState extends State<LoginPendingHome> {
                                   LinearProgressIndicator(
                                     color: Colors.green,
                                     borderRadius: BorderRadius.only(
-                                      bottomLeft: Radius.circular(50), 
-                                      topRight: percentage == 100 ? Radius.circular(0) : Radius.circular(30),
-                                      bottomRight: percentage == 100 ? Radius.circular(50) : Radius.circular(30)
+                                      bottomLeft: const Radius.circular(50), 
+                                      topRight: percentage == 1 ? const Radius.circular(0) : const Radius.circular(0.3),
+                                      bottomRight: percentage == 1 ? const Radius.circular(0.5) : const Radius.circular(0.3)
                                     ),
                                     minHeight: 5.0,
                                     value: percentage,
                                     backgroundColor: Colors.transparent,
-                                  )
+                                  ),
                                 ],
                               ),
                             ),
