@@ -225,7 +225,7 @@ class AddressDetails {
   String addressLine1;
   String? addressLine2;
   String city;
-  String taluk;
+  String taluka;
   String district;
   String state;
   String country;
@@ -236,7 +236,7 @@ class AddressDetails {
     required this.addressLine1,
     this.addressLine2,
     required this.city,
-    required this.taluk,
+    required this.taluka,
     required this.district,
     required this.state,
     required this.country,

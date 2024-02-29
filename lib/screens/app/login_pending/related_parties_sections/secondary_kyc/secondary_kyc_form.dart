@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:logger/logger.dart';
 import 'package:origination/models/login_flow/sections/related_party/pan_request_dto.dart';
 import 'package:origination/service/kyc_service.dart';
 
@@ -22,8 +23,7 @@ class _SecondaryKycFormState extends State<SecondaryKycForm> {
   bool isLoading = false;
 
   // Controllers
-  TextEditingController panNumberController =
-      TextEditingController(text: "BZFPV4605P");
+  TextEditingController panNumberController = TextEditingController(text: "BZFPV4605P");
   TextEditingController nameController = TextEditingController();
   TextEditingController fatherNameController = TextEditingController();
   TextEditingController dobController = TextEditingController();
@@ -35,16 +35,21 @@ class _SecondaryKycFormState extends State<SecondaryKycForm> {
   KycService kycService = KycService();
   late Future<PanRequestDTO> panRequestFuture;
 
+  Logger logger = Logger();
+
   void checkPan() async {
+    logger.d("Checking method...");
     setState(() {
-      validateLoading = true;
+      isLoading = true;
     });
-    panRequestFuture =
-        kycService.validatePan(widget.relatedPartyId, panNumberController.text);
-    setState(() {
-      validateLoading = false;
-    });
-    panRequestFuture.then((value) => {setData(value)});
+    try {
+      panRequestFuture = kycService.validatePan(widget.relatedPartyId, panNumberController.text);
+      panRequestFuture.then((value) => {setData(value)});
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 
   void setData(PanRequestDTO panData) {
@@ -132,7 +137,7 @@ class _SecondaryKycFormState extends State<SecondaryKycForm> {
                               borderRadius: BorderRadius.circular(30),
                             ),
                             child: IconButton(
-                              icon: validateLoading
+                              icon: isLoading
                                   ? const SizedBox(
                                       width: 20.0,
                                       height: 20.0,
@@ -143,7 +148,7 @@ class _SecondaryKycFormState extends State<SecondaryKycForm> {
                                                 Colors.white),
                                       ),
                                     )
-                                  : const Icon(
+                                  : const  Icon(
                                       Icons.search,
                                       color: Colors.white,
                                     ),
@@ -161,8 +166,7 @@ class _SecondaryKycFormState extends State<SecondaryKycForm> {
                   ],
                 ),
                 const SizedBox(height: 150),
-                isPanValidated
-                    ? FutureBuilder(
+                FutureBuilder(
                         future: panRequestFuture,
                         builder: (context, snapshot) {
                           if (snapshot.connectionState ==
@@ -193,8 +197,7 @@ class _SecondaryKycFormState extends State<SecondaryKycForm> {
                             }
                           }
                           return Container();
-                        })
-                    : Container(),
+                        }),
               ],
             ),
           ),

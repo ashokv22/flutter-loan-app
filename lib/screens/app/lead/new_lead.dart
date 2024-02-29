@@ -30,7 +30,13 @@ class _NewLeadState extends State<NewLead> {
   @override
   void initState() {
     super.initState();
-    leadApplicationFuture = applicationService.getEntityLeadApplication();
+    refreshLeadsSummary();
+  }
+
+  Future<void> refreshLeadsSummary() async {
+    setState(() {
+      leadApplicationFuture = applicationService.getEntityLeadApplication();
+    });
   }
 
   void onSave(EntityConfigurationMetaData entity) async {
@@ -81,112 +87,115 @@ class _NewLeadState extends State<NewLead> {
                   Color.fromRGBO(193, 248, 245, 1),
                 ]),
           ),
-          child: Column(
-          children: [
-            Expanded(
-              child: FutureBuilder(
-                future: leadApplicationFuture,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const SizedBox(
-                      width: double.infinity,
-                      height: double.infinity,
-                      child: Center(child: CircularProgressIndicator()),
-                    );
-                  } else if (snapshot.hasError) {
-                    return Center(
-                      child: Text('Error: ${snapshot.error}'),
-                    );
-                  } else if (!snapshot.hasData) {
+          child: RefreshIndicator(
+            onRefresh: refreshLeadsSummary,
+            child: Column(
+            children: [
+              Expanded(
+                child: FutureBuilder(
+                  future: leadApplicationFuture,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
                       return const SizedBox(
                         width: double.infinity,
                         height: double.infinity,
-                        child: Center(
-                            child: Text(
-                          'No data found',
-                          style: TextStyle(
-                            fontSize: 20,
-                          ),
-                        )));
-                  } else if (snapshot.hasData) {
-                    EntityConfigurationMetaData entity = snapshot.data!;
-                    return Flex(
-                      direction: Axis.vertical,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Expanded(
-                          child: SingleChildScrollView(
-                            scrollDirection: Axis.vertical,
-                            child: Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  if (entity.sections != null)
-                                     for (var section in entity.sections!)
-                                        if (section.subSections != null)
-                                          for (var subSection in section.subSections!)
-                                            Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                if (subSection.displayTitle!.isNotEmpty)
-                                                  SectionTitle(title: subSection.displayTitle!)
-                                                else 
-                                                  const SectionTitle(title: "Main Section"), 
-                                                if (subSection.fields != null)
-                                                  for (var field in subSection.fields!)
-                                                    Column(
-                                                      children: [
-                                                        buildFieldWidget(field),
-                                                        const SizedBox(height: 16.0),
-                                                      ]
-                                                    ),
-                                                const SizedBox(height: 20.0)
-                                              ],
-                                            ),
-                                  const SizedBox(height: 15.0),
-                                  Align(
-                                    alignment: Alignment.bottomCenter,
-                                    child: SizedBox(
-                                      width: double.infinity,
-                                      height: 50,
-                                      child: MaterialButton(
-                                        onPressed: () {
-                                          onSave(entity);
-                                        },
-                                        color: const Color.fromARGB(255, 3, 71, 244),
-                                        textColor: Colors.white,
-                                        padding: const EdgeInsets.symmetric(vertical: 16.0),
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(30.0),
-                                        ),
-                                        child: isLoading ? const SizedBox(
-                                          width: 20.0,
-                                          height: 20.0,
-                                          child: CircularProgressIndicator(
-                                            strokeWidth: 2.0,
-                                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                        child: Center(child: CircularProgressIndicator()),
+                      );
+                    } else if (snapshot.hasError) {
+                      return Center(
+                        child: Text('Error: ${snapshot.error}'),
+                      );
+                    } else if (!snapshot.hasData) {
+                        return const SizedBox(
+                          width: double.infinity,
+                          height: double.infinity,
+                          child: Center(
+                              child: Text(
+                            'No data found',
+                            style: TextStyle(
+                              fontSize: 20,
+                            ),
+                          )));
+                    } else if (snapshot.hasData) {
+                      EntityConfigurationMetaData entity = snapshot.data!;
+                      return Flex(
+                        direction: Axis.vertical,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            child: SingleChildScrollView(
+                              scrollDirection: Axis.vertical,
+                              child: Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    if (entity.sections != null)
+                                       for (var section in entity.sections!)
+                                          if (section.subSections != null)
+                                            for (var subSection in section.subSections!)
+                                              Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  if (subSection.displayTitle!.isNotEmpty)
+                                                    SectionTitle(title: subSection.displayTitle!)
+                                                  else 
+                                                    const SectionTitle(title: "Main Section"), 
+                                                  if (subSection.fields != null)
+                                                    for (var field in subSection.fields!)
+                                                      Column(
+                                                        children: [
+                                                          buildFieldWidget(field),
+                                                          const SizedBox(height: 16.0),
+                                                        ]
+                                                      ),
+                                                  const SizedBox(height: 20.0)
+                                                ],
+                                              ),
+                                    const SizedBox(height: 15.0),
+                                    Align(
+                                      alignment: Alignment.bottomCenter,
+                                      child: SizedBox(
+                                        width: double.infinity,
+                                        height: 50,
+                                        child: MaterialButton(
+                                          onPressed: () {
+                                            onSave(entity);
+                                          },
+                                          color: const Color.fromARGB(255, 3, 71, 244),
+                                          textColor: Colors.white,
+                                          padding: const EdgeInsets.symmetric(vertical: 16.0),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(30.0),
                                           ),
-                                        )
-                                        : const Text('Save Changes'),
+                                          child: isLoading ? const SizedBox(
+                                            width: 20.0,
+                                            height: 20.0,
+                                            child: CircularProgressIndicator(
+                                              strokeWidth: 2.0,
+                                              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                            ),
+                                          )
+                                          : const Text('Save Changes'),
+                                        ),
                                       ),
-                                    ),
-                                  )
-                                ],
+                                    )
+                                  ],
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
-                    );
-                  } else {
-                    return Container();
+                        ],
+                      );
+                    } else {
+                      return Container();
+                    }
                   }
-                }
-              )
-              )
-          ],
-        ),
+                )
+                )
+            ],
+                    ),
+          ),
         ),
       ),
     );
@@ -204,7 +213,7 @@ class _NewLeadState extends State<NewLead> {
     else if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'Address') {
       return AddressFields(
         label: fieldName, 
-        address: field.fieldMeta?.addressDetails ?? AddressDetails(addressType: '', addressLine1: '', city: '', taluk: '', district: '', state: '', country: '', pinCode: ''),
+        address: field.fieldMeta?.addressDetails ?? AddressDetails(addressType: '', addressLine1: '', city: '', taluka: '', district: '', state: '', country: '', pinCode: ''),
         onChanged: (newValue) => updateFieldValue(newValue, field), 
         isEditable: field.isEditable!, 
         isReadable: field.isReadOnly!

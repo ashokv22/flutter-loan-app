@@ -7,7 +7,7 @@ part 'primary_kyc_dto.g.dart';
 class PrimaryKycDTO {
   int? id;
   int relatedPartyId;
-  String adharNumber;
+  String aadhaarNumber;
   String name;
   String fatherName;
   DateTime dateOfBirth;
@@ -16,7 +16,7 @@ class PrimaryKycDTO {
   PrimaryKycDTO({
     this.id,
     required this.relatedPartyId,
-    required this.adharNumber,
+    required this.aadhaarNumber,
     required this.name,
     required this.fatherName,
     required this.dateOfBirth,

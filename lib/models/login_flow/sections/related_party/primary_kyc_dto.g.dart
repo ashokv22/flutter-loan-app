@@ -10,7 +10,7 @@ PrimaryKycDTO _$PrimaryKycDTOFromJson(Map<String, dynamic> json) =>
     PrimaryKycDTO(
       id: json['id'] as int?,
       relatedPartyId: json['relatedPartyId'] as int,
-      adharNumber: json['adharNumber'] as String,
+      aadhaarNumber: json['aadhaarNumber'] as String,
       name: json['name'] as String,
       fatherName: json['fatherName'] as String,
       dateOfBirth: DateTime.parse(json['dateOfBirth'] as String),
@@ -21,7 +21,7 @@ Map<String, dynamic> _$PrimaryKycDTOToJson(PrimaryKycDTO instance) =>
     <String, dynamic>{
       'id': instance.id,
       'relatedPartyId': instance.relatedPartyId,
-      'adharNumber': instance.adharNumber,
+      'aadhaarNumber': instance.aadhaarNumber,
       'name': instance.name,
       'fatherName': instance.fatherName,
       'dateOfBirth': instance.dateOfBirth.toIso8601String(),

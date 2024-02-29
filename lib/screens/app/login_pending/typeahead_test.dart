@@ -28,7 +28,7 @@ class _TypeaheadTestState extends State<TypeaheadTest> {
   final TextEditingController _controller = TextEditingController();
   final TextEditingController _latLongController = TextEditingController();
   final TextEditingController _multiSelectController = TextEditingController();
-  AddressDetails address = AddressDetails(addressLine1: '', addressType: '', city: '', country: '', district: '', taluk: '', state: '', pinCode: '');
+  AddressDetails address = AddressDetails(addressLine1: '', addressType: '', city: '', country: '', district: '', taluka: '', state: '', pinCode: '');
   Field field = Field(value: "Vegetable");
   final GlobalKey<FormState> _formKey = GlobalKey();
   final TextEditingController firstName = TextEditingController();

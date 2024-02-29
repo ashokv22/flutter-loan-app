@@ -41,7 +41,7 @@ class _PrimaryKycHomeState extends State<PrimaryKycHome> {
   void save() {
     PrimaryKycDTO dto = PrimaryKycDTO(
       relatedPartyId: widget.relatedPartyId, 
-      adharNumber: aadhaarNumberController.text, 
+      aadhaarNumber: aadhaarNumberController.text, 
       name: nameController.text, 
       fatherName: fatherNameController.text, 
       dateOfBirth: _selectedDate, 

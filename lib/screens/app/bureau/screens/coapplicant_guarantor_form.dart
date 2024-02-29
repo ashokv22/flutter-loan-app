@@ -115,18 +115,24 @@ class _CoApplicantGuarantorState extends State<CoApplicantGuarantor> {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkTheme = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
       appBar: AppBar(title: const Text('Bureau'),),
       body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
+        decoration: BoxDecoration(
+            gradient: isDarkTheme
+              ? null // No gradient for dark theme, use a single color
+              : const LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
                 Colors.white,
                 Color.fromRGBO(193, 248, 245, 1),
-              ]),
-        ),
+                Color.fromRGBO(184, 182, 253, 1),
+                Color.fromRGBO(62, 58, 250, 1),
+              ]
+            ),
+          ),
         child: Column(
         children: [
           Expanded(
@@ -165,13 +171,9 @@ class _CoApplicantGuarantorState extends State<CoApplicantGuarantor> {
                       ),
                     ),
                     const SizedBox(height: 20),
-                    Row(
-                      children: [
-                        Expanded(child: Referencecode(label: "Product", referenceCode: "product", controller: product, onChanged: (newValue) => onChange(newValue!, product))),
-                        const SizedBox(width: 10,),
-                        Expanded(child: Referencecode(label: "Enquiry", referenceCode: "enquiry", controller: enquiry, onChanged: (newValue) => onChange(newValue!, enquiry))),
-                      ],
-                    ),
+                    Referencecode(label: "Product", referenceCode: "product", controller: product, onChanged: (newValue) => onChange(newValue!, product)),
+                    const SizedBox(height: 20,),
+                    Referencecode(label: "Enquiry", referenceCode: "enquiry", controller: enquiry, onChanged: (newValue) => onChange(newValue!, enquiry)),
                     const SizedBox(height: 20),
                     Row(
                       children: [
@@ -201,13 +203,9 @@ class _CoApplicantGuarantorState extends State<CoApplicantGuarantor> {
                       ],
                     ),
                     const SizedBox(height: 20),
-                    Row(
-                      children: [
-                        Expanded(child: Referencecode(label: "Gender", referenceCode: "gender", controller: gender, onChanged: (newValue) => onChange(newValue!, gender))),
-                        const SizedBox(width: 10,),
-                        Expanded(child: Referencecode(label: "Marital Status", referenceCode: "marital_status", controller: maritalStatus, onChanged: (newValue) => onChange(newValue!, maritalStatus))),
-                      ],
-                    ),
+                    Referencecode(label: "Gender", referenceCode: "gender", controller: gender, onChanged: (newValue) => onChange(newValue!, gender)),
+                    const SizedBox(height: 20,),
+                    Referencecode(label: "Marital Status", referenceCode: "marital_status", controller: maritalStatus, onChanged: (newValue) => onChange(newValue!, maritalStatus)),
                     const SizedBox(height: 20),
                     MobileInput(label: "Alternate Mobile No", controller: alternateMobile, onChanged: (newValue) {}, isEditable: true, isReadable: false),
                     const SizedBox(height: 20),
@@ -241,14 +239,13 @@ class _CoApplicantGuarantorState extends State<CoApplicantGuarantor> {
                         alignment: Alignment.bottomCenter,
                         child: SizedBox(
                           width: double.infinity,
-                          height: 55,
+                          height: 45,
                           child: MaterialButton(
                             onPressed: () {
                               onSave();
                             },
                             color: const Color.fromARGB(255, 3, 71, 244),
                             textColor: Colors.white,
-                            padding: const EdgeInsets.symmetric(vertical: 16.0),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(30.0),
                             ),
@@ -260,7 +257,7 @@ class _CoApplicantGuarantorState extends State<CoApplicantGuarantor> {
                                 valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                               ),
                             )
-                            : const Text('Save', style: TextStyle(fontSize: 18),),
+                            : const Text('Save', style: TextStyle(fontSize: 16),),
                           ),
                         ),
                       ),

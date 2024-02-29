@@ -44,7 +44,7 @@ class _AddressFieldsState extends State<AddressFields> {
     _addressLine1Controller.text = widget.address.addressLine1;
     _addressLine2Controller.text = widget.address.addressLine2 ?? "";
     _city.text = widget.address.city;
-    _taluk.text = widget.address.taluk;
+    _taluk.text = widget.address.taluka;
     _district.text = widget.address.district;
     _state.text = widget.address.state;
     _country.text = widget.address.country;
@@ -55,7 +55,7 @@ class _AddressFieldsState extends State<AddressFields> {
     widget.address.addressLine1 = _addressLine1Controller.text;
     widget.address.addressLine2 = _addressLine2Controller.text;
     widget.address.city = _city.text;
-    widget.address.taluk = _taluk.text;
+    widget.address.taluka = _taluk.text;
     widget.address.district = _district.text;
     widget.address.state = _state.text;
     widget.address.country = _country.text;
@@ -149,7 +149,7 @@ class _AddressFieldsState extends State<AddressFields> {
           child: TextFormField(
             controller: _taluk,
             decoration: const InputDecoration(
-              labelText: "Taluk",
+              labelText: "Taluka",
               border: OutlineInputBorder(),
             ),
             onChanged: (value) => updateDto(),

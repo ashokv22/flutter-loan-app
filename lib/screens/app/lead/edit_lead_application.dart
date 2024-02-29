@@ -252,7 +252,7 @@ class _EditLeadState extends State<EditLead> {
     else if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'Address') {
       return AddressFields(
         label: fieldName, 
-        address: field.fieldMeta?.addressDetails ?? AddressDetails(addressType: '', addressLine1: '', city: '', taluk: '', district: '', state: '', country: '', pinCode: ''),
+        address: field.fieldMeta?.addressDetails ?? AddressDetails(addressType: '', addressLine1: '', city: '', taluka: '', district: '', state: '', country: '', pinCode: ''),
         onChanged: (newValue) => updateFieldValue(newValue, field), 
         isEditable: field.isEditable!, 
         isReadable: field.isReadOnly!
