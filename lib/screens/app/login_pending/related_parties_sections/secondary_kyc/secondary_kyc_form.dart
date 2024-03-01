@@ -33,18 +33,22 @@ class _SecondaryKycFormState extends State<SecondaryKycForm> {
   bool validateLoading = false;
 
   KycService kycService = KycService();
-  late Future<PanRequestDTO> panRequestFuture;
+  Future<PanRequestDTO>? panRequestFuture;
 
   Logger logger = Logger();
 
-  void checkPan() async {
-    logger.d("Checking method...");
+  Future<void> checkPan() async {
     setState(() {
       isLoading = true;
     });
     try {
-      panRequestFuture = kycService.validatePan(widget.relatedPartyId, panNumberController.text);
-      panRequestFuture.then((value) => {setData(value)});
+      PanRequestDTO panData = await kycService.validatePan(widget.relatedPartyId, panNumberController.text);
+      setData(panData);
+        setState(() {
+          panRequestFuture = Future.value(panData);
+        });
+    } catch(e) {
+      throw Exception(e);
     } finally {
       setState(() {
         isLoading = false;
@@ -106,26 +110,27 @@ class _SecondaryKycFormState extends State<SecondaryKycForm> {
                       child: Row(
                         children: [
                           Expanded(
-                              child: TextFormField(
-                            controller: panNumberController,
-                            keyboardType: TextInputType.text,
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(30),
+                            child: TextFormField(
+                              controller: panNumberController,
+                              keyboardType: TextInputType.text,
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(30),
+                                ),
+                                contentPadding: const EdgeInsets.symmetric(
+                                    vertical: 10.0, horizontal: 10.0),
+                                hintText: "Pan Number",
+                                hintStyle:
+                                    TextStyle(color: Theme.of(context).hintColor),
                               ),
-                              contentPadding: const EdgeInsets.symmetric(
-                                  vertical: 10.0, horizontal: 10.0),
-                              hintText: "Pan Number",
-                              hintStyle:
-                                  TextStyle(color: Theme.of(context).hintColor),
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'This field is required';
+                                }
+                                return null;
+                              },
                             ),
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'This field is required';
-                              }
-                              return null;
-                            },
-                          )),
+                          ),
                           const SizedBox(
                             width: 5,
                           ),
@@ -143,9 +148,7 @@ class _SecondaryKycFormState extends State<SecondaryKycForm> {
                                       height: 20.0,
                                       child: CircularProgressIndicator(
                                         strokeWidth: 2.0,
-                                        valueColor:
-                                            AlwaysStoppedAnimation<Color>(
-                                                Colors.white),
+                                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                                       ),
                                     )
                                   : const  Icon(
@@ -167,37 +170,38 @@ class _SecondaryKycFormState extends State<SecondaryKycForm> {
                 ),
                 const SizedBox(height: 150),
                 FutureBuilder(
-                        future: panRequestFuture,
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return const SizedBox(
-                              width: double.infinity,
-                              height: double.infinity,
-                              child: Center(child: CircularProgressIndicator()),
-                            );
-                          } else if (snapshot.hasError) {
-                            return Center(
-                              child: Text('Error: ${snapshot.error}'),
-                            );
-                          } else if (snapshot.hasData) {
-                            PanRequestDTO panData = snapshot.data!;
-                            if (panData.exist.toLowerCase() == "e") {
-                              return PanCardWidget(
-                                panData: panData,
-                                isLoading: isLoading,
-                              );
-                            } else if (panData.exist.toLowerCase() == "n") {
-                              return Container(
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: Colors.red[300]),
-                                child: const Text("Invalid Pan Number"),
-                              );
-                            }
-                          }
-                          return Container();
-                        }),
+                  future: panRequestFuture,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState ==
+                        ConnectionState.waiting) {
+                      return const SizedBox(
+                        width: double.infinity,
+                        height: double.infinity,
+                        child: Center(child: CircularProgressIndicator()),
+                      );
+                    } else if (snapshot.hasError) {
+                      return Center(
+                        child: Text('Error: ${snapshot.error}'),
+                      );
+                    } else if (snapshot.hasData) {
+                      PanRequestDTO panData = snapshot.data!;
+                      if (panData.exist.toLowerCase() == "e") {
+                        return PanCardWidget(
+                          panData: panData,
+                          isLoading: isLoading,
+                        );
+                      } else if (panData.exist.toLowerCase() == "n") {
+                        return Container(
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Colors.red[300]),
+                          child: const Text("Invalid Pan Number"),
+                        );
+                      }
+                    }
+                    return Text(snapshot.error == null ? snapshot.error.toString() : "Unexpected error!");
+                  }
+                ),
               ],
             ),
           ),
