@@ -19,17 +19,19 @@ class KycService {
   final String apiUrl = Environment.baseUrl;
 
   // Init OTP
-  Future<PrimaryKycDTO> savePrimaryManualKyc(int id, PrimaryKycDTO dto) async {
+  Future<PrimaryKycDTO> savePrimaryManualKyc(String type, int id, PrimaryKycDTO dto) async {
+    logger.i("Saving Aadhaar Primary KYC...");
+    String url = '${apiUrl}api/application/loanApplication/sectionsData/relatedParty/primaryKyc/$type/$id';
     String token = await authService.getAccessToken();
     final response = await http.post(
-      Uri.parse('${apiUrl}api/application/loanApplication/sectionsData/relatedParty/primaryKyc/APPLICANT/=$id'),
+      Uri.parse(url),
       headers: {
         'X-Auth-Token': token,
         'Content-Type': 'application/json',
       },
       body: jsonEncode(dto),
     );
-    if (response.statusCode == 200 || response.statusCode == 400) {
+    if (response.statusCode == 200) {
       final data = json.decode(response.body);
       logger.i(data);
       PrimaryKycDTO request = PrimaryKycDTO.fromJson(data);

@@ -52,7 +52,7 @@ class _AdharFormState extends State<AdharForm> {
     );
     logger.d(dto.toJson());
     try {
-      kycService.savePrimaryManualKyc(widget.relatedPartyId, dto);
+      // kycService.savePrimaryManualKyc(widget.relatedPartyId, dto);
     } catch (e) {
       setState(() {
         isLoading = false;

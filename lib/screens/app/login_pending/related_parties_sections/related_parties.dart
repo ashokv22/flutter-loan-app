@@ -156,7 +156,7 @@ class _RelatedPartiesState extends State<RelatedParties> {
                       if (section.status == "COMPLETED") {
                         aadharCardSheet(context, section);
                       } else {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => PrimaryKycHome(applicationId: widget.id, relatedPartyId: relatedPartyId,)));
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => PrimaryKycHome(applicationId: widget.id, relatedPartyId: relatedPartyId, type: selectedType,)));
                       }
                     }
                     else if (section.sectionName == "SecondaryKYC") {
@@ -290,6 +290,7 @@ class _RelatedPartiesState extends State<RelatedParties> {
                         ],
                       ),
                         const SizedBox(height: 10),
+                      // ignore: unnecessary_null_comparison
                       result.isVerified != null ? Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [

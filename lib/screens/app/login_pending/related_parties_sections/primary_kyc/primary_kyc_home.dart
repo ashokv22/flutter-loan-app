@@ -3,19 +3,23 @@ import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:origination/core/widgets/datepicker.dart';
-import 'package:origination/core/widgets/number_input.dart';
-import 'package:origination/core/widgets/text_input.dart';
+// import 'package:origination/core/widgets/datepicker.dart';
+// import 'package:origination/core/widgets/number_input.dart';
+// import 'package:origination/core/widgets/text_input.dart';
 import 'package:origination/models/login_flow/sections/related_party/primary_kyc_dto.dart';
+import 'package:origination/service/kyc_service.dart';
 
 class PrimaryKycHome extends StatefulWidget {
   const PrimaryKycHome({
     super.key,
     required this.applicationId,
-    required this.relatedPartyId,
+    required this.relatedPartyId, 
+    required this.type,
   });
 
   final int applicationId;
   final int relatedPartyId;
+  final String type;
 
   @override
   State<PrimaryKycHome> createState() => _PrimaryKycHomeState();
@@ -23,6 +27,17 @@ class PrimaryKycHome extends StatefulWidget {
 
 class _PrimaryKycHomeState extends State<PrimaryKycHome> {
   Logger logger = Logger();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  KycService kycService = KycService();
+
+  @override
+  void initState() {
+    super.initState();
+    nameController.text = "Ashok V";
+    fatherNameController.text = "";
+    addressController.text = "Mahadevapura, Kgf, Kolar 563116";
+  }
+
   bool isLoading = false;
   TextEditingController aadhaarNumberController = TextEditingController();
   TextEditingController nameController = TextEditingController();
@@ -38,17 +53,45 @@ class _PrimaryKycHomeState extends State<PrimaryKycHome> {
     });
   }
 
-  void save() {
-    PrimaryKycDTO dto = PrimaryKycDTO(
-      relatedPartyId: widget.relatedPartyId, 
-      aadhaarNumber: aadhaarNumberController.text, 
-      name: nameController.text, 
-      fatherName: fatherNameController.text, 
-      dateOfBirth: _selectedDate, 
-      address: addressController.text
+  void _showSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+      ),
     );
-    logger.d(dto.toJson());
-    Navigator.pop(context);
+  }
+
+  void _submitForm() async {
+    logger.d("Inside submit method...");
+    if (_formKey.currentState!.validate()) {
+      try {
+        setState(() {
+          isLoading = true;
+        });
+        PrimaryKycDTO dto = PrimaryKycDTO(
+          relatedPartyId: widget.relatedPartyId, 
+          aadhaarNumber: aadhaarNumberController.text, 
+          name: nameController.text, 
+          fatherName: fatherNameController.text, 
+          dateOfBirth: _selectedDate, 
+          address: addressController.text
+        );
+        final response = kycService.savePrimaryManualKyc(widget.type, widget.relatedPartyId, dto);
+        // ignore: unnecessary_null_comparison
+        if (response != null) {
+          _showSnackBar('Form submitted successfully');
+          Navigator.pop(context);
+        } else {
+          _showSnackBar('Failed to save form data');
+        }
+      } catch (e) {
+        _showSnackBar('Error: $e');
+      } finally {
+        setState(() {
+          isLoading = true;
+        });
+      }
+    }
   }
 
   @override
@@ -90,18 +133,63 @@ class _PrimaryKycHomeState extends State<PrimaryKycHome> {
                   ],
                 ),
                 const SizedBox(height: 30,),
-                Column(
-                  children: [
-                    NumberInput(label: "Adhar Number", controller: aadhaarNumberController, onChanged: (value) {}, isEditable: true, isReadable: false),
-                    const SizedBox(height: 10,),
-                    TextInput(label: "Name", controller: nameController, onChanged: (value) {}, isEditable: true, isReadable: false),
-                    const SizedBox(height: 10,),
-                    TextInput(label: "Father Name", controller: fatherNameController, onChanged: (value) {}, isEditable: true, isReadable: false),
-                    const SizedBox(height: 10,),
-                    DatePickerInput(label: "Date of birth", controller: dobController, onChanged: (newValue) => handleDateChanged(newValue), isReadable: false, isEditable: true,),
-                    const SizedBox(height: 10,),
-                    TextInput(label: "Address", controller: addressController, onChanged: (value) {}, isEditable: true, isReadable: false),
-                  ],
+                Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      TextFormField(
+                        controller: nameController,
+                        decoration: const InputDecoration(
+                          labelText: 'Name',
+                          border: OutlineInputBorder(),
+                          contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+                        ),
+                        
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter your name';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 10,),
+                      DatePickerInput(label: "Date of birth", controller: dobController, onChanged: (newValue) => handleDateChanged(newValue), isReadable: false, isEditable: true,),
+                      const SizedBox(height: 10,),
+                      TextFormField(
+                        controller: aadhaarNumberController,
+                        keyboardType: TextInputType.number,
+                        decoration: const InputDecoration(
+                          labelText: 'Aadhaar Number',
+                          border: OutlineInputBorder(),
+                          contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+                        ),
+                        maxLength: 12,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter your Aadhaar number';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 10,),
+                      TextFormField(
+                        controller: addressController,
+                        decoration: const InputDecoration(
+                          labelText: 'Address',
+                          border: OutlineInputBorder(),
+                          contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter your address';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 20),
+                    ],
+                  ),
                 ),
                 const Spacer(),
                 Align(
@@ -112,9 +200,7 @@ class _PrimaryKycHomeState extends State<PrimaryKycHome> {
                       width: double.infinity,
                       height: 50,
                       child: MaterialButton(
-                        onPressed: () {
-                          save();
-                        },
+                        onPressed: _submitForm,
                         color: const Color.fromARGB(255, 3, 71, 244),
                         textColor: Colors.white,
                         padding: const EdgeInsets.symmetric(vertical: 16.0),
@@ -135,71 +221,10 @@ class _PrimaryKycHomeState extends State<PrimaryKycHome> {
                     ),
                   ),
                 )
-                // Align(
-                //   alignment: Alignment.bottomCenter,
-                //   child: Container(
-                //     height: 50,
-                //     width: 50,
-                //     decoration: BoxDecoration(
-                //       color: Colors.white,
-                //       borderRadius: BorderRadius.circular(30),
-                //     ),
-                //     child: IconButton(
-                //       icon: const Icon(Icons.chevron_right),
-                //       onPressed: () {
-                //           Future.delayed(Duration.zero, () {
-                //             _showConfirmSheet(context);
-                //           });
-                //         },
-                //     ),
-                //   ),
-                // )
               ],
             ),
           ),
       ),
     );
   }
-  
-  // void _showConfirmSheet(BuildContext context) {
-  //   showModalBottomSheet(
-  //     context: context,
-  //     isScrollControlled: true,
-  //     builder: (BuildContext context) {
-  //       return SizedBox(
-  //         height: 250,
-  //         child:  Center(
-  //           child: Padding(
-  //             padding: const EdgeInsets.all(16.0),
-  //             child: Column(
-  //               mainAxisAlignment: MainAxisAlignment.center,
-  //               children: [
-  //                 const SizedBox(height: 10),
-  //                 const Text("You have selected Aadhar", textAlign: TextAlign.center, style: TextStyle(fontSize: 20)),
-  //                 const Text("Once Kyc mode selected, it cannot be changed in future. Please confirm before going further!", textAlign: TextAlign.center, style: TextStyle(fontSize: 20)),
-  //                 const Spacer(),
-  //                 SizedBox(
-  //                   width: double.infinity,
-  //                   height: 50,
-  //                   child: MaterialButton(
-  //                     onPressed: () {
-  //                       Navigator.push(context, MaterialPageRoute(builder: (context) => AdharForm(relatedPartyId: widget.relatedPartyId,)));
-  //                     },
-  //                     color: const Color.fromARGB(255, 3, 71, 244),
-  //                     textColor: Colors.white,
-  //                     padding: const EdgeInsets.symmetric(vertical: 16.0),
-  //                     shape: RoundedRectangleBorder(
-  //                       borderRadius: BorderRadius.circular(10.0),
-  //                     ),
-  //                     child: const Text('Continue'),
-  //                   ),
-  //                 )
-  //               ],
-  //             ),
-  //           ),
-  //         ),
-  //       );
-  //     }
-  //   );
-  // }
 }
