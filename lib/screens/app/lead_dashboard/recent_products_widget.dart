@@ -44,7 +44,7 @@ class _RecentProductsWidgetState extends State<RecentProductsWidget> {
                   const Text(
                     "Top Applications",  
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
-                  SizedBox(width: 5,),
+                  const SizedBox(width: 5,),
                   // Icon(Icons.trending_up)
                   Image.asset("assets/trend.png", fit: BoxFit.fill, width: 30, height: 30,),
                 ],

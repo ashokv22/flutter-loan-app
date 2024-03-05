@@ -6,9 +6,11 @@ import 'package:origination/models/stage.dart';
 import 'package:origination/models/summaries/dashboard_summary.dart';
 import 'package:origination/screens/app/lead/stage_leads_list.dart';
 import 'package:origination/screens/app/login_pending/login_pending_home.dart';
+import 'package:origination/screens/widgets/side_menu.dart';
 import 'package:origination/service/auth_service.dart';
 // import 'package:origination/screens/widgets/products.dart';
 import 'package:origination/service/loan_application_service.dart';
+import 'package:heroicons/heroicons.dart';
 
 import 'last_lead.dart';
 import 'recent_products_widget.dart';
@@ -46,10 +48,23 @@ class _LeadDashboardState extends State<LeadDashboard> {
     });
   }
 
+  int _selectedItemIndex = 0;
+
+  void _onDrawerItemClicked(int index) {
+    setState(() {
+      _selectedItemIndex = index;
+    });
+    Navigator.pop(context);
+  }
+
   @override
   Widget build(BuildContext context) {
     final isDarkTheme = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
+      drawer: SideMenu(
+        selectedItemIndex: _selectedItemIndex,
+        onItemClicked: _onDrawerItemClicked,
+      ),
       appBar: PreferredSize(
           preferredSize: const Size.fromHeight(100),
           child: Container(
@@ -74,13 +89,25 @@ class _LeadDashboardState extends State<LeadDashboard> {
                 return Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Text(
-                        "Hello ${userInfo['name']}\n${userInfo['branchData']['branchCode']}",
-                        style: const TextStyle(
-                            color: Colors.white, fontSize: 16),
-                      ),
+                    Row(
+                      children: [
+                        Builder(
+                          builder: (context) {
+                            return IconButton(
+                              onPressed: () {
+                                logger.wtf("Opening drawer...");
+                                Scaffold.of(context).openDrawer();
+                              },
+                              icon: const HeroIcon(HeroIcons.bars3CenterLeft, color: Colors.white),
+                            );
+                          }
+                        ),
+                        Text(
+                          "Hello ${userInfo['name']}\n${userInfo['branchData']['branchCode']}",
+                          style: const TextStyle(
+                              color: Colors.white, fontSize: 16),
+                        ),
+                      ],
                     ),
                     Padding(
                       padding: const EdgeInsets.all(16.0),
