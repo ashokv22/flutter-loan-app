@@ -208,7 +208,7 @@ class _NewLeadState extends State<NewLead> {
     
     TextEditingController controller = textEditingControllerMap[fieldName]!;
     if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'TextBox') {
-      return TextInput(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field), isEditable: field.isEditable!, isReadable: field.isReadOnly!);
+      return TextInput(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field), isEditable: field.isEditable!, isReadable: field.isReadOnly!, isRequired: field.isRequired!,);
     }
     else if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'Address') {
       return AddressFields(
@@ -220,7 +220,7 @@ class _NewLeadState extends State<NewLead> {
       );
     } 
     else if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'TextArea') {
-      return TextInput(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field), isEditable: field.isEditable!, isReadable: field.isReadOnly!);
+      return TextInput(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field), isEditable: field.isEditable!, isReadable: field.isReadOnly!, isRequired: field.isRequired!,);
     } 
     else if (field.fieldMeta?.fieldUiProperties?.uiComponentName!.toLowerCase() == 'referencecode' || field.fieldMeta?.fieldUiProperties?.uiComponentName == 'DropDown') {
       return Referencecode(label: fieldName, referenceCode: field.fieldMeta!.referenceCodeClassifier!, controller: controller, onChanged: (newValue) => updateFieldValue(newValue!, field));

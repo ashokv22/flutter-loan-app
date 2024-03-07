@@ -12,6 +12,7 @@ import 'package:origination/screens/app/login_pending/typeahead_test.dart';
 import 'package:origination/service/login_flow_service.dart';
 import 'package:swipeable_button_view/swipeable_button_view.dart';
 import '../consent/consent_screen.dart';
+import 'package:heroicons/heroicons.dart';
 
 class MainSectionsData extends StatefulWidget {
   const MainSectionsData({
@@ -177,10 +178,25 @@ class _MainSectionsDataState extends State<MainSectionsData> {
                                             ),
                                           ),
                                           if (section.status == "COMPLETED")
-                                            const Icon(
-                                              CupertinoIcons.checkmark_alt_circle_fill,
-                                              color: Color.fromARGB(255, 0, 152, 58),
-                                              size: 22,  
+                                            Row(
+                                              children: [
+                                                const Icon(
+                                                  CupertinoIcons.checkmark_alt_circle_fill,
+                                                  color: Color.fromARGB(255, 0, 152, 58),
+                                                  size: 22,  
+                                                ),
+                                                const SizedBox(width: 10,),
+                                                InkWell(
+                                                  onTap: () {
+                                                    confirmDeleteDialog(context, section);
+                                                  },
+                                                  child: const HeroIcon(
+                                                    HeroIcons.trash,
+                                                    color: Colors.red,
+                                                    size: 22, 
+                                                  ),
+                                                ),
+                                              ],
                                             )
                                           else
                                             Icon(
@@ -228,6 +244,70 @@ class _MainSectionsDataState extends State<MainSectionsData> {
                     return Container();
                   }
                 )
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<dynamic> confirmDeleteDialog(BuildContext context, LoanSection section) {
+    logger.v(section.toJson());
+    return showDialog(
+      context: context,
+      builder: (context) => Dialog(
+        child: Container(
+          padding: const EdgeInsets.all(12.0),
+          decoration: BoxDecoration(
+            shape: BoxShape.rectangle,
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(20.0),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Image.asset("assets/crisis.png", fit: BoxFit.cover, height: 70),
+              const SizedBox(height: 15.0),
+              const Text('Delete Section', 
+                textAlign: TextAlign.center, 
+                style: TextStyle(fontWeight: FontWeight.w600, fontSize: 24)
+              ),
+              const SizedBox(height: 15.0),
+              const Text('Even the Time Stone won’t bring this back!', textAlign: TextAlign.center,),
+              const SizedBox(height: 30,),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      style: OutlinedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 12.0),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30.0),
+                        ),
+                      ),
+                      child: const Text('Nope, Keep it.', style: TextStyle(color: Colors.black),),
+                    ),
+                  ),
+                  const SizedBox(width: 10,),
+                  Expanded(
+                    child: MaterialButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      color: Colors.red,
+                      padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 12.0),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30.0),
+                      ),
+                      child: const Text('Yes, Delete!', style: TextStyle(color: Colors.white)),
+                    ),
+                  ),
+                ],
               )
             ],
           ),

@@ -1,8 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
+import 'package:origination/core/utils/currency_input_formatter.dart';
 import 'package:origination/core/widgets/custom/multi_select_dropdown.dart';
 import 'package:origination/core/widgets/custom/yearpicker.dart';
 import 'package:origination/core/widgets/address_fields.dart';
@@ -81,63 +80,64 @@ class _TypeaheadTestState extends State<TypeaheadTest> {
                         // LocationWidget(label: "Lat and Long", controller: _latLongController, onChanged: (value) => updateFieldValue(value), isEditable: true, isReadable: true,),
                         // const SizedBox(height: 20,),
                         // MultiSelectDropDown(label: "Crops", controller: _multiSelectController, referenceCode: "crop_name", onChanged: (value) => updateFieldValue2(value, field), isReadable: false, isEditable: true,),
-                        // Form(
-                        //   key: _formKey,
-                        //   child: Padding(
-                        //   padding: const EdgeInsets.all(12.0),
-                        //   child: Column(
-                        //     children: [
-                        //       TextFormField(
-                        //         controller: firstName,
-                        //         textAlign: TextAlign.start,
-                        //         keyboardType: TextInputType.name,
-                        //         decoration: InputDecoration(
-                        //           border: OutlineInputBorder(
-                        //             borderRadius: BorderRadius.circular(30)
-                        //           ),
-                        //           contentPadding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
-                        //           hintText: "First name",
-                        //           hintStyle: TextStyle(
-                        //             color: Theme.of(context).hintColor
-                        //           ),
-                        //         ),
-                        //         validator: (value) {
-                        //           if (value == null || value.isEmpty) {
-                        //             return 'This field is required';
-                        //           } 
-                        //           return null;
-                        //         },
-                        //       ),
-                        //       const SizedBox(height: 10,),
-                        //       TextInput(
-                        //         label: "Name", 
-                        //         controller: c, 
-                        //         onChanged: (newValue) => () {}, 
-                        //         isEditable: true, 
-                        //         isReadable: false
-                        //       ),
-                        //     ],
-                        //   ),
-                        // )
-                        // ),
-                        // MaterialButton(
-                        //   onPressed: () {
-                        //     _formKey.currentState!.validate();
-                        //   },
-                        //   color: const Color.fromARGB(255, 3, 71, 244),
-                        //   textColor: Colors.white,
-                        //   padding: const EdgeInsets.symmetric(vertical: 16.0),
-                        //   shape: RoundedRectangleBorder(
-                        //     borderRadius: BorderRadius.circular(30.0),
-                        //   ),
-                        //   child: const Text('Check'),
-                        // )
+                        Form(
+                          key: _formKey,
+                          child: Padding(
+                          padding: const EdgeInsets.all(12.0),
+                          child: Column(
+                            children: [
+                              TextFormField(
+                                controller: firstName,
+                                textAlign: TextAlign.start,
+                                keyboardType: TextInputType.name,
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(30)
+                                  ),
+                                  contentPadding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+                                  hintText: "First name",
+                                  hintStyle: TextStyle(
+                                    color: Theme.of(context).hintColor
+                                  ),
+                                ),
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'This field is required';
+                                  } 
+                                  return null;
+                                },
+                              ),
+                              const SizedBox(height: 10,),
+                              TextInput(
+                                label: "Name", 
+                                controller: c, 
+                                onChanged: (newValue) => () {}, 
+                                isEditable: true, 
+                                isReadable: false,
+                                isRequired: true,
+                              ),
+                            ],
+                          ),
+                        )
+                        ),
+                        MaterialButton(
+                          onPressed: () {
+                            _formKey.currentState!.validate();
+                          },
+                          color: const Color.fromARGB(255, 3, 71, 244),
+                          textColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(vertical: 16.0),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30.0),
+                          ),
+                          child: const Text('Check'),
+                        ),
                         TextFormField(
                           inputFormatters: [
                             CurrencyInputFormatter()
                           ],
                           keyboardType: TextInputType.number,
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                             labelText: 'Enter amount in Indian Rupees',
                           ),
                         )
@@ -165,76 +165,3 @@ class _TypeaheadTestState extends State<TypeaheadTest> {
     });
   }
 }
-
-class CurrencyInputFormatter extends TextInputFormatter {
- 
-    final validationRegex = RegExp(r'^[\d,]*\.?\d*$');
-    final replaceRegex = RegExp(r'[^\d\.]+');
-    static const fractionalDigits = 2;
-    static const thousandSeparator = ',';
-    static const decimalSeparator = '.';
- 
-    @override
-    TextEditingValue formatEditUpdate(
-      TextEditingValue oldValue,
-      TextEditingValue newValue
-    ) {
-      if (!validationRegex.hasMatch(newValue.text)) {
-        return oldValue;
-      }
- 
-      final newValueNumber = newValue.text.replaceAll(replaceRegex, '');
- 
-      var formattedText = newValueNumber;
- 
-      /// Add thousand separators.
-      var index = newValueNumber.contains(decimalSeparator)
-          ? newValueNumber.indexOf(decimalSeparator)
-          : newValueNumber.length;
- 
-      while (index > 0) {
-        index -= 3;
- 
-        if (index > 0) {
-          formattedText = formattedText.substring(0, index)
-              + thousandSeparator
-              + formattedText.substring(index, formattedText.length);
-        }
-      }
- 
-      /// Limit the number of decimal digits.
-      final decimalIndex = formattedText.indexOf(decimalSeparator);
-      var removedDecimalDigits = 0;
- 
-      if (decimalIndex != -1) {
-        var decimalText = formattedText.substring(decimalIndex + 1);
- 
-        if (decimalText.isNotEmpty && decimalText.length > fractionalDigits) {
-          removedDecimalDigits = decimalText.length - fractionalDigits;
-          decimalText = decimalText.substring(0, fractionalDigits);
-          formattedText = formattedText.substring(0, decimalIndex)
-              + decimalSeparator
-              + decimalText;
-        }
-      }
- 
-      /// Check whether the text is unmodified.
-      if (oldValue.text == formattedText) {
-        return oldValue;
-      }
- 
-      /// Handle moving cursor.
-      final initialNumberOfPrecedingSeparators = oldValue.text.characters
-          .where((e) => e == thousandSeparator)
-          .length;
-      final newNumberOfPrecedingSeparators = formattedText.characters
-          .where((e) => e == thousandSeparator)
-          .length;
-      final additionalOffset = newNumberOfPrecedingSeparators - initialNumberOfPrecedingSeparators;
- 
-      return newValue.copyWith(
-        text: formattedText,
-        selection: TextSelection.collapsed(offset: newValue.selection.baseOffset + additionalOffset - removedDecimalDigits),
-      );
-    }
-  }

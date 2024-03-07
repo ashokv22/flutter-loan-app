@@ -32,6 +32,7 @@ class SectionScreenEmpty extends StatefulWidget {
 
 class _SectionScreenEmptyState extends State<SectionScreenEmpty> {
   final loginPendingService = LoginPendingService();
+  final GlobalKey<FormState> _formKey = GlobalKey();
   final loanApplicationService = LoanApplicationService();
   late Future<Section> leadApplicationFuture;
   bool loadError = false;
@@ -60,8 +61,42 @@ class _SectionScreenEmptyState extends State<SectionScreenEmpty> {
       isLoading = true;
     });
     try {
-      await loanApplicationService.saveSection(widget.id, widget.title, entity);
-      Navigator.of(context).pop();
+      loanApplicationService.saveSection(widget.id, widget.title, entity)
+        .then((response) {
+          setState(() {
+            isLoading = false;
+          });
+          if (response.statusCode == 200) {
+            Navigator.pop(context);
+          } else if (response.statusCode == 422) {
+            final detailedMessage = response.body;
+            _showBottomSheet(context, detailedMessage);
+          } else if (response.statusCode == 404) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Resource not found.'),
+                duration: Duration(seconds: 2),
+              ),
+            );
+          } else {
+            // Handle other error codes
+            final errorMessage = 'An error occurred. Error code: ${response.statusCode}';
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(errorMessage),
+                duration: const Duration(seconds: 2),
+              ),
+            );
+          }
+        }).catchError((error) {
+        logger.e('An error occurred while saving section: $error');
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Failed to save section. Please try again.'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+      });
     }
     catch (e) {
       logger.e('An error occurred while saving section: $e');
@@ -77,6 +112,21 @@ class _SectionScreenEmptyState extends State<SectionScreenEmpty> {
     });
 
   }
+
+  void _showBottomSheet(BuildContext context, String message) {
+  showModalBottomSheet(
+    context: context,
+    builder: (BuildContext context) {
+      return Container(
+        padding: EdgeInsets.all(16.0),
+        child: Text(
+          message,
+          style: TextStyle(fontSize: 16.0),
+        ),
+      );
+    },
+  );
+}
 
   @override
   Widget build(BuildContext context) {
@@ -140,59 +190,64 @@ class _SectionScreenEmptyState extends State<SectionScreenEmpty> {
                         children: [
                           Expanded(
                             child: SingleChildScrollView(
-                              child: Padding(
-                                padding: const EdgeInsets.all(16.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    if (section.subSections != null)
-                                      for (var subSection in section.subSections!)
-                                        Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            if (subSection.displayTitle! != "Main Section")
-                                              SectionTitle(title: subSection.displayTitle!.isEmpty ? 'Main Section' : subSection.displayTitle!),
-                                            if (subSection.fields != null)
-                                              for (var field in subSection.fields!)
-                                                Column(
-                                                  children: [
-                                                    buildFieldWidget(field),
-                                                    const SizedBox(height: 16.0),
-                                                  ]
-                                                ),
-                                            const SizedBox(height: 20.0)
-                                          ],
-                                        ),
-                                    const SizedBox(height: 15.0),
-                                    Align(
-                                      alignment: Alignment.bottomCenter,
-                                      child: SizedBox(
-                                        width: double.infinity,
-                                        height: 50,
-                                        child: MaterialButton(
-                                          onPressed: () {
-                                            onSave(section);
-                                          },
-                                          color: const Color.fromARGB(255, 3, 71, 244),
-                                          textColor: Colors.white,
-                                          padding: const EdgeInsets.symmetric(vertical: 16.0),
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(30.0),
-                                          ),
-                                          child: isLoading
-                                              ? const SizedBox(
-                                                  width: 20.0,
-                                                  height: 20.0,
-                                                  child: CircularProgressIndicator(
-                                                    strokeWidth: 2.0,
-                                                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                              child: Form(
+                                key: _formKey,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(16.0),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      if (section.subSections != null)
+                                        for (var subSection in section.subSections!)
+                                          Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              if (subSection.displayTitle! != "Main Section")
+                                                SectionTitle(title: subSection.displayTitle!.isEmpty ? 'Main Section' : subSection.displayTitle!),
+                                              if (subSection.fields != null)
+                                                for (var field in subSection.fields!)
+                                                  Column(
+                                                    children: [
+                                                      buildFieldWidget(field),
+                                                      const SizedBox(height: 16.0),
+                                                    ]
                                                   ),
-                                                )
-                                              : const Text('Save Changes'),
+                                              const SizedBox(height: 20.0)
+                                            ],
+                                          ),
+                                      const SizedBox(height: 15.0),
+                                      Align(
+                                        alignment: Alignment.bottomCenter,
+                                        child: SizedBox(
+                                          width: double.infinity,
+                                          height: 50,
+                                          child: MaterialButton(
+                                            onPressed: () {
+                                              if (_formKey.currentState!.validate()) {
+                                                onSave(section);
+                                              }
+                                            },
+                                            color: const Color.fromARGB(255, 3, 71, 244),
+                                            textColor: Colors.white,
+                                            padding: const EdgeInsets.symmetric(vertical: 16.0),
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(30.0),
+                                            ),
+                                            child: isLoading
+                                                ? const SizedBox(
+                                                    width: 20.0,
+                                                    height: 20.0,
+                                                    child: CircularProgressIndicator(
+                                                      strokeWidth: 2.0,
+                                                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                                    ),
+                                                  )
+                                                : const Text('Save Changes'),
+                                          ),
                                         ),
-                                      ),
-                                    )
-                                  ],
+                                      )
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
@@ -225,7 +280,7 @@ class _SectionScreenEmptyState extends State<SectionScreenEmpty> {
       if (['Integer', 'BigDecimal'].toList().contains(field.fieldMeta?.dataType)) {
         return NumberInput(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field), isEditable: field.isEditable!, isReadable: field.isReadOnly!);
       } else {
-        return TextInput(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field), isEditable: field.isEditable!, isReadable: field.isReadOnly!);
+        return TextInput(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field), isEditable: field.isEditable!, isReadable: field.isReadOnly!, isRequired: field.isRequired!,);
       }
     } 
     else if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'TextArea') {
@@ -238,7 +293,7 @@ class _SectionScreenEmptyState extends State<SectionScreenEmpty> {
           isReadable: field.isReadOnly!
         );
       }
-      return TextInput(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field), isEditable: field.isEditable!, isReadable: field.isReadOnly!);
+      return TextInput(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field), isEditable: field.isEditable!, isReadable: field.isReadOnly!, isRequired: field.isRequired!,);
     } 
     else if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'Referencecode' || field.fieldMeta?.fieldUiProperties?.uiComponentName == 'DropDown') {
       return Referencecode(label: fieldName, referenceCode: field.fieldMeta!.referenceCodeClassifier!, controller: controller, onChanged: (newValue) => updateFieldValue(newValue!, field));

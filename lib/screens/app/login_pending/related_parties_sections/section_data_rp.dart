@@ -35,6 +35,7 @@ class SectionScreenRP extends StatefulWidget {
 
 class _SectionScreenRPState extends State<SectionScreenRP> {
   final loginPendingService = LoginPendingService();
+  final GlobalKey<FormState> _formKey = GlobalKey();
   final loanApplicationService = LoanApplicationService();
   final utilService = UtilService();
   late Future<Section> leadApplicationFuture;
@@ -133,59 +134,64 @@ class _SectionScreenRPState extends State<SectionScreenRP> {
                         children: [
                           Expanded(
                             child: SingleChildScrollView(
-                              child: Padding(
-                                padding: const EdgeInsets.all(16.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    if (section.subSections != null)
-                                      for (var subSection in section.subSections!)
-                                        Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            if (subSection.displayTitle! != "Main Section")
-                                              SectionTitle(title: subSection.displayTitle!.isEmpty ? '' : subSection.displayTitle!),
-                                            if (subSection.fields != null)
-                                              for (var field in subSection.fields!)
-                                                Column(
-                                                  children: [
-                                                    buildFieldWidget(field),
-                                                    const SizedBox(height: 16.0),
-                                                  ]
-                                                ),
-                                            const SizedBox(height: 20.0)
-                                          ],
-                                        ),
-                                    const SizedBox(height: 25.0),
-                                    Align(
-                                      alignment: Alignment.bottomCenter,
-                                      child: SizedBox(
-                                        width: double.infinity,
-                                        height: 50,
-                                        child: MaterialButton(
-                                          onPressed: () {
-                                            onSave(section);
-                                          },
-                                          color: const Color.fromARGB(255, 3, 71, 244),
-                                          textColor: Colors.white,
-                                          padding: const EdgeInsets.symmetric(vertical: 16.0),
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(30.0),
-                                          ),
-                                          child: isLoading
-                                              ? const SizedBox(
-                                                  width: 20.0,
-                                                  height: 20.0,
-                                                  child: CircularProgressIndicator(
-                                                    strokeWidth: 2.0,
-                                                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                              child: Form(
+                                key: _formKey,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(16.0),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      if (section.subSections != null)
+                                        for (var subSection in section.subSections!)
+                                          Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              if (subSection.displayTitle! != "Main Section")
+                                                SectionTitle(title: subSection.displayTitle!.isEmpty ? '' : subSection.displayTitle!),
+                                              if (subSection.fields != null)
+                                                for (var field in subSection.fields!)
+                                                  Column(
+                                                    children: [
+                                                      buildFieldWidget(field),
+                                                      const SizedBox(height: 16.0),
+                                                    ]
                                                   ),
-                                                )
-                                              : const Text('Save Changes'),
+                                              const SizedBox(height: 20.0)
+                                            ],
+                                          ),
+                                      const SizedBox(height: 25.0),
+                                      Align(
+                                        alignment: Alignment.bottomCenter,
+                                        child: SizedBox(
+                                          width: double.infinity,
+                                          height: 50,
+                                          child: MaterialButton(
+                                            onPressed: () {
+                                              if (_formKey.currentState!.validate()) {
+                                                onSave(section);
+                                              }
+                                            },
+                                            color: const Color.fromARGB(255, 3, 71, 244),
+                                            textColor: Colors.white,
+                                            padding: const EdgeInsets.symmetric(vertical: 16.0),
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(30.0),
+                                            ),
+                                            child: isLoading
+                                                ? const SizedBox(
+                                                    width: 20.0,
+                                                    height: 20.0,
+                                                    child: CircularProgressIndicator(
+                                                      strokeWidth: 2.0,
+                                                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                                    ),
+                                                  )
+                                                : const Text('Save Changes'),
+                                          ),
                                         ),
-                                      ),
-                                    )
-                                  ],
+                                      )
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
@@ -215,7 +221,7 @@ class _SectionScreenRPState extends State<SectionScreenRP> {
       if (['Integer', 'BigDecimal'].toList().contains(field.fieldMeta?.dataType)) {
         return NumberInput(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field), isEditable: field.isEditable!, isReadable: field.isReadOnly!);
       } else {
-        return TextInput(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field), isEditable: field.isEditable!, isReadable: field.isReadOnly!);
+        return TextInput(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field), isEditable: field.isEditable!, isReadable: field.isReadOnly!, isRequired: field.isRequired!,);
       }
     } 
     else if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'TextArea') {
@@ -228,7 +234,7 @@ class _SectionScreenRPState extends State<SectionScreenRP> {
           isReadable: field.isReadOnly!
         );
       }
-      return TextInput(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field), isEditable: field.isEditable!, isReadable: field.isReadOnly!);
+      return TextInput(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field), isEditable: field.isEditable!, isReadable: field.isReadOnly!, isRequired: field.isRequired!,);
     } 
     else if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'Referencecode' || field.fieldMeta?.fieldUiProperties?.uiComponentName == 'DropDown') {
       return Referencecode(label: fieldName, referenceCode: field.fieldMeta!.referenceCodeClassifier!, controller: controller, onChanged: (newValue) => updateFieldValue(newValue!, field));

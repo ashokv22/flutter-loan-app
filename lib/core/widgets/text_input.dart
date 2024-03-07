@@ -8,6 +8,7 @@ class TextInput extends StatefulWidget {
     required this.onChanged,
     required this.isReadable,
     required this.isEditable,
+    required this.isRequired,
   }) : super(key: key);
 
   final String label;
@@ -15,6 +16,7 @@ class TextInput extends StatefulWidget {
   final ValueChanged<String> onChanged;
   final bool isReadable;
   final bool isEditable;
+  final bool isRequired;
 
   @override
   _TextInputState createState() => _TextInputState();
@@ -48,12 +50,12 @@ class _TextInputState extends State<TextInput> {
         onChanged: widget.onChanged,
         enabled: widget.isEditable,
         readOnly: widget.isReadable,
-        // validator: (value) {
-        //   if (value == null || value.isEmpty) {
-        //     return 'This field is required';
-        //   } 
-        //   return null;
-        // }
+        validator: widget.isRequired ? (value) {
+          if (value == null || value.isEmpty) {
+            return 'This field is required';
+          } 
+          return null;
+        } : null,
       ),
     );
   }

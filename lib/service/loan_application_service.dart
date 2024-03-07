@@ -350,9 +350,8 @@ class LoanApplicationService {
     }
   }
 
-  Future<void> saveSection(int applicantId, String sectionName, Section data) async {
+  Future<http.Response> saveSection(int applicantId, String sectionName, Section data) async {
     String endpoint = "api/application/loanApplication/sectionsData/$applicantId/Application/All?sectionName=$sectionName";
-    try {
       logger.wtf(endpoint);
       final response = await http.post(Uri.parse(apiUrl + endpoint), headers: {
         'X-AUTH-TOKEN': await authService.getAccessToken(),
@@ -360,17 +359,7 @@ class LoanApplicationService {
         }, 
         body: jsonEncode(data)
       );
-      logger.d(response.statusCode);
-      if (response.statusCode == 200) {
-        logger.i(response.statusCode);
-      }
-      else {
-        throw Exception('There\'s a problem while saving Section $sectionName. Error code: ${response.statusCode}');
-      }
-    }
-    catch (e) {
-      throw  Exception('An error occurred while getting the data: $e');
-    }
+      return response;
   }
 
   Future<void> saveSectionRP(int applicantId, String entitySubType, String sectionName, Section data) async {
