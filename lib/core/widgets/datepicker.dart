@@ -7,6 +7,7 @@ class DatePickerInput extends StatefulWidget {
   final ValueChanged<String> onChanged;
   final bool isReadable;
   final bool isEditable;
+  final bool isRequired;
 
   const DatePickerInput({
     Key? key,
@@ -15,6 +16,7 @@ class DatePickerInput extends StatefulWidget {
     required this.onChanged,
     required this.isReadable,
     required this.isEditable,
+    required this.isRequired,
   }) : super(key: key);
   
   @override
@@ -56,7 +58,6 @@ class _DatePickerInputState extends State<DatePickerInput> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 48,
       child: InkWell(
         onTap: () {
           _selectDate(context);
@@ -67,12 +68,19 @@ class _DatePickerInputState extends State<DatePickerInput> {
             decoration: InputDecoration(
               labelText: widget.label,
               border: const OutlineInputBorder(),
+              contentPadding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
             ),
-            readOnly: true,
-            enabled: widget.isEditable,
             onTap: () async {
               await _selectDate(context);
             },
+            enabled: widget.isEditable,
+            readOnly: widget.isReadable,
+            validator: widget.isRequired ? (value) {
+              if (value == null || value.isEmpty) {
+                return 'This field is required';
+              } 
+              return null;
+            } : null,
           ),
         ),
       ),

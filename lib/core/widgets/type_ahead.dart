@@ -12,12 +12,18 @@ class TypeAhead extends StatefulWidget {
     required this.controller,
     required this.onChanged,
     required this.referenceCode,
+    required this.isReadable,
+    required this.isEditable,
+    required this.isRequired,
   });
 
   final String label;
   final TextEditingController controller;
   final String referenceCode;
   final void Function(String?) onChanged;
+  final bool isReadable;
+  final bool isEditable;
+  final bool isRequired;
 
   @override
   State<TypeAhead> createState() => _TypeAheadState();
@@ -70,8 +76,9 @@ class _TypeAheadState extends State<TypeAhead> {
               labelText: widget.label,
               border: const OutlineInputBorder(),
               isDense: true,
-              contentPadding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 12),
-            )
+              contentPadding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+            ),
+            enabled: widget.isEditable,
           ),
           suggestionsCallback: (pattern) => fetchOptions(pattern),
           itemBuilder: (context, NameValueDTO option) => ListTile(

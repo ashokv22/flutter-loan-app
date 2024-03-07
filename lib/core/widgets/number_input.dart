@@ -8,6 +8,7 @@ class NumberInput extends StatefulWidget {
     required this.onChanged,
     required this.isReadable,
     required this.isEditable,
+    required this.isRequired,
   }) : super(key: key);
 
   final String label;
@@ -15,6 +16,7 @@ class NumberInput extends StatefulWidget {
   final ValueChanged<String> onChanged;
   final bool isReadable;
   final bool isEditable;
+  final bool isRequired;
 
   @override
   State<NumberInput> createState() => _NumberInputState();
@@ -37,17 +39,23 @@ class _NumberInputState extends State<NumberInput> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 48,
       child: TextFormField(
         controller: widget.controller,
         keyboardType: TextInputType.number,
         decoration: InputDecoration(
           labelText: widget.label,
           border: const OutlineInputBorder(),
+          contentPadding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
         ),
         onChanged: widget.onChanged,
         enabled: widget.isEditable,
         readOnly: widget.isReadable,
+        validator: widget.isRequired ? (value) {
+          if (value == null || value.isEmpty) {
+            return 'This field is required';
+          } 
+          return null;
+        } : null,
       ),
     );
   }

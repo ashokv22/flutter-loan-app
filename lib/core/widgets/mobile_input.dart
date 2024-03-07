@@ -8,6 +8,7 @@ class MobileInput extends StatefulWidget {
     required this.onChanged,
     required this.isReadable,
     required this.isEditable,
+    required this.isRequired,
   }) : super(key: key);
 
   final String label;
@@ -15,6 +16,7 @@ class MobileInput extends StatefulWidget {
   final ValueChanged<String> onChanged;
   final bool isReadable;
   final bool isEditable;
+  final bool isRequired;
 
     @override
   _MobileInputState createState() => _MobileInputState();
@@ -40,17 +42,23 @@ class _MobileInputState extends State<MobileInput> {
     // Build and return mobile input widget
     // Use label to configure the mobile input
     return SizedBox(
-      height: 48,
       child: TextFormField(
         controller: widget.controller,
         keyboardType: TextInputType.phone,
         decoration: InputDecoration(
           labelText: widget.label,
           border: const OutlineInputBorder(),
+          contentPadding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
         ),
         onChanged: widget.onChanged,
         readOnly: widget.isReadable,
         enabled: widget.isEditable,
+        validator: widget.isRequired ? (value) {
+          if (value == null || value.isEmpty) {
+            return 'This field is required';
+          } 
+          return null;
+        } : null,
       ),
     );
   }

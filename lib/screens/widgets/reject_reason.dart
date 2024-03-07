@@ -84,7 +84,7 @@ class _RejectReasonState extends State<RejectReason> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Referencecode(label: "Reason", controller: widget.controller, referenceCode: "reject_reason", onChanged: (newValue) => updateValue(newValue, widget.controller)),
+                  Referencecode(label: "Reason", controller: widget.controller, referenceCode: "reject_reason", onChanged: (newValue) => updateValue(newValue, widget.controller), isEditable: true, isReadable: false, isRequired: true,),
                 ],
               ),
             ),

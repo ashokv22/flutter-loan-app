@@ -23,6 +23,7 @@ class _NewLeadState extends State<NewLead> {
   Logger logger = Logger();
   final applicationService = LoanApplicationService();
   late Future<EntityConfigurationMetaData> leadApplicationFuture;
+  final GlobalKey<FormState> _formKey = GlobalKey();
   late EntityConfigurationMetaData entity;
   bool isLoading = false;
   Map<String, TextEditingController> textEditingControllerMap = {};
@@ -125,62 +126,67 @@ class _NewLeadState extends State<NewLead> {
                           Expanded(
                             child: SingleChildScrollView(
                               scrollDirection: Axis.vertical,
-                              child: Padding(
-                                padding: const EdgeInsets.all(16.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    if (entity.sections != null)
-                                       for (var section in entity.sections!)
-                                          if (section.subSections != null)
-                                            for (var subSection in section.subSections!)
-                                              Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                                  if (subSection.displayTitle!.isNotEmpty)
-                                                    SectionTitle(title: subSection.displayTitle!)
-                                                  else 
-                                                    const SectionTitle(title: "Main Section"), 
-                                                  if (subSection.fields != null)
-                                                    for (var field in subSection.fields!)
-                                                      Column(
-                                                        children: [
-                                                          buildFieldWidget(field),
-                                                          const SizedBox(height: 16.0),
-                                                        ]
-                                                      ),
-                                                  const SizedBox(height: 20.0)
-                                                ],
-                                              ),
-                                    const SizedBox(height: 15.0),
-                                    Align(
-                                      alignment: Alignment.bottomCenter,
-                                      child: SizedBox(
-                                        width: double.infinity,
-                                        height: 50,
-                                        child: MaterialButton(
-                                          onPressed: () {
-                                            onSave(entity);
-                                          },
-                                          color: const Color.fromARGB(255, 3, 71, 244),
-                                          textColor: Colors.white,
-                                          padding: const EdgeInsets.symmetric(vertical: 16.0),
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(30.0),
-                                          ),
-                                          child: isLoading ? const SizedBox(
-                                            width: 20.0,
-                                            height: 20.0,
-                                            child: CircularProgressIndicator(
-                                              strokeWidth: 2.0,
-                                              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                              child: Form(
+                                key: _formKey,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(16.0),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      if (entity.sections != null)
+                                         for (var section in entity.sections!)
+                                            if (section.subSections != null)
+                                              for (var subSection in section.subSections!)
+                                                Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    if (subSection.displayTitle!.isNotEmpty)
+                                                      SectionTitle(title: subSection.displayTitle!)
+                                                    else 
+                                                      const SectionTitle(title: "Main Section"), 
+                                                    if (subSection.fields != null)
+                                                      for (var field in subSection.fields!)
+                                                        Column(
+                                                          children: [
+                                                            buildFieldWidget(field),
+                                                            const SizedBox(height: 16.0),
+                                                          ]
+                                                        ),
+                                                    const SizedBox(height: 20.0)
+                                                  ],
+                                                ),
+                                      const SizedBox(height: 15.0),
+                                      Align(
+                                        alignment: Alignment.bottomCenter,
+                                        child: SizedBox(
+                                          width: double.infinity,
+                                          height: 50,
+                                          child: MaterialButton(
+                                            onPressed: () {
+                                              if (_formKey.currentState!.validate()) {
+                                                onSave(entity);
+                                              }
+                                            },
+                                            color: const Color.fromARGB(255, 3, 71, 244),
+                                            textColor: Colors.white,
+                                            padding: const EdgeInsets.symmetric(vertical: 16.0),
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(30.0),
                                             ),
-                                          )
-                                          : const Text('Save Changes'),
+                                            child: isLoading ? const SizedBox(
+                                              width: 20.0,
+                                              height: 20.0,
+                                              child: CircularProgressIndicator(
+                                                strokeWidth: 2.0,
+                                                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                              ),
+                                            )
+                                            : const Text('Save Changes'),
+                                          ),
                                         ),
-                                      ),
-                                    )
-                                  ],
+                                      )
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
@@ -223,19 +229,19 @@ class _NewLeadState extends State<NewLead> {
       return TextInput(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field), isEditable: field.isEditable!, isReadable: field.isReadOnly!, isRequired: field.isRequired!,);
     } 
     else if (field.fieldMeta?.fieldUiProperties?.uiComponentName!.toLowerCase() == 'referencecode' || field.fieldMeta?.fieldUiProperties?.uiComponentName == 'DropDown') {
-      return Referencecode(label: fieldName, referenceCode: field.fieldMeta!.referenceCodeClassifier!, controller: controller, onChanged: (newValue) => updateFieldValue(newValue!, field));
+      return Referencecode(label: fieldName, referenceCode: field.fieldMeta!.referenceCodeClassifier!, controller: controller, onChanged: (newValue) => updateFieldValue(newValue!, field), isEditable: field.isEditable!, isReadable: field.isReadOnly!, isRequired: field.isRequired!);
     } 
     else if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'DatePicker') {
-      return DatePickerInput(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field), isEditable: field.isEditable!, isReadable: field.isReadOnly!);
+      return DatePickerInput(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field), isEditable: field.isEditable!, isReadable: field.isReadOnly!, isRequired: field.isRequired!);
     } 
     else if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'TypeAhead') {
-      return TypeAhead(label: fieldName, referenceCode: field.fieldMeta!.referenceCodeClassifier!, controller: controller, onChanged: (newValue) => updateFieldValue(newValue!, field),);
+      return TypeAhead(label: fieldName, referenceCode: field.fieldMeta!.referenceCodeClassifier!, controller: controller, onChanged: (newValue) => updateFieldValue(newValue!, field), isEditable: field.isEditable!, isReadable: field.isReadOnly!, isRequired: field.isRequired!);
     } 
     else if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'Phone') {
-      return MobileInput(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field), isEditable: field.isEditable!, isReadable: field.isReadOnly!);
+      return MobileInput(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field), isEditable: field.isEditable!, isReadable: field.isReadOnly!, isRequired: field.isRequired!);
     }
     else if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'Number') {
-      return NumberInput(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field), isEditable: field.isEditable!, isReadable: field.isReadOnly!);
+      return NumberInput(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field), isEditable: field.isEditable!, isReadable: field.isReadOnly!, isRequired: field.isRequired!);
     }
     return const SizedBox();
   }

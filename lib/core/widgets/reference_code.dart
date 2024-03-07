@@ -10,12 +10,18 @@ class Referencecode extends StatefulWidget {
     required this.controller,
     required this.onChanged,
     required this.referenceCode,
+    required this.isReadable,
+    required this.isEditable,
+    required this.isRequired,
   }) : super(key: key);
 
   final String label;
   final TextEditingController controller;
   final String referenceCode;
   final void Function(String?) onChanged;
+  final bool isReadable;
+  final bool isEditable;
+  final bool isRequired;
 
   @override
   _ReferencecodeState createState() => _ReferencecodeState();

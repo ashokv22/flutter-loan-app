@@ -154,7 +154,7 @@ class _PrimaryKycHomeState extends State<PrimaryKycHome> {
                         },
                       ),
                       const SizedBox(height: 10,),
-                      DatePickerInput(label: "Date of birth", controller: dobController, onChanged: (newValue) => handleDateChanged(newValue), isReadable: false, isEditable: true,),
+                      DatePickerInput(label: "Date of birth", controller: dobController, onChanged: (newValue) => handleDateChanged(newValue), isReadable: false, isEditable: true, isRequired: true,),
                       const SizedBox(height: 10,),
                       TextFormField(
                         controller: aadhaarNumberController,

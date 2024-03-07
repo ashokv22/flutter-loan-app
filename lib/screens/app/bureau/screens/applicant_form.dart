@@ -143,17 +143,17 @@ void onChange(String value, TextEditingController controller) {
                     const SizedBox(height: 20),
                     Row(
                       children: [
-                        Expanded(child: Referencecode(label: "Product", referenceCode: "product", controller: product, onChanged: (newValue) => onChange(newValue!, product))),
+                        Expanded(child: Referencecode(label: "Product", referenceCode: "product", controller: product, onChanged: (newValue) => onChange(newValue!, product), isEditable: true, isReadable: false, isRequired: true)),
                         const SizedBox(width: 10,),
-                        Expanded(child: Referencecode(label: "Enquiry", referenceCode: "enquiry", controller: enquiry, onChanged: (newValue) => onChange(newValue!, enquiry))),
+                        Expanded(child: Referencecode(label: "Enquiry", referenceCode: "enquiry", controller: enquiry, onChanged: (newValue) => onChange(newValue!, enquiry), isEditable: true, isReadable: false, isRequired: true)),
                       ],
                     ),
                     const SizedBox(height: 20),
                     Row(
                       children: [
-                        Expanded(child: NumberInput(label: "Internal Ref No", controller: internalRefNo, onChanged: (newValue) {}, isEditable: true, isReadable: false)),
+                        Expanded(child: NumberInput(label: "Internal Ref No", controller: internalRefNo, onChanged: (newValue) {}, isEditable: true, isReadable: false, isRequired: true)),
                         const SizedBox(width: 10,),
-                        Expanded(child: NumberInput(label: "Loan Amount", controller: loanAMount, onChanged: (newValue) {}, isEditable: true, isReadable: false)),
+                        Expanded(child: NumberInput(label: "Loan Amount", controller: loanAMount, onChanged: (newValue) {}, isEditable: true, isReadable: false, isRequired: true)),
                       ],
                     ),
                     const SizedBox(height: 20),
@@ -171,21 +171,21 @@ void onChange(String value, TextEditingController controller) {
                     const SizedBox(height: 20),
                     Row(
                       children: [
-                        Expanded(child: MobileInput(label: "Mobile No", controller: mobile, onChanged: (newValue) {}, isEditable: true, isReadable: false)),
+                        Expanded(child: MobileInput(label: "Mobile No", controller: mobile, onChanged: (newValue) {}, isEditable: true, isReadable: false, isRequired: true)),
                         const SizedBox(width: 10,),
-                        Expanded(child: DatePickerInput(label: "Date of Birth", controller: dob, onChanged: (newValue) => handleDateChanged(newValue), isEditable: true, isReadable: false)),
+                        Expanded(child: DatePickerInput(label: "Date of Birth", controller: dob, onChanged: (newValue) => handleDateChanged(newValue), isEditable: true, isReadable: false, isRequired: true)),
                       ],
                     ),
                     const SizedBox(height: 20),
                     Row(
                       children: [
-                        Expanded(child: Referencecode(label: "Gender", referenceCode: "gender", controller: gender, onChanged: (newValue) => onChange(newValue!, gender))),
+                        Expanded(child: Referencecode(label: "Gender", referenceCode: "gender", controller: gender, onChanged: (newValue) => onChange(newValue!, gender), isEditable: true, isReadable: false, isRequired: true)),
                         const SizedBox(width: 10,),
-                        Expanded(child: Referencecode(label: "Marital Status", referenceCode: "marital_status", controller: maritalStatus, onChanged: (newValue) => onChange(newValue!, maritalStatus))),
+                        Expanded(child: Referencecode(label: "Marital Status", referenceCode: "marital_status", controller: maritalStatus, onChanged: (newValue) => onChange(newValue!, maritalStatus), isEditable: true, isReadable: false, isRequired: true)),
                       ],
                     ),
                     const SizedBox(height: 20),
-                    MobileInput(label: "Alternate Mobile No", controller: alternateMobile, onChanged: (newValue) {}, isEditable: true, isReadable: false),
+                    MobileInput(label: "Alternate Mobile No", controller: alternateMobile, onChanged: (newValue) {}, isEditable: true, isReadable: false, isRequired: true),
                     const SizedBox(height: 20),
                     TextInput(label: "Address Line 1", controller: address1, onChanged: (newValue) {}, isEditable: true, isReadable: false, isRequired: true,),
                     const SizedBox(height: 20),
@@ -193,7 +193,7 @@ void onChange(String value, TextEditingController controller) {
                     const SizedBox(height: 20),
                     Row(
                       children: [
-                        Expanded(child: NumberInput(label: "Pincode", controller: pincode, onChanged: (newValue) {}, isEditable: true, isReadable: false)),
+                        Expanded(child: NumberInput(label: "Pincode", controller: pincode, onChanged: (newValue) {}, isEditable: true, isReadable: false, isRequired: true)),
                         const SizedBox(width: 10,),
                         Expanded(child: TextInput(label: "Landmark", controller: landMark, onChanged: (newValue) {}, isEditable: true, isReadable: false, isRequired: true,)),
                       ],

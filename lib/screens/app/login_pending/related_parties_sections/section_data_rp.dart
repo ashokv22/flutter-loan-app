@@ -219,7 +219,7 @@ class _SectionScreenRPState extends State<SectionScreenRP> {
 
     if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'TextBox') {
       if (['Integer', 'BigDecimal'].toList().contains(field.fieldMeta?.dataType)) {
-        return NumberInput(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field), isEditable: field.isEditable!, isReadable: field.isReadOnly!);
+        return NumberInput(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field), isEditable: field.isEditable!, isReadable: field.isReadOnly!, isRequired: field.isRequired!);
       } else {
         return TextInput(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field), isEditable: field.isEditable!, isReadable: field.isReadOnly!, isRequired: field.isRequired!,);
       }
@@ -237,19 +237,19 @@ class _SectionScreenRPState extends State<SectionScreenRP> {
       return TextInput(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field), isEditable: field.isEditable!, isReadable: field.isReadOnly!, isRequired: field.isRequired!,);
     } 
     else if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'Referencecode' || field.fieldMeta?.fieldUiProperties?.uiComponentName == 'DropDown') {
-      return Referencecode(label: fieldName, referenceCode: field.fieldMeta!.referenceCodeClassifier!, controller: controller, onChanged: (newValue) => updateFieldValue(newValue!, field));
+      return Referencecode(label: fieldName, referenceCode: field.fieldMeta!.referenceCodeClassifier!, controller: controller, onChanged: (newValue) => updateFieldValue(newValue!, field), isEditable: field.isEditable!, isReadable: field.isReadOnly!, isRequired: field.isRequired!);
     } 
     // else if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'DropDown') {
     //   return DropDown(label: fieldName, options: const ['Abcd', 'Def'], controller: controller, onChanged: (newValue) => updateFieldValue(newValue!, field));
     // } 
     else if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'DatePicker') {
-      return DatePickerInput(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field), isEditable: field.isEditable!, isReadable: field.isReadOnly!);
+      return DatePickerInput(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field), isEditable: field.isEditable!, isReadable: field.isReadOnly!, isRequired: field.isRequired!);
     } 
     else if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'TypeAhead') {
-      return TypeAhead(label: fieldName, referenceCode: field.fieldMeta!.referenceCodeClassifier!, controller: controller, onChanged: (newValue) => updateFieldValue(newValue!, field));
+      return TypeAhead(label: fieldName, referenceCode: field.fieldMeta!.referenceCodeClassifier!, controller: controller, onChanged: (newValue) => updateFieldValue(newValue!, field), isEditable: field.isEditable!, isReadable: field.isReadOnly!, isRequired: field.isRequired!);
     } 
     else if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'Phone') {
-      return MobileInput(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field), isEditable: field.isEditable!, isReadable: field.isReadOnly!);
+      return MobileInput(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field), isEditable: field.isEditable!, isReadable: field.isReadOnly!, isRequired: field.isRequired!);
     }
     else if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'RadioButton') {
       return CustomCheckBox(label: fieldName, initialValue: false, onChanged: (newValue) => updateFieldValue(newValue.toString(), field),);
