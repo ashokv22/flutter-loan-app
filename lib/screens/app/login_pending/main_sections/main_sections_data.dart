@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:origination/models/login_flow/sections/loan_application_entity.dart';
 import 'package:origination/screens/app/bureau/screens/bureau_check_list.dart';
+import 'package:origination/screens/app/login_pending/main_sections/helper_widgets/confirm_delete_sheet.dart';
 // import 'package:origination/screens/app/login_pending/main_sections/document_upload.dart';
 // import 'package:origination/screens/app/login_pending/main_sections/land_and_crop_details.dart';
 // import 'package:origination/screens/app/login_pending/number_advanced.dart';
@@ -188,7 +189,18 @@ class _MainSectionsDataState extends State<MainSectionsData> {
                                                 const SizedBox(width: 10,),
                                                 InkWell(
                                                   onTap: () {
-                                                    confirmDeleteDialog(context, section);
+                                                    showModalBottomSheet(
+                                                      context: context,
+                                                      builder: (context) => SizedBox(
+                                                        width: MediaQuery.of(context).size.width, 
+                                                        child: ConfirmDeleteSheet(
+                                                          onDeleted: () {
+                                                            refreshScreen();
+                                                          },
+                                                          loanApplicationId: widget.id,
+                                                          section: section
+                                                        )),
+                                                    );
                                                   },
                                                   child: const HeroIcon(
                                                     HeroIcons.trash,
@@ -244,70 +256,6 @@ class _MainSectionsDataState extends State<MainSectionsData> {
                     return Container();
                   }
                 )
-              )
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Future<dynamic> confirmDeleteDialog(BuildContext context, LoanSection section) {
-    logger.v(section.toJson());
-    return showDialog(
-      context: context,
-      builder: (context) => Dialog(
-        child: Container(
-          padding: const EdgeInsets.all(12.0),
-          decoration: BoxDecoration(
-            shape: BoxShape.rectangle,
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(20.0),
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Image.asset("assets/crisis.png", fit: BoxFit.cover, height: 70),
-              const SizedBox(height: 15.0),
-              const Text('Delete Section', 
-                textAlign: TextAlign.center, 
-                style: TextStyle(fontWeight: FontWeight.w600, fontSize: 24)
-              ),
-              const SizedBox(height: 15.0),
-              const Text('Even the Time Stone won’t bring this back!', textAlign: TextAlign.center,),
-              const SizedBox(height: 30,),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: OutlinedButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      style: OutlinedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 12.0),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30.0),
-                        ),
-                      ),
-                      child: const Text('Nope, Keep it.', style: TextStyle(color: Colors.black),),
-                    ),
-                  ),
-                  const SizedBox(width: 10,),
-                  Expanded(
-                    child: MaterialButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      color: Colors.red,
-                      padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 12.0),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30.0),
-                      ),
-                      child: const Text('Yes, Delete!', style: TextStyle(color: Colors.white)),
-                    ),
-                  ),
-                ],
               )
             ],
           ),

@@ -99,4 +99,20 @@ class LoginPendingService {
     }
   }
 
+  Future<void> deleteSection(int loanApplicationId, String sectionName) async {
+    final url = Uri.parse('api/application/loanApplication/sectionsData/$loanApplicationId?sectionName=$sectionName');
+    try {
+      final response = await authInterceptor.delete(url);
+      logger.i('Response: $response');
+      if (response.statusCode != 200) {
+        logger.e('Failed to delete section: ${response.statusCode}');
+        throw Exception('Failed to delete section: ${response.statusCode}');
+      }
+    } catch (error) {
+      // An error occurred while deleting section, show error in bottom sheet
+      logger.e('Error deleting section: $error');
+      rethrow;
+    }
+  }
+
 }
