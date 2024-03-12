@@ -17,8 +17,8 @@ class LoginPendingService {
   Logger logger = Logger();
   final apiUrl = Environment.baseUrl;
 
-  Future<List<LoginPendingProductsDTO>> getPendingProducts() async {
-    String endpoint = "api/application/loanApplication/lead/loginPending";
+  Future<List<LoginPendingProductsDTO>> getPendingProducts(int page) async {
+    String endpoint = "api/application/loanApplication/lead/loginPending?page=$page&size=10&sort=id,desc";
     try {
       final response = await authInterceptor.get(Uri.parse(endpoint));
       if (response.statusCode == 200) {

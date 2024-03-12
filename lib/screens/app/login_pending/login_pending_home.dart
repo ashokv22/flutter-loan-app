@@ -10,8 +10,11 @@ import 'package:origination/service/login_flow_service.dart';
 
 class LoginPendingHome extends StatefulWidget {
   const LoginPendingHome({
-    super.key,
+    super.key, 
+    required this.total,
   });
+
+  final int total;
 
   @override
   State<LoginPendingHome> createState() => _LoginPendingHomeState();
@@ -20,6 +23,12 @@ class LoginPendingHome extends StatefulWidget {
 class _LoginPendingHomeState extends State<LoginPendingHome> {
 
   final loginPendingService = LoginPendingService();
+  final _scrollController = ScrollController();
+  // Pgination
+  int page = 0;
+  int defaultPageSize = 10;
+  List<LoginPendingProductsDTO> items = [];
+  
   var logger = Logger();
   late Future<List<LoginPendingProductsDTO>> pendingProductsFuture;
   final ProductsSharedUtilService _productsSharedUtilService = ProductsSharedUtilService();
@@ -28,19 +37,39 @@ class _LoginPendingHomeState extends State<LoginPendingHome> {
   @override
   void initState() {
     super.initState();
-    // refreshLeadsSummary(); // Fetch leads summary on widget initialization
     _initializeServices();
-  }
-
-  Future<void> refreshLeadsSummary() async {
-    setState(() {
-      pendingProductsFuture = loginPendingService.getPendingProducts();
+    
+    _scrollController.addListener(() async {
+      if (_scrollController.position.maxScrollExtent == _scrollController.offset) {
+        _fetchNextPage();
+      }
     });
   }
 
+  Future<void> refreshLeadsSummary() async {
+    final products = await loginPendingService.getPendingProducts(page);
+    setState(() {
+      items.clear(); // Clear existing items
+      items.addAll(products);
+      page = 1; // Reset page count
+    });
+  }
+
+  Future<void> _fetchNextPage() async {
+    final nextPage = page + 1;
+    final result = await loginPendingService.getPendingProducts(nextPage);
+
+    if (result.isNotEmpty) {
+      setState(() {
+        logger.wtf("Page length: ${result.length}");
+        items.addAll(result);
+        page = nextPage; // Update page count
+      });
+    }
+  }
+
   Future<void> _initializeServices() async {
-    // await _productsSharedUtilService.initSharedPreferences();
-    refreshLeadsSummary(); // Fetch leads summary after initializing SharedPreferences
+    pendingProductsFuture = loginPendingService.getPendingProducts(page);
   }
 
   String getNamesByType(List<Individual> applicants, IndividualType type) {
@@ -128,6 +157,7 @@ class _LoginPendingHomeState extends State<LoginPendingHome> {
                   ),
                 ),
               ),
+              Text("Total: ${widget.total} \t Page: $page \t List size: ${items.length}", textAlign: TextAlign.left,),
               Expanded(
                 child: FutureBuilder<List<LoginPendingProductsDTO>>(
                   future: pendingProductsFuture,
@@ -147,8 +177,12 @@ class _LoginPendingHomeState extends State<LoginPendingHome> {
                     } else if (snapshot.hasData) {
                       List<LoginPendingProductsDTO> products = snapshot.data!;
                       List<LoginPendingProductsDTO> filteredList = [];
+                      // Add the retrieved products to the global list
+                      if (items.isEmpty) {
+                        items.addAll(products);
+                      }
 
-                      if (products.isEmpty) {
+                      if (items.isEmpty) {
                         return const SizedBox(
                           width: double.infinity,
                           height: double.infinity,
@@ -164,12 +198,12 @@ class _LoginPendingHomeState extends State<LoginPendingHome> {
                       // Filter products based on search input
                       if (_searchController.text.isNotEmpty) {
                         String searchTerm = _searchController.text.toLowerCase();
-                        filteredList = products.where((product) {
+                        filteredList = items.where((product) {
                           List<String> firstNames = product.applicants.map((applicant) => applicant.firstName ?? '').toList();
                           return firstNames.any((name) => name.toLowerCase().contains(searchTerm.toLowerCase()));
                         }).toList();
                       } else {
-                        filteredList = List.from(products);
+                        filteredList = List.from(items);
                       }
 
                       if (filteredList.isEmpty) {
@@ -188,15 +222,17 @@ class _LoginPendingHomeState extends State<LoginPendingHome> {
                       }
                       
                       return ListView.builder(
-                        itemCount: filteredList.length,
+                        controller: _scrollController,
+                        itemCount: filteredList.length + 1,
                         itemBuilder: (context, index) {
-                          // Data
+                          if (index < filteredList.length) {
+                            // Data
                           LoginPendingProductsDTO product = filteredList[index];
                           String applicantName = getNamesByType(product.applicants, IndividualType.APPLICANT);
                           String coApplicantNames = getNamesByType(product.applicants, IndividualType.CO_APPLICANT);
                           String guarantorNames = getNamesByType(product.applicants, IndividualType.GUARANTOR);
                           double percentage =  getPercentage(product.completedSections, product.totalSections);
-                          return GestureDetector(
+                            return GestureDetector(
                             onTap: () {
                               setProductToShared(product.id, applicantName, product.completedSections);
                               Navigator.push(context, MaterialPageRoute(builder: (context) => MainSectionsData(id: product.id, completedSections: product.completedSections)));
@@ -232,11 +268,17 @@ class _LoginPendingHomeState extends State<LoginPendingHome> {
                                             Column(
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
-                                                Text("Product: ${product.id}",
-                                                  style: const TextStyle(
-                                                    fontSize: 14,
-                                                    fontWeight: FontWeight.w600
-                                                  ),
+                                                Row(
+                                                  children: [
+                                                    Text("Product: ${product.id}",
+                                                      style: const TextStyle(
+                                                        fontSize: 14,
+                                                        fontWeight: FontWeight.w600
+                                                      ),
+                                                    ),
+                                                    const SizedBox(width: 10,),
+                                                    Text("Index: $index",),
+                                                  ],
                                                 ),
                                                 Text(
                                                   product.product,
@@ -393,6 +435,33 @@ class _LoginPendingHomeState extends State<LoginPendingHome> {
                               ),
                             ),
                           );
+                          } else {
+                            if (items.length >= widget.total) {
+                              // Display "That's all" message
+                              return const Center(
+                                child: Center(
+                                  child: Padding(
+                                    padding: EdgeInsets.all(12.0),
+                                    child: Text(
+                                      "You've reached the end!",
+                                      style: TextStyle(fontSize: 16, color: Colors.white),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            } else {
+                              return const Padding(
+                                padding: EdgeInsets.symmetric(vertical: 30),
+                                child: Center(child: SizedBox(
+                                  height: 30,
+                                  width: 30,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 3.0,
+                                  ),
+                                ),),
+                              );
+                            }
+                          }
                         }
                       );
                     } else {

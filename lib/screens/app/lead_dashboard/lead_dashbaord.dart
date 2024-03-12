@@ -8,7 +8,6 @@ import 'package:origination/screens/app/lead/stage_leads_list.dart';
 import 'package:origination/screens/app/login_pending/login_pending_home.dart';
 import 'package:origination/screens/widgets/side_menu.dart';
 import 'package:origination/service/auth_service.dart';
-// import 'package:origination/screens/widgets/products.dart';
 import 'package:origination/service/loan_application_service.dart';
 import 'package:heroicons/heroicons.dart';
 
@@ -34,11 +33,9 @@ class _LeadDashboardState extends State<LeadDashboard> {
   void initState() {
     super.initState();
     _initializeServices();
-    // refreshLeadsSummary();
   }
 
   Future<void> _initializeServices() async {
-    // await productUtilService.initSharedPreferences();
     await refreshLeadsSummary();
   }
 
@@ -184,7 +181,7 @@ class _LeadDashboardState extends State<LeadDashboard> {
                           return GestureDetector(
                             onTap: () {
                               if (summary.stage == ApplicationStage.LOGIN_PENDING.name) {
-                                Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginPendingHome()));
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPendingHome(total: summary.count)));
                               } else {
                                 Navigator.push(context, MaterialPageRoute(builder: (context) => StageLeadList(stage: summary.stage)));
                               }
