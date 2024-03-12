@@ -350,6 +350,10 @@ class _StageLeadListState extends State<StageLeadList> {
   }
 
   SnackBar customSnackBar(bool isDarkTheme, String text) {
+    final ScaffoldMessengerState scaffoldMessenger = ScaffoldMessenger.of(context);
+    // Remove any existing snackbars
+    scaffoldMessenger.removeCurrentSnackBar();
+
     final animationController = AnimationController(
       vsync: ScaffoldMessenger.of(context),
       duration: const Duration(milliseconds: 500),
