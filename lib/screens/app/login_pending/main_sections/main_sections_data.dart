@@ -4,6 +4,7 @@ import 'package:logger/logger.dart';
 import 'package:origination/models/login_flow/sections/loan_application_entity.dart';
 import 'package:origination/screens/app/bureau/screens/bureau_check_list.dart';
 import 'package:origination/screens/app/login_pending/main_sections/helper_widgets/confirm_delete_sheet.dart';
+import 'package:origination/screens/app/login_pending/main_sections/helper_widgets/submit_dialog.dart';
 // import 'package:origination/screens/app/login_pending/main_sections/document_upload.dart';
 // import 'package:origination/screens/app/login_pending/main_sections/land_and_crop_details.dart';
 // import 'package:origination/screens/app/login_pending/number_advanced.dart';
@@ -11,8 +12,8 @@ import 'package:origination/screens/app/login_pending/related_parties_sections/r
 import 'package:origination/screens/app/login_pending/main_sections/section_data.dart';
 import 'package:origination/screens/app/login_pending/typeahead_test.dart';
 import 'package:origination/service/login_flow_service.dart';
-import 'package:swipeable_button_view/swipeable_button_view.dart';
-import '../consent/consent_screen.dart';
+// import 'package:swipeable_button_view/swipeable_button_view.dart';
+// import '../consent/consent_screen.dart';
 import 'package:heroicons/heroicons.dart';
 
 class MainSectionsData extends StatefulWidget {
@@ -229,24 +230,47 @@ class _MainSectionsDataState extends State<MainSectionsData> {
                               padding: const EdgeInsets.all(8.0),
                               child: Align(
                                 alignment: Alignment.bottomCenter,
-                                child: SwipeableButtonView(
-                                  buttonText: "Swipe to Save Loan",
-                                  buttonWidget: const Icon(
-                                    Icons.arrow_forward_ios_rounded,
-                                    color: Colors.grey,
+                                
+                                child: SizedBox(
+                                  width: double.infinity,
+                                  height: 50,
+                                  child: MaterialButton(
+                                    onPressed: () {
+                                      showModalBottomSheet(
+                                          context: context, 
+                                          builder: (context) => SizedBox(
+                                            width: MediaQuery.of(context).size.width, 
+                                            child: SubmitDialog(loanApplicationId: widget.id)
+                                          )
+                                        );
+                                    },
+                                    color: const Color.fromARGB(255, 3, 71, 244),
+                                    textColor: Colors.white,
+                                    padding: const EdgeInsets.symmetric(vertical: 16.0),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(30.0),
+                                    ),
+                                    child: const Text('Save Changes'),
                                   ),
-                                  activeColor: const Color(0xFF009C41),
-                                  isFinished: isFinished,
-                                  onWaitingProcess: () {
-                                    Future.delayed(const Duration(seconds: 2), () {
-                                      setState(() {
-                                        isFinished = true;
-                                      });
-                                      Navigator.push(context, MaterialPageRoute(builder: (context) => ConsentScreen(id: widget.id),));
-                                    });
-                                  },
-                                  onFinish: () {}
                                 ),
+                                // child: SwipeableButtonView(
+                                //   buttonText: "Swipe to Save Loan",
+                                //   buttonWidget: const Icon(
+                                //     Icons.arrow_forward_ios_rounded,
+                                //     color: Colors.grey,
+                                //   ),
+                                //   activeColor: const Color(0xFF009C41),
+                                //   isFinished: isFinished,
+                                //   onWaitingProcess: () {
+                                //     Future.delayed(const Duration(seconds: 2), () {
+                                //       setState(() {
+                                //         isFinished = true;
+                                //       });
+                                //       Navigator.push(context, MaterialPageRoute(builder: (context) => ConsentScreen(id: widget.id),));
+                                //     });
+                                //   },
+                                //   onFinish: () {}
+                                // ),
                               ),
                             ) : Container(),
                           ],

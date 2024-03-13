@@ -237,6 +237,31 @@ class _LoginPendingHomeState extends State<LoginPendingHome> {
                               setProductToShared(product.id, applicantName, product.completedSections);
                               Navigator.push(context, MaterialPageRoute(builder: (context) => MainSectionsData(id: product.id, completedSections: product.completedSections)));
                             },
+                            onLongPress: () {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: const Text('Please Confirm'),
+                                    content: const Text(
+                                        "Are you sure you want to delete the lead?"),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: const Text('Yes')),
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: const Text('No'),
+                                      )
+                                    ],
+                                  );
+                                }
+                              );
+                            },
                             child: Container(
                               margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
                               padding: const EdgeInsets.all(0.0),
@@ -276,8 +301,6 @@ class _LoginPendingHomeState extends State<LoginPendingHome> {
                                                         fontWeight: FontWeight.w600
                                                       ),
                                                     ),
-                                                    const SizedBox(width: 10,),
-                                                    Text("Index: $index",),
                                                   ],
                                                 ),
                                                 Text(

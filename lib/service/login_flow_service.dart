@@ -115,4 +115,20 @@ class LoginPendingService {
     }
   }
 
+  Future<http.Response> submitLoanApplication(int applicantId) async {
+    String endpoint = "api/application/loanApplication/lead/submit/$applicantId/Application/All";
+    Map body = {
+      "CustID": applicantId,
+      "CustOTP": "000000",
+      "CustMobileNo": "9916315365"
+    };
+    final response = await http.post(Uri.parse(apiUrl + endpoint), headers: {
+      'X-AUTH-TOKEN': await authService.getAccessToken(),
+      'Content-Type': 'application/json',
+      },
+      body: jsonEncode(body),
+    );
+    return response;
+  }
+
 }
