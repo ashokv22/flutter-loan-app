@@ -24,32 +24,34 @@ class _SubmitDialogState extends State<SubmitDialog> {
   bool isLoading = false;
   bool isError = false;
   String errorMessage = '';
+  int statusCode = 0;
 
   void submitLoanApplication() async {
     setState(() {
       isLoading = true;
       errorMessage = '';
     });
-    await Future.delayed(const Duration(seconds: 3));
+    await Future.delayed(const Duration(seconds: 2));
     try {
       loginPendingService.submitLoanApplication(widget.loanApplicationId)
         .then((response) {
           setState(() {
             isLoading = false;
+            statusCode = response.statusCode;
           });
-          logger.i('Satus: ${response.statusCode}, body: ${response.body}');
+          logger.i('Status: ${response.statusCode}, body: ${response.body}');
           if (response.statusCode == 200) {
             Navigator.pop(context);
-          } else if (response.statusCode == 400) {
+          } else if (response.statusCode == 400 || response.statusCode == 406) {
+            setState(() {
+              isLoading = false;
+              isError = true;
+            });
             errorMessage = response.body;
-            Navigator.of(context).pop();
-            _showBottomSheet(context, errorMessage, response.statusCode);
+            // Navigator.of(context).pop();
+            // _showBottomSheet(errorMessage, response.statusCode);
           } else if (response.statusCode == 404) {
             errorMessage = response.body;
-          } else if (response.statusCode == 406) {
-            errorMessage = jsonDecode(response.body)['errors'];
-            Navigator.of(context).pop();
-            _showBottomSheet(context, errorMessage, response.statusCode);
           } else {
             // Handle other error codes
             errorMessage = response.body;
@@ -75,10 +77,10 @@ class _SubmitDialogState extends State<SubmitDialog> {
 
   }
 
-  void _showBottomSheet(BuildContext context, String message, int statusCode) {
+  void _showBottomSheet(String message, int statusCode) {
     showModalBottomSheet(
       context: context,
-      builder: (BuildContext context) {
+      builder: (context) {
         return Container(
           padding: const EdgeInsets.all(16.0),
           child: Column(
@@ -203,14 +205,53 @@ class _SubmitDialogState extends State<SubmitDialog> {
           ),
           Visibility(
             visible: isError, // Show the error container if isError is true
-            child: Container(
-              padding: const EdgeInsets.all(10.0),
-              child: Text(
-                errorMessage,
-                style: const TextStyle(
-                  fontSize: 16,
-                ),
-              ),
+            child: Column(
+              children: [
+                if (statusCode == 406) ...[
+                  const SizedBox(height: 10),
+                  const Icon(Icons.pending_outlined, size: 50, color: Colors.amber,),
+                  const SizedBox(height: 10),
+                  const Text("Sections pending", style: TextStyle(fontWeight: FontWeight.w700, fontSize: 20)),
+                  const SizedBox(height: 10),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      errorMessage,
+                      style: const TextStyle(fontSize: 14.0),
+                    ),
+                  )
+                ]
+                else if (statusCode == 400)... [
+                  const SizedBox(height: 10),
+                  const Icon(Icons.rule_rounded, size: 50, color: Colors.amber,),
+                  const SizedBox(height: 10),
+                  Text(jsonDecode(errorMessage)['message'], style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 20)),
+                  const SizedBox(height: 10),
+                  Column(
+                    children: [
+                      Text(
+                        'Total Errors: ${(jsonDecode(errorMessage)['errors'] as List<dynamic>).length}',
+                        style: const TextStyle(fontSize: 16.0),
+                      ),
+                      const SizedBox(height: 10),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ListView(
+                          shrinkWrap: true,
+                          children: (jsonDecode(errorMessage)['errors'] as List<dynamic>).map<Widget>((error) {
+                            return Text(
+                              '${error.toString()}\n',
+                                style: GoogleFonts.sourceCodePro(
+                                  fontSize: 14.0,
+                                )
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                    ],
+                  )
+                ]
+              ],
             ),
           )
         ],

@@ -238,9 +238,12 @@ class _MainSectionsDataState extends State<MainSectionsData> {
                                     onPressed: () {
                                       showModalBottomSheet(
                                           context: context, 
-                                          builder: (context) => SizedBox(
-                                            width: MediaQuery.of(context).size.width, 
-                                            child: SubmitDialog(loanApplicationId: widget.id)
+                                          builder: (context) => ConstrainedBox(
+                                            constraints: const BoxConstraints(minHeight: 150),
+                                            child: SizedBox(
+                                              width: MediaQuery.of(context).size.width, 
+                                              child: SubmitDialog(loanApplicationId: widget.id)
+                                            ),
                                           )
                                         );
                                     },
