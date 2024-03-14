@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:heroicons/heroicons.dart';
+import 'package:origination/environments/environment.dart';
+import 'package:origination/models/utils/server_type.dart';
 import 'package:origination/screens/sign_in/sign_in.dart';
 import 'package:origination/service/auth_service.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
@@ -18,7 +20,7 @@ class SideMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AuthService authService = AuthService();
-    String selectedServer = 'Local';
+    ServerType selectedServer = Environment.currentServerType;
 
     return Drawer(
       child: FutureBuilder<Map<String, dynamic>>(
@@ -60,41 +62,46 @@ class SideMenu extends StatelessWidget {
             ),
             ListTile(
               leading: const HeroIcon(HeroIcons.serverStack),
-              title: DropdownButtonFormField<String>(
+              title: DropdownButtonFormField<ServerType>(
                 decoration: const InputDecoration(
                   border: InputBorder.none,
                 ),
                 value: selectedServer,
-                items: <String>['Local', 'Dev', 'Staging']
-                    .map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
+                items: ServerType.values.map((ServerType value) {
+                  return DropdownMenuItem<ServerType>(
                     value: value,
-                    child: Text(value),
+                    child: Text(value.toString().split('.').last),
                   );
                 }).toList(),
-                onChanged: (String? value) {
+                onChanged: (ServerType? value) {
                   if (value != null) {
                     selectedServer = value;
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {
                         return AlertDialog(
-                          title: Text('Confirm Server Switch'),
+                          title: const Text('Confirm Server Switch'),
                           content: Text('Are you sure you want to switch to $value server?'),
                           actions: <Widget>[
                             TextButton(
                               onPressed: () {
                                 Navigator.of(context).pop();
                               },
-                              child: Text('Cancel'),
+                              child: const Text('No'),
                             ),
                             TextButton(
                               onPressed: () {
                                 // Perform server switch logic here
                                 selectedServer = value;
-                                Navigator.of(context).pop();
+                                Environment.setServerType(selectedServer);
+                                AuthService.signOut().then((_) => 
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => const SignIn()),
+                                  )
+                                );
                               },
-                              child: Text('Confirm'),
+                              child: const Text('Switch'),
                             ),
                           ],
                         );

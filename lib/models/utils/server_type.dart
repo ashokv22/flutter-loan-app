@@ -1,0 +1,1 @@
+enum ServerType { local, localStatic, development, staging }

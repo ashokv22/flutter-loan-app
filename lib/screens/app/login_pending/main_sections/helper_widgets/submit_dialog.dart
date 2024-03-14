@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:origination/service/login_flow_service.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lottie/lottie.dart';
 
 class SubmitDialog extends StatefulWidget {
   const SubmitDialog({super.key, 
@@ -31,7 +32,7 @@ class _SubmitDialogState extends State<SubmitDialog> {
       isLoading = true;
       errorMessage = '';
     });
-    await Future.delayed(const Duration(seconds: 2));
+    await Future.delayed(const Duration(seconds: 5));
     try {
       loginPendingService.submitLoanApplication(widget.loanApplicationId)
         .then((response) {
@@ -195,8 +196,20 @@ class _SubmitDialogState extends State<SubmitDialog> {
                     ),
                   ],
                 )]
+                // else...[
+                //     const CircularProgressIndicator(),
+                //     const SizedBox(height: 10.0),
+                //     const Text('Submitting, This may take a while...'),
+                //   ]
                 else...[
-                    const CircularProgressIndicator(),
+                    LottieBuilder.asset(
+                      'assets/animations/rocket_launch_modified.json',
+                      width: 100,
+                      height: 100,
+                      fit: BoxFit.fill,
+                      animate: true,
+                      repeat: false,
+                    ),
                     const SizedBox(height: 10.0),
                     const Text('Submitting, This may take a while...'),
                   ]
