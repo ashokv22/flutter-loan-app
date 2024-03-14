@@ -4,8 +4,11 @@ import 'package:origination/core/utils/loan_amount_formatter.dart';
 import 'package:origination/core/utils/products_shared_utils.dart';
 import 'package:origination/models/stage.dart';
 import 'package:origination/models/summaries/dashboard_summary.dart';
+import 'package:origination/screens/app/lead/new_lead.dart';
+import 'package:origination/screens/app/lead/search_new.dart';
 import 'package:origination/screens/app/lead/stage_leads_list.dart';
 import 'package:origination/screens/app/login_pending/login_pending_home.dart';
+import 'package:origination/screens/pages/profile/profile_screen.dart';
 import 'package:origination/screens/widgets/side_menu.dart';
 import 'package:origination/service/auth_service.dart';
 import 'package:origination/service/loan_application_service.dart';
@@ -52,6 +55,34 @@ class _LeadDashboardState extends State<LeadDashboard> {
       _selectedItemIndex = index;
     });
     Navigator.pop(context);
+    // Navigate to the corresponding page based on the selected index
+  switch (index) {
+    case 0:
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const LeadDashboard()),
+      );
+      break;
+    case 1:
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const NewLead()),
+      );
+      break;
+    case 2:
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const SearchPage()),
+      );
+      break;
+    case 3:
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const ProfileScreen()),
+      );
+      break;
+    // Add cases for other menu items if needed
+  }
   }
 
   @override

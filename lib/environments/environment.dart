@@ -5,21 +5,21 @@ class Environment {
 
   //Default Dev server
   static String baseUrl = 'http://13.127.65.162/server/';
-  static ServerType currentServerType = ServerType.development;
+  static ServerType currentServerType = ServerType.Development;
 
   static void setServerType(ServerType type) async {
     
     switch (type) {
-      case ServerType.local:
+      case ServerType.Local:
         baseUrl = 'http://172.20.10.3:8080/';     // Local
         break;
-      case ServerType.localStatic:
-        baseUrl = 'http://192.168.2.254:8080/';   // Local static
+      case ServerType.LocalStatic:
+        baseUrl = 'http://192.168.2.130:8080/';   // Local static
         break;
-      case ServerType.development:
+      case ServerType.Development:
         baseUrl = 'http://13.127.65.162/server/'; // Dev
         break;
-      case ServerType.staging:
+      case ServerType.Staging:
         baseUrl = 'http://13.127.140.32/server/'; // Staging
         break;
     }
@@ -43,8 +43,8 @@ class Environment {
       currentServerType = ServerType.values[serverIndex];
       setServerType(currentServerType); // Update baseUrl
     } else {
-      currentServerType = ServerType.development; // Default to development server type
-      await saveServerType(ServerType.development); // Store default value in local storage
+      currentServerType = ServerType.Development; // Default to development server type
+      await saveServerType(ServerType.Development); // Store default value in local storage
     }
   }
 }
