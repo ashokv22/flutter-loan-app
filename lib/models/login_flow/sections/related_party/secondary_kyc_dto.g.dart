@@ -13,7 +13,9 @@ SecondaryKYCDTO _$SecondaryKYCDTOFromJson(Map<String, dynamic> json) =>
       panNumber: json['panNumber'] as String,
       name: json['name'] as String,
       fatherName: json['fatherName'] as String?,
-      dateOfBirth: DateTime.parse(json['dateOfBirth'] as String),
+      dateOfBirth: json['dateOfBirth'] == null
+          ? null
+          : DateTime.parse(json['dateOfBirth'] as String),
       isVerified: json['isVerified'] as bool,
     );
 
@@ -24,6 +26,6 @@ Map<String, dynamic> _$SecondaryKYCDTOToJson(SecondaryKYCDTO instance) =>
       'panNumber': instance.panNumber,
       'name': instance.name,
       'fatherName': instance.fatherName,
-      'dateOfBirth': instance.dateOfBirth.toIso8601String(),
+      'dateOfBirth': instance.dateOfBirth?.toIso8601String(),
       'isVerified': instance.isVerified,
     };

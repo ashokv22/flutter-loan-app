@@ -141,7 +141,7 @@ class _SecondaryKycCompletedState extends State<SecondaryKycCompleted> {
                                 const Text("Date of Birth:", style: TextStyle(fontWeight: FontWeight.w300, fontSize: 16),
                                 ),
                                 const SizedBox(width: 5),
-                                Text('${result.dateOfBirth.year}/${result.dateOfBirth.month}/${result.dateOfBirth.day}', style: const TextStyle(fontWeight: FontWeight.w400, fontSize: 18)),
+                                Text('${result.dateOfBirth!.year}/${result.dateOfBirth!.month}/${result.dateOfBirth!.day}', style: const TextStyle(fontWeight: FontWeight.w400, fontSize: 18)),
                               ],
                             ),
                           ],
