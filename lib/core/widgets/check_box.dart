@@ -29,7 +29,7 @@ class _CustomCheckBoxState extends State<CustomCheckBox> {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Text(widget.label, style: Theme.of(context).textTheme.bodyLarge,),
+        Flexible(child: Text(widget.label, style: Theme.of(context).textTheme.bodyLarge,)),
         const Spacer(),
         Checkbox(
           value: _value, 
