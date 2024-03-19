@@ -248,7 +248,7 @@ class _RelatedPartiesState extends State<RelatedParties> {
                   ),
                 );
               } else if (snapshot.hasError) {
-                return Center(child: Text('Error: ${snapshot.error}'));
+                return Center(child: Text('Uh oh! Error: ${snapshot.error}'));
               } else if (snapshot.hasData) {
                 SecondaryKYCDTO result = snapshot.data!;
                 return Padding(
@@ -286,7 +286,7 @@ class _RelatedPartiesState extends State<RelatedParties> {
                         children: [
                           const Text("Date of Birth:", style: TextStyle(fontWeight: FontWeight.w300, fontSize: 16),),
                           const SizedBox(width: 5),
-                          Text('${result.dateOfBirth.year}/${result.dateOfBirth.month}/${result.dateOfBirth.day}', style: const TextStyle(fontWeight: FontWeight.w400, fontSize: 18)),
+                          Text(result.dateOfBirth != null ? '${result.dateOfBirth!.year}/${result.dateOfBirth!.month}/${result.dateOfBirth!.day}' : 'null', style: const TextStyle(fontWeight: FontWeight.w400, fontSize: 18))
                         ],
                       ),
                         const SizedBox(height: 10),

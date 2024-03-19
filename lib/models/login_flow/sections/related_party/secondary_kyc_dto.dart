@@ -10,7 +10,7 @@ class SecondaryKYCDTO {
   String panNumber;
   String name;
   String? fatherName;
-  DateTime dateOfBirth;
+  DateTime? dateOfBirth;
   bool isVerified;
   SecondaryKYCDTO({
     required this.id,
@@ -18,7 +18,7 @@ class SecondaryKYCDTO {
     required this.panNumber,
     required this.name,
     this.fatherName,
-    required this.dateOfBirth,
+    this.dateOfBirth,
     required this.isVerified,
   });
 
