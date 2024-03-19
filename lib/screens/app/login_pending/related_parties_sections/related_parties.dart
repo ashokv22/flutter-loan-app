@@ -251,6 +251,7 @@ class _RelatedPartiesState extends State<RelatedParties> {
                 return Center(child: Text('Uh oh! Error: ${snapshot.error}'));
               } else if (snapshot.hasData) {
                 SecondaryKYCDTO result = snapshot.data!;
+                logger.wtf(result.toJson());
                 return Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
                   child: Column(
