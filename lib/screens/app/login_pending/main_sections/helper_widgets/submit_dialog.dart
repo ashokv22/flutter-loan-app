@@ -1,10 +1,10 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:logger/logger.dart';
 import 'package:origination/service/login_flow_service.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:lottie/lottie.dart';
 
 class SubmitDialog extends StatefulWidget {
   const SubmitDialog({super.key, 
@@ -32,112 +32,43 @@ class _SubmitDialogState extends State<SubmitDialog> {
       isLoading = true;
       errorMessage = '';
     });
-    await Future.delayed(const Duration(seconds: 5));
+    await Future.delayed(const Duration(seconds: 1));
     try {
-      loginPendingService.submitLoanApplication(widget.loanApplicationId)
-        .then((response) {
-          setState(() {
-            isLoading = false;
-            statusCode = response.statusCode;
-          });
-          logger.i('Status: ${response.statusCode}, body: ${response.body}');
-          if (response.statusCode == 200) {
-            Navigator.pop(context);
-          } else if (response.statusCode == 400 || response.statusCode == 406) {
-            setState(() {
-              isLoading = false;
-              isError = true;
-            });
-            errorMessage = response.body;
-            // Navigator.of(context).pop();
-            // _showBottomSheet(errorMessage, response.statusCode);
-          } else if (response.statusCode == 404) {
-            errorMessage = response.body;
-          } else {
-            // Handle other error codes
-            errorMessage = response.body;
-          }
-        }).catchError((error) {
-        logger.e('An error occurred while saving section: $error');
-        errorMessage = error;
+      final response = await loginPendingService.submitLoanApplication(widget.loanApplicationId);
+      logger.i('Status: ${response.statusCode}, body: ${response.body}');
+      
+      setState(() {
+        statusCode = response.statusCode;
+        if (response.statusCode == 200) {
+          Navigator.pop(context);
+        } else if (response.statusCode == 400 || response.statusCode == 406) {
+          isError = true;
+          errorMessage = response.body;
+        } else if (response.statusCode == 404) {
+          errorMessage = response.body;
+        } else {
+          // Handle other error codes
+          errorMessage = response.body;
+        }
       });
     }
-    catch (e) {
-      logger.e('An error occurred while saving section: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Failed to save section. Please try again.'),
-        duration: Duration(seconds: 2),
-      ),
-    );
+    catch (error) {
+      logger.e('An error occurred while saving section: $error');
+      errorMessage = error.toString();
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
     }
-    setState(() {
-      isError = true;
-      isLoading = false;
-    });
 
   }
 
-  void _showBottomSheet(String message, int statusCode) {
-    showModalBottomSheet(
-      context: context,
-      builder: (context) {
-        return Container(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              if (statusCode == 406) ...[
-                const SizedBox(height: 10),
-                const Icon(Icons.pending_outlined, size: 50, color: Colors.amber,),
-                const SizedBox(height: 10),
-                const Text("Sections pending", style: TextStyle(fontWeight: FontWeight.w700, fontSize: 20)),
-                const SizedBox(height: 10),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    errorMessage,
-                    style: const TextStyle(fontSize: 14.0),
-                  ),
-                )
-              ]
-              else if (statusCode == 400)... [
-                const SizedBox(height: 10),
-                const Icon(Icons.rule_rounded, size: 50, color: Colors.amber,),
-                const SizedBox(height: 10),
-                Text(jsonDecode(message)['message'], style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 20)),
-                const SizedBox(height: 10),
-                Expanded(
-                  child: Column(
-                    children: [
-                      Text(
-                        'Total Errors: ${(jsonDecode(message)['errors'] as List<dynamic>).length}',
-                        style: const TextStyle(fontSize: 16.0),
-                      ),
-                      const SizedBox(height: 10),
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: ListView(
-                            children: (jsonDecode(message)['errors'] as List<dynamic>).map<Widget>((error) {
-                              return Text(
-                                '${error.toString()}\n',
-                                  style: GoogleFonts.sourceCodePro(
-                                    fontSize: 14.0,
-                                  )
-                              );
-                            }).toList(),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                )
-              ]
-            ],
-          ),
-        );
-      },
+  void _copyToClipboard(BuildContext context) {
+    Clipboard.setData(ClipboardData(text: errorMessage));
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Content has been copied to clipboard!'),
+      ),
     );
   }
   
@@ -154,65 +85,63 @@ class _SubmitDialogState extends State<SubmitDialog> {
             child: Column(
               children: [
                 const SizedBox(height: 15.0),
-                const Text(
-                  'Do you wanna Submit?', 
-                  textAlign: TextAlign.center, 
-                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 22)
-                ),
-                const SizedBox(height: 20),
-                const Text('Make sure you filled all the required data!', textAlign: TextAlign.center,),
-                const SizedBox(height: 10,),
-                if (!isLoading)... [Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                if (!isLoading)... [Column(
                   children: [
-                    Expanded(
-                      child: OutlinedButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        style: OutlinedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 12.0),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30.0),
+                    const Text(
+                      'Do you wanna Submit?', 
+                      textAlign: TextAlign.center, 
+                      style: TextStyle(fontWeight: FontWeight.w600, fontSize: 22)
+                    ),
+                    const SizedBox(height: 20),
+                    const Text('Make sure you filled all the required data!', textAlign: TextAlign.center,),
+                    const SizedBox(height: 10),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: OutlinedButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            style: OutlinedButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 12.0),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30.0),
+                              ),
+                            ),
+                            child: Text('Cancel', style: TextStyle(color: isDarkTheme ? Colors.white : Colors.black),),
                           ),
                         ),
-                        child: Text('Cancel', style: TextStyle(color: isDarkTheme ? Colors.white : Colors.black),),
-                      ),
-                    ),
-                    const SizedBox(width: 10,),
-                    Expanded(
-                      child: MaterialButton(
-                        onPressed: () {
-                          submitLoanApplication();
-                          // Navigator.of(context).pop();
-                        },
-                        color: Colors.green,
-                        padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 12.0),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30.0),
+                        const SizedBox(width: 10,),
+                        Expanded(
+                          child: MaterialButton(
+                            onPressed: () {
+                              submitLoanApplication();
+                              // Navigator.of(context).pop();
+                            },
+                            color: Color.fromARGB(255, 6, 139, 26),
+                            padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 12.0),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30.0),
+                            ),
+                            child: const Text('Submit', style: TextStyle(color: Colors.white)),
+                          ),
                         ),
-                        child: const Text('Submit', style: TextStyle(color: Colors.white)),
-                      ),
+                      ],
                     ),
                   ],
                 )]
-                // else...[
-                //     const CircularProgressIndicator(),
-                //     const SizedBox(height: 10.0),
-                //     const Text('Submitting, This may take a while...'),
-                //   ]
                 else...[
-                    LottieBuilder.asset(
-                      'assets/animations/rocket_launch_modified.json',
-                      width: 100,
-                      height: 100,
-                      fit: BoxFit.fill,
-                      animate: true,
-                      repeat: false,
-                    ),
-                    const SizedBox(height: 10.0),
-                    const Text('Submitting, This may take a while...'),
-                  ]
+                  const Text(
+                    'Submitting...', 
+                    textAlign: TextAlign.center, 
+                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: 22)
+                  ),
+                  const SizedBox(height: 20),
+                  const CircularProgressIndicator(),
+                  const SizedBox(height: 10.0),
+                  const Text('Sit back and relax, This may take a while...'),
+                ]
               ]
             ),
           ),
@@ -242,23 +171,38 @@ class _SubmitDialogState extends State<SubmitDialog> {
                   const SizedBox(height: 10),
                   Column(
                     children: [
-                      Text(
-                        'Total Errors: ${(jsonDecode(errorMessage)['errors'] as List<dynamic>).length}',
-                        style: const TextStyle(fontSize: 16.0),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Text(
+                            'Total Errors: ${(jsonDecode(errorMessage)['errors'] as List<dynamic>).length}',
+                            style: const TextStyle(fontSize: 16.0),
+                          ),
+                          const Spacer(), // This creates space between the middle and right widgets
+                          IconButton(
+                            onPressed: () => _copyToClipboard(context), 
+                            icon: const Icon(Icons.content_copy_outlined)
+                          ),
+                        ],
                       ),
                       const SizedBox(height: 10),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: ListView(
-                          shrinkWrap: true,
-                          children: (jsonDecode(errorMessage)['errors'] as List<dynamic>).map<Widget>((error) {
-                            return Text(
-                              '${error.toString()}\n',
-                                style: GoogleFonts.sourceCodePro(
-                                  fontSize: 14.0,
-                                )
-                            );
-                          }).toList(),
+                      SizedBox(
+                        height: 240,
+                        child: SingleChildScrollView(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: (jsonDecode(errorMessage)['errors'] as List<dynamic>).map<Widget>((error) {
+                              return Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  '${error.toString()}\n',
+                                  style: GoogleFonts.sourceCodePro(
+                                    fontSize: 14.0,
+                                  ),
+                                ),
+                              );
+                            }).toList(),
+                          ),
                         ),
                       ),
                     ],

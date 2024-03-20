@@ -11,10 +11,10 @@ class Environment {
     
     switch (type) {
       case ServerType.Local:
-        baseUrl = 'http://172.20.10.3:8080/';     // Local
+        baseUrl = 'http://192.168.0.19:8080/';     // Local
         break;
       case ServerType.LocalStatic:
-        baseUrl = 'http://192.168.2.130:8080/';   // Local static
+        baseUrl = 'http://192.168.2.254:8080/';   // Local static
         break;
       case ServerType.Development:
         baseUrl = 'http://13.127.65.162/server/'; // Dev

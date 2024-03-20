@@ -247,13 +247,13 @@ class _MainSectionsDataState extends State<MainSectionsData> {
                                           )
                                         );
                                     },
-                                    color: const Color.fromARGB(255, 3, 71, 244),
+                                    color: const Color.fromARGB(255, 6, 139, 26),
                                     textColor: Colors.white,
                                     padding: const EdgeInsets.symmetric(vertical: 16.0),
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(30.0),
                                     ),
-                                    child: const Text('Save Changes'),
+                                    child: const Text('Save Loan'),
                                   ),
                                 ),
                                 // child: SwipeableButtonView(
