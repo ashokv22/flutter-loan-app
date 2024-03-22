@@ -76,19 +76,20 @@ class _PrimaryKycHomeState extends State<PrimaryKycHome> {
           dateOfBirth: _selectedDate, 
           address: addressController.text
         );
-        final response = kycService.savePrimaryManualKyc(widget.type, widget.relatedPartyId, dto);
-        // ignore: unnecessary_null_comparison
-        if (response != null) {
-          _showSnackBar('Form submitted successfully');
-          Navigator.pop(context);
-        } else {
-          _showSnackBar('Failed to save form data');
-        }
+        kycService.savePrimaryManualKyc(widget.type, widget.relatedPartyId, dto);
+        setState(() {
+          isLoading = false;
+        });
+        _showSnackBar('Form submitted successfully');
+        Navigator.pop(context);
       } catch (e) {
+        setState(() {
+          isLoading = false;
+        });
         _showSnackBar('Error: $e');
       } finally {
         setState(() {
-          isLoading = true;
+          isLoading = false;
         });
       }
     }
@@ -162,6 +163,7 @@ class _PrimaryKycHomeState extends State<PrimaryKycHome> {
                         decoration: const InputDecoration(
                           labelText: 'Aadhaar Number',
                           border: OutlineInputBorder(),
+                          counterText: "",
                           contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
                         ),
                         maxLength: 12,

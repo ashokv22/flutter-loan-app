@@ -1,16 +1,65 @@
 import 'package:flutter/material.dart';
 import 'package:origination/models/login_flow/sections/related_party/pan_request_dto.dart';
+import 'package:origination/models/login_flow/sections/related_party/secondary_kyc_dto.dart';
+import 'package:origination/service/kyc_service.dart';
 
-class PanCardWidget extends StatelessWidget {
+class PanCardWidget extends StatefulWidget {
   const PanCardWidget({
     super.key,
     required this.panData,
     required this.isLoading,
+    required this.relatedPartyId,
+    required this.type
   });
 
   final PanRequestDTO panData;
   final bool isLoading;
+  final int relatedPartyId;
+  final String type;
 
+  @override
+  State<PanCardWidget> createState() => _PanCardWidgetState();
+}
+
+class _PanCardWidgetState extends State<PanCardWidget> {
+
+  bool isLoading = false;
+  bool isError = false;
+  
+  KycService kycService = KycService();
+  void save() async {
+    setState(() {
+      isLoading = true;
+    });
+    SecondaryKYCDTO secondaryKYCDTO = SecondaryKYCDTO(
+      id: null,
+      isVerified: true,
+      name: "${widget.panData.title} ${widget.panData.firstname} ${widget.panData.middlename} ${widget.panData.lastname}",
+      fatherName: widget.panData.firstname,
+      dateOfBirth: null,
+      panNumber: widget.panData.panNo,
+      relatedPartyId: widget.relatedPartyId,
+    );
+    try {
+      await kycService.saveSecondaryKyc(widget.type, secondaryKYCDTO);
+      setState(() {
+        isLoading = false;
+      });
+      showMessage("Secondary KYC saved successfully!");
+    } catch (e) {
+      setState(() {
+        isLoading = false;
+      });
+      showMessage(e.toString());
+    }
+  }
+  void showMessage(String content) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(content)));
+  }
+
+
+
+  
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -51,7 +100,7 @@ class PanCardWidget extends StatelessWidget {
                           TextStyle(fontWeight: FontWeight.w300, fontSize: 16),
                     ),
                     const SizedBox(width: 5),
-                    Text('${panData.firstname} ${panData.lastname}',
+                    Text('${widget.panData.firstname} ${widget.panData.lastname}',
                         style: const TextStyle(
                             fontWeight: FontWeight.w400, fontSize: 18)),
                   ],
@@ -91,10 +140,9 @@ class PanCardWidget extends StatelessWidget {
                   alignment: Alignment.bottomCenter,
                   child: SizedBox(
                     width: double.infinity,
-                    height: 50,
                     child: MaterialButton(
                       onPressed: () {
-                        // save();
+                        save();
                       },
                       color: const Color.fromARGB(255, 3, 71, 244),
                       textColor: Colors.white,

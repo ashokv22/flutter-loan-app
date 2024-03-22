@@ -105,15 +105,15 @@ class _OtpValidationState extends State<OtpValidation> {
             child: Center(
               child: Column(
                 children: [
-                  const Text("OTP Verification", style: TextStyle(fontSize: 28, fontWeight: FontWeight.w600),),
-                  Text("Enter the OTP sent to ${widget.mobile}", style: const TextStyle(fontSize: 18),),
+                  const Text("OTP Verification", style: TextStyle(fontSize: 24, fontWeight: FontWeight.w600),),
+                  Text("Enter the OTP sent to ${widget.mobile}", style: const TextStyle(fontSize: 16),),
                   const SizedBox(height: 50,),
                   OtpTextField(
                     textStyle: const TextStyle(fontSize: 22),
                     numberOfFields: 6,
                     borderColor: Colors.red,
                     showFieldAsBox: false,
-                    fieldWidth: 40,
+                    fieldWidth: 30,
                     margin: const EdgeInsets.only(left: 10, right: 10),
                     onCodeChanged: (String code) {
                       if (code.isEmpty) {
@@ -128,8 +128,8 @@ class _OtpValidationState extends State<OtpValidation> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text("Din't recieve the OTP?", style: TextStyle(fontSize: 16),),
-                      TextButton(onPressed: () {}, child: const Text("RESEND OTP", style: TextStyle(fontSize: 18),))
+                      const Text("Din't recieve the OTP?", style: TextStyle(fontSize: 14),),
+                      TextButton(onPressed: () {}, child: const Text("RESEND OTP", style: TextStyle(fontSize: 16),))
                     ],
                   ),
                   const SizedBox(height: 20,),

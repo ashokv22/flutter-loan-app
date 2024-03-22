@@ -209,16 +209,21 @@ class _LeadDashboardState extends State<LeadDashboard> {
                         itemCount: summaries.length,
                         itemBuilder: (context, index) {
                           DashBoardSummaryDTO summary = summaries[index];
-                          return GestureDetector(
-                            onTap: () {
-                              if (summary.stage == ApplicationStage.LOGIN_PENDING.name) {
-                                Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPendingHome(total: summary.count)));
-                              } else {
-                                Navigator.push(context, MaterialPageRoute(builder: (context) => StageLeadList(stage: summary.stage)));
-                              }
-                            },
-                            child: leadItem(context, isDarkTheme, summary),
-                          );
+                          if (summary.count <= 0) {
+                            return Container();                            
+                          }
+                          else {
+                            return GestureDetector(
+                              onTap: () {
+                                if (summary.stage == ApplicationStage.LOGIN_PENDING.name) {
+                                  Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPendingHome(total: summary.count)));
+                                } else {
+                                  Navigator.push(context, MaterialPageRoute(builder: (context) => StageLeadList(stage: summary.stage)));
+                                }
+                              },
+                              child: leadItem(context, isDarkTheme, summary),
+                            );
+                          }
                         },
                       );
                     } else {

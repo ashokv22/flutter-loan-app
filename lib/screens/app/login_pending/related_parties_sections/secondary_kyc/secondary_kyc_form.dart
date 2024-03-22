@@ -11,9 +11,11 @@ class SecondaryKycForm extends StatefulWidget {
   const SecondaryKycForm({
     super.key,
     required this.relatedPartyId,
+    required this.type,
   });
 
   final int relatedPartyId;
+  final String type;
 
   @override
   State<SecondaryKycForm> createState() => _SecondaryKycFormState();
@@ -168,12 +170,13 @@ class _SecondaryKycFormState extends State<SecondaryKycForm> {
                     ),
                   ],
                 ),
+                const SizedBox(height: 10),
+                const Text("No Manual KYC as of now!", style: TextStyle(fontStyle: FontStyle.italic),),
                 const SizedBox(height: 150),
-                FutureBuilder(
+                if(isPanValidated)...[FutureBuilder(
                   future: panRequestFuture,
                   builder: (context, snapshot) {
-                    if (snapshot.connectionState ==
-                        ConnectionState.waiting) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
                       return const SizedBox(
                         width: double.infinity,
                         height: double.infinity,
@@ -189,6 +192,8 @@ class _SecondaryKycFormState extends State<SecondaryKycForm> {
                         return PanCardWidget(
                           panData: panData,
                           isLoading: isLoading,
+                          relatedPartyId: widget.relatedPartyId,
+                          type: widget.type,
                         );
                       } else if (panData.exist.toLowerCase() == "n") {
                         return Container(
@@ -201,7 +206,7 @@ class _SecondaryKycFormState extends State<SecondaryKycForm> {
                     }
                     return Text(snapshot.error == null ? snapshot.error.toString() : "Unexpected error!");
                   }
-                ),
+                )],
               ],
             ),
           ),

@@ -111,8 +111,7 @@ flutter:
     - assets/images/
     - assets/animations/
     - assets/
-    - assets/svg/waves.png
-    - assets/svg/waves.svg
+    - assets/svg/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

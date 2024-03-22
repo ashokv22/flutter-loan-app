@@ -8,9 +8,11 @@ class SecondaryKycHome extends StatefulWidget {
   const SecondaryKycHome({
     super.key,
     required this.relatedPartyId,
+    required this.type,
     });
 
   final int relatedPartyId;
+  final String type;
 
   @override
   State<SecondaryKycHome> createState() => _SecondaryKycHomeState();
@@ -24,7 +26,7 @@ class _SecondaryKycHomeState extends State<SecondaryKycHome> {
   void redirect() {
     print(_value == false ? "PAN":"Form 60");
     if (_value == false) {
-      Navigator.push(context, MaterialPageRoute(builder: (context) => SecondaryKycForm(relatedPartyId: widget.relatedPartyId,)));
+      Navigator.push(context, MaterialPageRoute(builder: (context) => SecondaryKycForm(relatedPartyId: widget.relatedPartyId, type: widget.type)));
     }
     else {
       Navigator.push(context, MaterialPageRoute(builder: (context) => Form60(relatedPartyId: widget.relatedPartyId,)));

@@ -95,4 +95,32 @@ class KycService {
     }
   }
 
+  Future<SecondaryKYCDTO> saveSecondaryKyc(String type, SecondaryKYCDTO secondaryKYCDTO) async {
+    String endpoint = "${apiUrl}api/application/loanApplication/sectionsData/relatedParty/secondaryKyc/$type/${secondaryKYCDTO.relatedPartyId}";
+    try {
+      String token = await authService.getAccessToken();
+      final response = await http.post(
+        Uri.parse(endpoint),
+        headers: {
+          'X-Auth-Token': token,
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode(secondaryKYCDTO),
+      );
+      logger.i("Response: ${response.body}");
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        if (data == null) {
+          logger.e("No record found");
+        }
+        logger.d("Response: ${data.toString()}");
+        return SecondaryKYCDTO.fromJson(data);
+      } else {
+        throw Exception("Error: Status code:${response.statusCode}, ${response.body}");
+      }
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
 }

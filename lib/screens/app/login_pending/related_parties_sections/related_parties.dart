@@ -163,7 +163,7 @@ class _RelatedPartiesState extends State<RelatedParties> {
                       if (section.status == "COMPLETED") {
                         panCardSheet(context, section);
                       } else {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => SecondaryKycHome(relatedPartyId: relatedPartyId,)));
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => SecondaryKycHome(relatedPartyId: relatedPartyId, type: selectedType)));
                       }
                     }
                     else {

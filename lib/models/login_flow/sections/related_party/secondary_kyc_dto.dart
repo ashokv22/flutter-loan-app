@@ -5,7 +5,7 @@ part 'secondary_kyc_dto.g.dart';
 
 @JsonSerializable()
 class SecondaryKYCDTO {
-  int id;
+  int? id;
   int relatedPartyId;
   String panNumber;
   String name;
@@ -13,7 +13,7 @@ class SecondaryKYCDTO {
   DateTime? dateOfBirth;
   bool isVerified;
   SecondaryKYCDTO({
-    required this.id,
+    this.id,
     required this.relatedPartyId,
     required this.panNumber,
     required this.name,

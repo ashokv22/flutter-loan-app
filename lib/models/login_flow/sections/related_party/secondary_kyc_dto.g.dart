@@ -8,7 +8,7 @@ part of 'secondary_kyc_dto.dart';
 
 SecondaryKYCDTO _$SecondaryKYCDTOFromJson(Map<String, dynamic> json) =>
     SecondaryKYCDTO(
-      id: json['id'] as int,
+      id: json['id'] as int?,
       relatedPartyId: json['relatedPartyId'] as int,
       panNumber: json['panNumber'] as String,
       name: json['name'] as String,
