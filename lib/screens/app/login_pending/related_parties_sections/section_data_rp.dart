@@ -146,8 +146,9 @@ class _SectionScreenRPState extends State<SectionScreenRP> {
                                           Column(
                                             crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
-                                              if (subSection.displayTitle! != "Main Section")
-                                                SectionTitle(title: subSection.displayTitle!.isEmpty ? '' : subSection.displayTitle!),
+                                              if (subSection.displayTitle!.isNotEmpty) ...[
+                                                SectionTitle(title: subSection.displayTitle!),
+                                              ],
                                               if (subSection.fields != null)
                                                 for (var field in subSection.fields!)
                                                   Column(
@@ -159,7 +160,6 @@ class _SectionScreenRPState extends State<SectionScreenRP> {
                                               const SizedBox(height: 20.0)
                                             ],
                                           ),
-                                      const SizedBox(height: 25.0),
                                       Align(
                                         alignment: Alignment.bottomCenter,
                                         child: SizedBox(

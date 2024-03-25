@@ -6,6 +6,10 @@ import 'package:origination/environments/environment.dart';
 import 'package:origination/models/entity_configuration.dart';
 import 'package:origination/models/login_flow/login_pending_products_dto.dart';
 import 'package:origination/models/login_flow/sections/loan_application_entity.dart';
+import 'package:origination/models/login_flow/sections/loan_submit_dto.dart';
+import 'package:origination/models/login_flow/sections/nominee_details.dart';
+import 'package:origination/models/login_flow/sections/validate_dto.dart';
+import 'package:origination/models/utils/server_type.dart';
 import 'package:origination/screens/sign_in/auth_interceptor.dart';
 import 'package:origination/service/auth_service.dart';
 
@@ -117,16 +121,36 @@ class LoginPendingService {
 
   Future<http.Response> submitLoanApplication(int applicantId) async {
     String endpoint = "api/application/loanApplication/lead/submit/$applicantId/Application/All";
-    Map body = {
+    LoanSubmitDTO body = LoanSubmitDTO(
+      validateDTO: ValidateDTO(CustID: applicantId, CustOTP: "000000", CustMobileNo: "9916315365"),
+      nomineeDetailsDTO: NomineeDetails(
+        nomineeName: "Ashok", 
+        addressLine1: "27th A cross road, 10th Main", 
+        addressLine2: "Geetha colony, 4th block Jayanagar", 
+        landMark: "Near Woodland",
+        city: "Bangalore", 
+        taluka: "Bangalore South", 
+        district: "Bangalore Urban", 
+        state: "Karnataka", 
+        country: "India", 
+        pinCode: "560011", 
+        relationshipWithApplicant: "", 
+        dateOfBirth: "2012-02-27", 
+        age: 24, 
+        applicantId: applicantId
+      )
+    );
+    Map body1 = {
       "CustID": applicantId,
       "CustOTP": "000000",
       "CustMobileNo": "9916315365"
     };
+    logger.i("Submitting ${Environment.currentServerType} server");
     final response = await http.post(Uri.parse(apiUrl + endpoint), headers: {
       'X-AUTH-TOKEN': await authService.getAccessToken(),
       'Content-Type': 'application/json',
       },
-      body: jsonEncode(body),
+      body: Environment.currentServerType == ServerType.Staging ? jsonEncode(body1) : body.toJson(),
     );
     return response;
   }

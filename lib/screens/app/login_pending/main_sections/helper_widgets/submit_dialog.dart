@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:logger/logger.dart';
 import 'package:origination/service/login_flow_service.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -46,8 +47,11 @@ class _SubmitDialogState extends State<SubmitDialog> {
           errorMessage = response.body;
         } else if (response.statusCode == 404) {
           errorMessage = response.body;
+        } else if (response.statusCode == 422) {
+          isError = true;
+          errorMessage = response.body;
         } else {
-          // Handle other error codes
+          isError= true;
           errorMessage = response.body;
         }
       });
@@ -119,7 +123,7 @@ class _SubmitDialogState extends State<SubmitDialog> {
                               submitLoanApplication();
                               // Navigator.of(context).pop();
                             },
-                            color: Color.fromARGB(255, 6, 139, 26),
+                            color: const Color.fromARGB(255, 6, 139, 26),
                             padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 12.0),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(30.0),
@@ -206,6 +210,21 @@ class _SubmitDialogState extends State<SubmitDialog> {
                         ),
                       ),
                     ],
+                  )
+                ] else if (statusCode == 422)... [
+                  const SizedBox(height: 10),
+                  const Icon(Icons.pending_outlined, size: 50, color: Colors.amber,),
+                  const SizedBox(height: 10),
+                  const Text("Sections pending", style: TextStyle(fontWeight: FontWeight.w700, fontSize: 20)),
+                  const SizedBox(height: 10),
+                  SingleChildScrollView(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        errorMessage,
+                        style: const TextStyle(fontSize: 14.0),
+                      ),
+                    ),
                   )
                 ]
               ],

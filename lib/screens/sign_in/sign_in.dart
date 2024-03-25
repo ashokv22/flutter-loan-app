@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:logger/logger.dart';
+import 'package:origination/environments/environment.dart';
 import 'package:origination/main.dart';
+import 'package:origination/models/utils/server_type.dart';
+import 'package:origination/service/auth_service.dart';
 import 'package:origination/service/implementation/sign_in_service_impl.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -22,6 +25,7 @@ class _SignInPageState extends State<SignIn> {
   TextEditingController passwordController = TextEditingController();
   final FocusNode _userNameFocusNode = FocusNode();
   final FocusNode _passwordFocusNode = FocusNode();
+  ServerType selectedServer = Environment.currentServerType;
 
     @override
   void initState() {
@@ -136,6 +140,41 @@ class _SignInPageState extends State<SignIn> {
                         ],
                       ),
                       const SizedBox(height: 60.0),
+                      InputDecorator(
+                        decoration: const InputDecoration(
+                          labelText: "Server",
+                          border: OutlineInputBorder(),
+                          isDense: true,
+                          contentPadding: EdgeInsets.symmetric(horizontal: 12.0),
+                        ),
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButtonFormField<ServerType>(
+                            value: selectedServer,
+                            onChanged: (ServerType? newValue) {
+                              setState(() {
+                                selectedServer = newValue!;
+                                Environment.setServerType(selectedServer);
+                                AuthService.signOut().then((_) => 
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => const SignIn()),
+                                  )
+                                );
+                              });
+                            },
+                            decoration: const InputDecoration(
+                              border: InputBorder.none,
+                            ),
+                            items: ServerType.values.map<DropdownMenuItem<ServerType>>((ServerType value) {
+                              return DropdownMenuItem<ServerType>(
+                                value: value,
+                                child: Text(value.toString().split('.').last, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.normal),),
+                              );
+                            }).toList(),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 20.0),
                       SizedBox(
                         height: 50,
                         child: TextField(
