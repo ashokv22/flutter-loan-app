@@ -12,6 +12,7 @@ class PrimaryKycDTO {
   String fatherName;
   DateTime dateOfBirth;
   String address;
+  bool isVerified = true;
 
   PrimaryKycDTO({
     this.id,
@@ -20,7 +21,8 @@ class PrimaryKycDTO {
     required this.name,
     required this.fatherName,
     required this.dateOfBirth,
-    required this.address
+    required this.address,
+    required this.isVerified,
   });
 
   factory PrimaryKycDTO.fromJson(Map<String, dynamic> json) => _$PrimaryKycDTOFromJson(json);

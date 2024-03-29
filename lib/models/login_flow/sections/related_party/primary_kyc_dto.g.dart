@@ -15,6 +15,7 @@ PrimaryKycDTO _$PrimaryKycDTOFromJson(Map<String, dynamic> json) =>
       fatherName: json['fatherName'] as String,
       dateOfBirth: DateTime.parse(json['dateOfBirth'] as String),
       address: json['address'] as String,
+      isVerified: json['isVerified'] as bool,
     );
 
 Map<String, dynamic> _$PrimaryKycDTOToJson(PrimaryKycDTO instance) =>
@@ -26,4 +27,5 @@ Map<String, dynamic> _$PrimaryKycDTOToJson(PrimaryKycDTO instance) =>
       'fatherName': instance.fatherName,
       'dateOfBirth': instance.dateOfBirth.toIso8601String(),
       'address': instance.address,
+      'isVerified': instance.isVerified,
     };

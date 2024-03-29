@@ -9,7 +9,6 @@ import 'package:origination/models/login_flow/sections/loan_application_entity.d
 import 'package:origination/models/login_flow/sections/loan_submit_dto.dart';
 import 'package:origination/models/login_flow/sections/nominee_details.dart';
 import 'package:origination/models/login_flow/sections/validate_dto.dart';
-import 'package:origination/models/utils/server_type.dart';
 import 'package:origination/screens/sign_in/auth_interceptor.dart';
 import 'package:origination/service/auth_service.dart';
 
@@ -140,17 +139,11 @@ class LoginPendingService {
         applicantId: applicantId
       )
     );
-    Map body1 = {
-      "CustID": applicantId,
-      "CustOTP": "000000",
-      "CustMobileNo": "9916315365"
-    };
-    logger.i("Submitting ${Environment.currentServerType} server");
     final response = await http.post(Uri.parse(apiUrl + endpoint), headers: {
       'X-AUTH-TOKEN': await authService.getAccessToken(),
       'Content-Type': 'application/json',
       },
-      body: Environment.currentServerType == ServerType.Staging ? jsonEncode(body1) : body.toJson(),
+      body: body.toJson(),
     );
     return response;
   }

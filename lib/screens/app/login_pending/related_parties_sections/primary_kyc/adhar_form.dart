@@ -48,7 +48,8 @@ class _AdharFormState extends State<AdharForm> {
       name: nameController.text, 
       fatherName: fatherNameController.text, 
       dateOfBirth: _selectedDate, 
-      address: addressController.text
+      address: addressController.text,
+      isVerified: false,
     );
     logger.d(dto.toJson());
     try {

@@ -74,7 +74,8 @@ class _PrimaryKycHomeState extends State<PrimaryKycHome> {
           name: nameController.text, 
           fatherName: fatherNameController.text, 
           dateOfBirth: _selectedDate, 
-          address: addressController.text
+          address: addressController.text,
+          isVerified: false,
         );
         kycService.savePrimaryManualKyc(widget.type, widget.relatedPartyId, dto);
         setState(() {
