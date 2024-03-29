@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:logger/logger.dart';
 import 'package:origination/core/utils/loan_amount_formatter.dart';
 import 'package:origination/core/utils/products_shared_utils.dart';
@@ -120,43 +121,7 @@ class _LoginPendingHomeState extends State<LoginPendingHome> {
           ),
           child: Column(
             children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: SizedBox(
-                  height: 45,
-                  child: TextField(
-                    controller: _searchController,
-                    decoration: InputDecoration(
-                    hintText: 'Search...',
-                    suffixIcon: _searchController.text.isNotEmpty ? IconButton(
-                          icon: const Icon(Icons.clear),
-                          onPressed: () {
-                            setState(() {
-                              _searchController.clear(); // Clear the search text
-                            });
-                          }
-                        ): null,
-                        // Add a search icon or button to the search bar
-                        prefixIcon: IconButton(
-                          icon: const Icon(Icons.search),
-                          onPressed: () {},
-                        ),
-                    contentPadding: const EdgeInsets.all(15),
-                    border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30))),
-                    onChanged: (value) {
-                      setState(() {
-                        _searchController.value = _searchController.value.copyWith(
-                          text: value,
-                          selection: TextSelection.fromPosition(
-                            TextPosition(offset: value.length),
-                          ),
-                        );
-                      });
-                    },
-                  ),
-                ),
-              ),
+              searchBar(),
               Text("Total: ${widget.total} \t Page: $page \t List size: ${items.length}", textAlign: TextAlign.left,),
               Expanded(
                 child: FutureBuilder<List<LoginPendingProductsDTO>>(
@@ -436,6 +401,16 @@ class _LoginPendingHomeState extends State<LoginPendingHome> {
                                                 Text("Completed: ${product.completedSections}, Total: ${product.totalSections}", 
                                                   style: const TextStyle(fontStyle: FontStyle.italic, fontWeight: FontWeight.w600),
                                                 ),
+                                                if ((product.totalSections - product.completedSections) < 4)...[
+                                                  SizedBox(
+                                                    width: 300,
+                                                    child: Text(
+                                                      "Hint: ${product.sectionsPending.toString()}", 
+                                                      overflow: TextOverflow.ellipsis,
+                                                      style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 10),
+                                                    )
+                                                  ),
+                                                ]
                                               ],
                                             )
                                           ],
@@ -498,5 +473,45 @@ class _LoginPendingHomeState extends State<LoginPendingHome> {
         ),
       ),
     );
+  }
+
+  Padding searchBar() {
+    return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: SizedBox(
+                height: 45,
+                child: TextField(
+                  controller: _searchController,
+                  decoration: InputDecoration(
+                  hintText: 'Search...',
+                  suffixIcon: _searchController.text.isNotEmpty ? IconButton(
+                        icon: const Icon(Icons.clear),
+                        onPressed: () {
+                          setState(() {
+                            _searchController.clear(); // Clear the search text
+                          });
+                        }
+                      ): null,
+                      // Add a search icon or button to the search bar
+                      prefixIcon: IconButton(
+                        icon: const Icon(Icons.search),
+                        onPressed: () {},
+                      ),
+                  contentPadding: const EdgeInsets.all(15),
+                  border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(30))),
+                  onChanged: (value) {
+                    setState(() {
+                      _searchController.value = _searchController.value.copyWith(
+                        text: value,
+                        selection: TextSelection.fromPosition(
+                          TextPosition(offset: value.length),
+                        ),
+                      );
+                    });
+                  },
+                ),
+              ),
+            );
   }
 }

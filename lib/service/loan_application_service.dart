@@ -416,4 +416,28 @@ class LoanApplicationService {
     }
   }
 
+  Future<List<ApplicantDTO>> searchApplicant(String query) async {
+    String endpoint = "api/application/applicant/search?firstName=$query";
+    try {
+      logger.i("Searching...");
+      final response = await authInterceptor.get(Uri.parse(endpoint));
+      if (response.statusCode == 200) {
+        final jsonResponse = json.decode(response.body);
+        logger.i(jsonResponse);
+        List<ApplicantDTO> list = [];
+        for (var data in jsonResponse) {
+          ApplicantDTO app = ApplicantDTO.fromJson(data);
+          list.add(app);
+        }
+        return list;
+      }
+      else {
+        throw Exception(response);
+      }
+    }
+    catch (e) {
+      throw  Exception(e);
+    }
+  }
+
 } 

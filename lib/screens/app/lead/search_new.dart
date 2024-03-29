@@ -1,7 +1,10 @@
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:origination/models/namevalue_dto.dart';
+import 'package:origination/models/applicant_dto.dart';
 import 'package:origination/service/loan_application_service.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 class SearchPage extends StatefulWidget {
   const SearchPage({Key? key}) : super(key: key);
@@ -13,21 +16,29 @@ class SearchPage extends StatefulWidget {
 class _SearchPageState extends State<SearchPage> {
   final TextEditingController _controller = TextEditingController();
   final LoanApplicationService loanService = LoanApplicationService();
-  List<NameValueDTO> searchResults = [];
+  List<ApplicantDTO> searchResults = [];
 
   void _fetchSearchResults(String query) async {
-    List<NameValueDTO> results = await fetchOptions(query);
+    List<ApplicantDTO> results = await fetchOptions(query);
     setState(() {
       searchResults = results;
     });
   }
 
-  Future<List<NameValueDTO>> fetchOptions(String query) async {
-    return loanService.searchReferenceCodes("manufacturer", query);
+  int getRandomNumber() {
+    int min = 1;
+    int max = 20;
+    final Random random = Random();
+    return min + random.nextInt(max - min + 1);
+  }
+
+  Future<List<ApplicantDTO>> fetchOptions(String query) async {
+    return loanService.searchApplicant(query);
   }
 
   @override
   Widget build(BuildContext context) {
+    final isDarkTheme = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
       appBar: AppBar(
           iconTheme: Theme.of(context).iconTheme,
@@ -76,26 +87,96 @@ class _SearchPageState extends State<SearchPage> {
               child: ListView.builder(
               itemCount: searchResults.length,
               itemBuilder: (context, index) {
-                var result = searchResults[index];
-                return ListTile(
-                  title: Text(result.name!),
-                  onTap: () {
-                    setState(() {
-                      _controller.text = result.name!;
-                      searchResults.clear();
-                    });
-                  }, // Display the appropriate property
+                ApplicantDTO applicant = searchResults[index];
+                int randomNumber = getRandomNumber();
+                return Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 1.0, vertical: 0.0),
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          SizedBox(
+                            width: 60,
+                            height: 60,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(50),
+                              child: Image.asset('assets/images/female-${randomNumber.toString().padLeft(2, '0')}.jpg', fit: BoxFit.cover,)),
+                          ),
+                          const SizedBox(width: 10),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                applicant.firstName!,
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                  color: isDarkTheme ? Colors.blueAccent[400] : const Color.fromARGB(255, 3, 71, 244),
+                                  // color: Color.fromARGB(255, 3, 71, 244),
+                                ),
+                              ),
+                              Text(applicant.mobile!,
+                                style: TextStyle(
+                                  color: Theme.of(context).textTheme.displayMedium!.color,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                              SizedBox(
+                                width: 150,
+                                child: Text(
+                                  // applicant.dsaName,
+                                  "ID: ${applicant.id}, AppID:${applicant.applicantId}",
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Theme.of(context).textTheme.displayMedium!.color,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                  maxLines: 1,
+                                  softWrap: false,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            timeago.format(applicant.createdDate!, allowFromNow: true),
+                            style: TextStyle(
+                              color: Theme.of(context).textTheme.displayMedium!.color,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500
+                            ),
+                          ),
+                          // const SizedBox(height: 10),
+                          Text(
+                            applicant.model!,
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Theme.of(context).textTheme.displayMedium!.color,
+                              fontWeight: FontWeight.w300,
+                            ),
+                            maxLines: 1,
+                            softWrap: false,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 );
               },
-                  ),
             ),
-          ],
-        )
+          ),
+        ],
+      )
     );
   }
-
-  // Future<List<NameValueDTO>> fetchOptions(String query) async {
-  //   await Future.delayed(const Duration(seconds: 1));
-  //   return [];
-  // }
 }
