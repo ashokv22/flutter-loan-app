@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
@@ -319,7 +321,7 @@ class _RelatedPartiesState extends State<RelatedParties> {
       context: context, 
       builder: (context) {
         return SizedBox(
-          height: 250,
+          height: 300,
           child: FutureBuilder(
             future: getPrimaryKyc(relatedPartyId),
             builder: (context, snapshot) {
@@ -354,6 +356,12 @@ class _RelatedPartiesState extends State<RelatedParties> {
                             fontSize: 20),
                       ),
                       const SizedBox(height: 10),
+                      if (result.photoBase64 != null) ...[
+                        Image.memory(const Base64Decoder().convert(result.photoBase64!), width: 60, fit: BoxFit.contain,),
+                      ] else ...[
+                        const Text("Manual Aadhaar"),
+                      ],
+                      const SizedBox(height: 10),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -363,30 +371,38 @@ class _RelatedPartiesState extends State<RelatedParties> {
                         ],
                       ),
                       const SizedBox(height: 10),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text("Father Name:", style: TextStyle(fontWeight: FontWeight.w300, fontSize: 16),),
-                          const SizedBox(width: 5),
-                          Text(result.fatherName, style: const TextStyle(fontWeight: FontWeight.w400, fontSize: 18)),
-                        ],
-                      ),
-                      const SizedBox(height: 10),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text("Date of Birth:", style: TextStyle(fontWeight: FontWeight.w300, fontSize: 16),),
-                          const SizedBox(width: 5),
-                          Text('${result.dateOfBirth.year}/${result.dateOfBirth.month}/${result.dateOfBirth.day}', style: const TextStyle(fontWeight: FontWeight.w400, fontSize: 18)),
-                        ],
-                      ),
+                      if (result.fatherName != null) ...[
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text("Father Name:", style: TextStyle(fontWeight: FontWeight.w300, fontSize: 16),),
+                            const SizedBox(width: 5),
+                            Text(result.fatherName!, style: const TextStyle(fontWeight: FontWeight.w400, fontSize: 18)),
+                          ],
+                        ),
                         const SizedBox(height: 10),
+                      ],
+                      if (result.yearOfBirth != null) ...[
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text("Date of Birth:", style: TextStyle(fontWeight: FontWeight.w300, fontSize: 16),),
+                            const SizedBox(width: 5),
+                            if (result.yearOfBirth!.isNotEmpty)...[
+                              Text(result.yearOfBirth!, style: const TextStyle(fontWeight: FontWeight.w400, fontSize: 18)),
+                            ] else ...[
+                              Text(result.dateOfBirth!, style: const TextStyle(fontWeight: FontWeight.w400, fontSize: 18)),
+                            ]
+                          ],
+                        ),
+                        const SizedBox(height: 10),
+                      ],
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           const Text("Address:", style: TextStyle(fontWeight: FontWeight.w300, fontSize: 16),),
                           const SizedBox(width: 5),
-                          Flexible(child: Text(result.address, overflow: TextOverflow.visible, textAlign: TextAlign.end, style: const TextStyle(fontWeight: FontWeight.w400, fontSize: 18))),
+                          Flexible(child: Text(result.address, overflow: TextOverflow.visible, textAlign: TextAlign.end, style: const TextStyle(fontWeight: FontWeight.w400, fontSize: 14))),
                         ],
                       ),
                     ],

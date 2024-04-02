@@ -12,10 +12,12 @@ PrimaryKycDTO _$PrimaryKycDTOFromJson(Map<String, dynamic> json) =>
       relatedPartyId: json['relatedPartyId'] as int,
       aadhaarNumber: json['aadhaarNumber'] as String,
       name: json['name'] as String,
-      fatherName: json['fatherName'] as String,
-      dateOfBirth: DateTime.parse(json['dateOfBirth'] as String),
+      fatherName: json['fatherName'] as String?,
+      dateOfBirth: json['dateOfBirth'] as String?,
+      yearOfBirth: json['yearOfBirth'] as String?,
       address: json['address'] as String,
       isVerified: json['isVerified'] as bool,
+      photoBase64: json['photoBase64'] as String?,
     );
 
 Map<String, dynamic> _$PrimaryKycDTOToJson(PrimaryKycDTO instance) =>
@@ -25,7 +27,9 @@ Map<String, dynamic> _$PrimaryKycDTOToJson(PrimaryKycDTO instance) =>
       'aadhaarNumber': instance.aadhaarNumber,
       'name': instance.name,
       'fatherName': instance.fatherName,
-      'dateOfBirth': instance.dateOfBirth.toIso8601String(),
+      'dateOfBirth': instance.dateOfBirth,
+      'yearOfBirth': instance.yearOfBirth,
       'address': instance.address,
       'isVerified': instance.isVerified,
+      'photoBase64': instance.photoBase64,
     };

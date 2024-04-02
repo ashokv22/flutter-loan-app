@@ -47,7 +47,7 @@ class _AdharFormState extends State<AdharForm> {
       aadhaarNumber: aadhaarNumberController.text, 
       name: nameController.text, 
       fatherName: fatherNameController.text, 
-      dateOfBirth: _selectedDate, 
+      dateOfBirth: _selectedDate.toString(), 
       address: addressController.text,
       isVerified: false,
     );
