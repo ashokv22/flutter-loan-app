@@ -170,7 +170,7 @@ class _StageLeadListState extends State<StageLeadList> {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 customSnackBar(isDarkTheme, "Lead is Submitted ${applicant.id}"),
                               );
-                          } else if (applicant.status == ApplicationStage.LOGIN_PENDING.name) {
+                            } else if (applicant.status == ApplicationStage.LOGIN_PENDING.name) {
                               // Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginPendingHome()));
                               // Edit Login Pending Leads
                               Navigator.push(context, MaterialPageRoute(builder: (context) => EditLead(id: applicant.id, applicantId: int.parse(applicant.applicantId))));

@@ -6,7 +6,7 @@ import 'package:origination/models/bureau_check/bc_check_list_dto.dart';
 import 'package:origination/screens/widgets/reject_reason.dart';
 import 'package:origination/service/bureau_check_service.dart';
 import 'package:origination/service/loan_application_service.dart';
-
+import 'package:origination/screens/app/bureau/screens/applicant_form.dart';
 import 'coapplicant_guarantor_form.dart';
 
 class BureauCheckList extends StatefulWidget {
@@ -33,6 +33,7 @@ class _BureauCheckListState extends State<BureauCheckList> {
   bool proceedLoading = false;
   bool rejectLoading = false;
   bool approveLoading = false;
+  bool isRecordsExist = false;
 
   @override
   void initState() {
@@ -158,16 +159,8 @@ class _BureauCheckListState extends State<BureauCheckList> {
                   } else if (snapshot.hasData) {
                     List<CheckListDTO> data  =snapshot.data!;
                     if (data.isEmpty) {
-                      return const SizedBox(
-                        width: double.infinity,
-                        height: double.infinity,
-                        child: Center(
-                          child: Text('No data found',
-                          style: TextStyle(
-                            fontSize: 20,
-                          ),)
-                        )
-                      );
+                      isRecordsExist = true;
+                      return const NoDataFound();
                     }
                     return ListView.builder(
                       itemCount: data.length,
@@ -382,7 +375,7 @@ class _BureauCheckListState extends State<BureauCheckList> {
                   }
                 )
               ),
-              Padding(
+              if (isRecordsExist) ...[Padding(
                 padding: const EdgeInsets.only(bottom: 15.0, left: 10.0, right: 10.0),
                 child: Column(
                   children: [
@@ -454,24 +447,7 @@ class _BureauCheckListState extends State<BureauCheckList> {
                           showDialog(
                             context: context,
                             builder: (BuildContext context) {
-                              return AlertDialog(
-                                title: const Text('Please Confirm'),
-                                content: const Text(
-                                    "Are you sure you want to reject the lead?"),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: const Text('Yes')),
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: const Text('No'),
-                                  )
-                                ],
-                              );
+                              return const RejectLead();
                             }
                           );
                         },
@@ -480,63 +456,142 @@ class _BureauCheckListState extends State<BureauCheckList> {
                     ),
                   ],
                 ),
-              )
+              )]
             ],
           ),
         ),
       ),
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.only(bottom: 120.0),
-        child: SpeedDial(
-          buttonSize: const Size(56, 56),
-          icon: Icons.add,
-          activeIcon: Icons.close,
-          backgroundColor: const Color.fromARGB(255, 3, 71, 244),
-          foregroundColor: Colors.white,
-          activeBackgroundColor: Colors.black,
-          activeForegroundColor: Colors.white,
-          visible: true,
-          closeManually: false,
-          curve: Curves.bounceIn,
-          overlayColor: Colors.black,
-          overlayOpacity: 0.5,
-          onOpen: () => {},
-          onClose: () => {},
-          elevation: 8.0,
-          shape: const CircleBorder(),
-          children: [
-            SpeedDialChild(
-              child: const Icon(Icons.group_add),
-              backgroundColor: const Color.fromARGB(255, 3, 71, 244),
-              foregroundColor: Colors.white,
-              label: 'Commercial',
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(50)
+      floatingActionButton: Visibility(
+        visible: isRecordsExist,
+        child: Padding(
+          padding: const EdgeInsets.only(bottom: 120.0),
+          child: SpeedDial(
+            buttonSize: const Size(56, 56),
+            icon: Icons.add,
+            activeIcon: Icons.close,
+            backgroundColor: const Color.fromARGB(255, 3, 71, 244),
+            foregroundColor: Colors.white,
+            activeBackgroundColor: Colors.black,
+            activeForegroundColor: Colors.white,
+            visible: true,
+            closeManually: false,
+            curve: Curves.bounceIn,
+            overlayColor: Colors.black,
+            overlayOpacity: 0.5,
+            onOpen: () => {},
+            onClose: () => {},
+            elevation: 8.0,
+            shape: const CircleBorder(),
+            children: [
+              SpeedDialChild(
+                child: const Icon(Icons.group_add),
+                backgroundColor: const Color.fromARGB(255, 3, 71, 244),
+                foregroundColor: Colors.white,
+                label: 'Commercial',
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(50)
+                ),
+                labelBackgroundColor: Colors.black,
+                labelStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: Colors.white),
+                onTap: () => {},
+                onLongPress: () {},
               ),
-              labelBackgroundColor: Colors.black,
-              labelStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: Colors.white),
-              onTap: () => {},
-              onLongPress: () {},
-            ),
-            SpeedDialChild( //speed dial child
-              child: const Icon(Icons.person_add),
-              backgroundColor: const Color.fromARGB(255, 3, 71, 244),
-              foregroundColor: Colors.white,
-              label: 'Co Applicant / Guarantor',
-              labelBackgroundColor: Colors.black,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(50)
+              SpeedDialChild( //speed dial child
+                child: const Icon(Icons.person_add),
+                backgroundColor: const Color.fromARGB(255, 3, 71, 244),
+                foregroundColor: Colors.white,
+                label: 'Co Applicant / Guarantor',
+                labelBackgroundColor: Colors.black,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(50)
+                ),
+                labelStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: Colors.white),
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => CoApplicantGuarantor(id: widget.id)));
+                },
+                onLongPress: () {},
               ),
-              labelStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: Colors.white),
-              onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => CoApplicantGuarantor(id: widget.id)));
-              },
-              onLongPress: () {},
-            ),
-            //add more menu item childs here
-          ],
+              SpeedDialChild( //speed dial child
+                child: const Icon(Icons.person_add),
+                backgroundColor: const Color.fromARGB(255, 3, 71, 244),
+                foregroundColor: Colors.white,
+                label: 'Applicant',
+                labelBackgroundColor: Colors.black,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(50)
+                ),
+                labelStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: Colors.white),
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => ApplicantForm(id: widget.id,)));
+                },
+                onLongPress: () {},
+              ),
+              //add more menu item childs here
+            ],
+          ),
         ),
       ),
+    );
+  }
+}
+
+class RejectLead extends StatelessWidget {
+  const RejectLead({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const Text('Please Confirm'),
+      content: const Text(
+          "Are you sure you want to reject the lead?"),
+      actions: [
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          child: const Text('Yes')),
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          child: const Text('No'),
+        )
+      ],
+    );
+  }
+}
+
+class NoDataFound extends StatelessWidget {
+  const NoDataFound({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: double.infinity,
+      height: double.infinity,
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const Text('No Records exist!', style: TextStyle(fontSize: 20)),
+            const SizedBox(height: 10,),
+            MaterialButton(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(30.0),
+              ),
+              color: Colors.green,
+              textColor: Colors.white,
+              onPressed: () {},
+              child: const Text("Create Sameple Data", style: TextStyle(fontSize: 16, color: Colors.white),),
+            )
+          ],
+        )
+      )
     );
   }
 }

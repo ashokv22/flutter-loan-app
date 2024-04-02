@@ -209,5 +209,21 @@ class BureauCheckService {
     }
   }
 
+  // Method to fetch individual fake data
+  Future<http.Response> getIndividualData() async {
+    try {
+      logger.i("Fetching applicant data...");
+      final response = await http.get(Uri.parse('http://13.127.65.162/flask/getIndividual'));
+      if (response.statusCode == 200) {
+        logger.i(response.body);
+        return response;
+      } else {
+        throw Exception('Failed to fetch individual data: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Failed to fetch individual data: $e');
+    }
+  }
+
 
 }

@@ -11,6 +11,7 @@ class LoginPendingProductsDTO {
   List<Individual> applicants;
   int completedSections;
   int totalSections;
+  List<String>? sectionsPending;
 
   LoginPendingProductsDTO({
     required this.id,
@@ -18,7 +19,8 @@ class LoginPendingProductsDTO {
     required this.loanAmount,
     required this.applicants,
     required this.completedSections,
-    required this.totalSections
+    required this.totalSections,
+    this.sectionsPending,
   });
 
   factory LoginPendingProductsDTO.fromJson(Map<String, dynamic> json) => _$LoginPendingProductsDTOFromJson(json);

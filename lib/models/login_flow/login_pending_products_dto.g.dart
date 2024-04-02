@@ -17,6 +17,9 @@ LoginPendingProductsDTO _$LoginPendingProductsDTOFromJson(
           .toList(),
       completedSections: json['completedSections'] as int,
       totalSections: json['totalSections'] as int,
+      sectionsPending: (json['sectionsPending'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList(),
     );
 
 Map<String, dynamic> _$LoginPendingProductsDTOToJson(
@@ -28,4 +31,5 @@ Map<String, dynamic> _$LoginPendingProductsDTOToJson(
       'applicants': instance.applicants,
       'completedSections': instance.completedSections,
       'totalSections': instance.totalSections,
+      'sectionsPending': instance.sectionsPending,
     };

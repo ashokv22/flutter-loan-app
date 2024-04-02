@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:heroicons/heroicons.dart';
 import 'package:origination/environments/environment.dart';
 import 'package:origination/models/utils/server_type.dart';
+import 'package:origination/screens/app/lead/list_selector.dart';
 import 'package:origination/screens/sign_in/sign_in.dart';
 import 'package:origination/service/auth_service.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
@@ -107,6 +108,18 @@ class SideMenu extends StatelessWidget {
                 selected: selectedItemIndex == 3,
                 onTap: () {
                   onItemClicked(3);
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.science_outlined),
+                title: const Text('R&D Selector'),
+                selected: selectedItemIndex == 1,
+                onTap: () {
+                  // onItemClicked(1);
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const ListSelector()),
+                    );
                 },
               ),
               // ListTile(
