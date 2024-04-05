@@ -264,9 +264,6 @@ class _SectionScreenRPState extends State<SectionScreenRP> {
     else if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'Location') {
       return LocationWidget(label: "Lat and Long", controller: controller, onChanged: (value) => updateFieldValue(value, field), isEditable: true, isReadable: true,);
     }
-    else if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'HIDDEN') {
-      return Text("$fieldName value: ${field.value}");
-    }
     else if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'Address') {
       return AddressFields(
         label: fieldName, 
@@ -275,6 +272,19 @@ class _SectionScreenRPState extends State<SectionScreenRP> {
         isEditable: field.isEditable!, 
         isReadable: field.isReadOnly!
       );
+    }
+    else if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'HIDDEN') {
+      if (field.fieldMeta?.dataType?.toLowerCase() == "address") {
+        return AddressFields(
+        label: fieldName, 
+        address: field.fieldMeta?.addressDetails ?? AddressDetails(addressType: '', addressLine1: '', city: '', taluka: '', district: '', state: '', country: '', pinCode: ''),
+        onChanged: (newValue) => updateFieldValue(newValue, field), 
+        isEditable: field.isEditable!, 
+        isReadable: field.isReadOnly!
+      );
+      } else {
+        return Text("$fieldName value: ${field.value}");
+      }
     } 
     return SizedBox(child: Text("${field.fieldMeta?.fieldUiProperties?.uiComponentName} is not handled"),);
   }

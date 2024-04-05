@@ -3,8 +3,10 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
 import 'package:origination/environments/environment.dart';
+import 'package:origination/models/applicant/entity_state_manager.dart';
 import 'package:origination/models/entity_configuration.dart';
 import 'package:origination/models/login_flow/login_pending_products_dto.dart';
+import 'package:origination/models/login_flow/sections/document_upload/document_checklist_dto.dart';
 import 'package:origination/models/login_flow/sections/loan_application_entity.dart';
 import 'package:origination/models/login_flow/sections/loan_submit_dto.dart';
 import 'package:origination/models/login_flow/sections/nominee_details.dart';
@@ -146,6 +148,59 @@ class LoginPendingService {
       body: body.toJson(),
     );
     return response;
+  }
+
+  Future<List<DocumentChecklistDTO>> getApplicationDocuments(int applicationId) async {
+    String endpoint = "api/application/documents/$applicationId/checklist?category=PRE_SANCTION";
+    try {
+      final response = await authInterceptor.get(Uri.parse(endpoint));
+      if (response.statusCode == 200) {
+        final List<dynamic> jsonResponse = jsonDecode(response.body);
+        List<DocumentChecklistDTO> list = [];
+        for (var data in jsonResponse) {
+          DocumentChecklistDTO app = DocumentChecklistDTO.fromJson(data);
+          list.add(app);
+          logger.i('Total records found: ${list.length}');
+        }
+        return list;
+      }
+      else {
+        throw Exception(response.body);
+      }
+    }
+    catch (e) {
+      throw  Exception(e);
+    }
+  }
+
+  Future<http.Response> streamFile(int fileId) async {
+    String endpoint = "api/files/stream/$fileId";
+    try {
+      final response = await authInterceptor.get(Uri.parse(endpoint));
+      return response;
+    }
+    catch (e) {
+      throw  Exception(e);
+    }
+  }
+
+  Future<EntityStateManager> getDeviations(int applicantId) async {
+    String endpoint = "api/application/loanApplication/lead/deviation/$applicantId";
+    try {
+      final response = await authInterceptor.get(Uri.parse(endpoint));
+      if (response.statusCode == 200) {
+        final jsonResponse = json.decode(response.body);
+        logger.i("Response: ", jsonResponse);
+        EntityStateManager esm = EntityStateManager.fromJson(jsonResponse);
+        return esm;
+      }
+      else {
+        throw Exception(response);
+      }
+    }
+    catch (e) {
+      throw  Exception(e);
+    }
   }
 
 }
