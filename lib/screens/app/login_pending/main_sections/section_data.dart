@@ -4,6 +4,7 @@ import 'package:logger/logger.dart';
 import 'package:origination/core/widgets/address_fields.dart';
 import 'package:origination/core/widgets/check_box.dart';
 import 'package:origination/core/widgets/custom/location_widget.dart';
+import 'package:origination/core/widgets/custom/yearpicker.dart';
 import 'package:origination/core/widgets/datepicker.dart';
 import 'package:origination/core/widgets/mobile_input.dart';
 import 'package:origination/core/widgets/number_input.dart';
@@ -303,6 +304,9 @@ class _SectionScreenEmptyState extends State<SectionScreenEmpty> {
     // } 
     else if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'DatePicker') {
       return DatePickerInput(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field), isEditable: field.isEditable!, isReadable: field.isReadOnly!, isRequired: field.isRequired!);
+    } 
+    else if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'YearPicker') {
+      return CustomYearPicker(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field), isEditable: field.isEditable!, isReadable: field.isReadOnly!);
     } 
     else if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'TypeAhead') {
       return TypeAhead(label: fieldName, referenceCode: field.fieldMeta!.referenceCodeClassifier!, controller: controller, onChanged: (newValue) => updateFieldValue(newValue!, field), isEditable: field.isEditable!, isReadable: field.isReadOnly!, isRequired: field.isRequired!);

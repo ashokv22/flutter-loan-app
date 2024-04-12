@@ -10,7 +10,7 @@ LeadsListDTO _$LeadsListDTOFromJson(Map<String, dynamic> json) => LeadsListDTO(
       id: json['id'] as int,
       name: json['name'] as String,
       status: json['status'] as String,
-      dsaName: json['dsaName'] as String,
+      dsaName: json['dsaName'] as String?,
       model: json['model'] as String,
       mobile: json['mobile'] as String,
       applicantId: json['applicantId'] as String,

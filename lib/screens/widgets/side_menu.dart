@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:heroicons/heroicons.dart';
 import 'package:origination/environments/environment.dart';
 import 'package:origination/models/utils/server_type.dart';
+import 'package:origination/screens/admin/reference_codes/reference_codes_search.dart';
+import 'package:origination/screens/admin/users/users_list.dart';
 import 'package:origination/screens/app/lead/list_selector.dart';
 import 'package:origination/screens/sign_in/sign_in.dart';
 import 'package:origination/service/auth_service.dart';
@@ -110,18 +112,47 @@ class SideMenu extends StatelessWidget {
                   onItemClicked(3);
                 },
               ),
-              ListTile(
-                leading: const Icon(Icons.science_outlined),
-                title: const Text('R&D Selector'),
-                selected: selectedItemIndex == 1,
-                onTap: () {
-                  // onItemClicked(1);
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const ListSelector()),
-                    );
-                },
-              ),
+              ExpansionTile(
+                shape: const Border(),
+                title: const Text("Core"),
+                leading: const Icon(Icons.handyman_outlined), //add icon
+                childrenPadding: const EdgeInsets.only(left:20), //children padding
+                children: [
+                  ListTile(
+                    leading: const Icon(Icons.science_outlined),
+                    title: const Text('R&D Selector'),
+                    selected: selectedItemIndex == 1,
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const ListSelector()),
+                        );
+                    },
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.hardware_outlined),
+                    title: const Text('Reference codes'),
+                    selected: selectedItemIndex == 1,
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const ReferenceCodeSearch()),
+                        );
+                    },
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.manage_accounts),
+                    title: const Text('Users'),
+                    selected: selectedItemIndex == 1,
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const UsersList()),
+                        );
+                    },
+                  ),
+                ],
+                ),
               // ListTile(
               //   title: const Text('Application',),
               //   selected: selectedItemIndex == 2,

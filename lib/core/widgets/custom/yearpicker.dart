@@ -87,6 +87,7 @@ class _CustomYearPickerState extends State<CustomYearPicker> {
                     IconButton(
                       icon: const Icon(Icons.check),
                       onPressed: () {
+                        widget.onChanged(selectedYear.toString());
                         widget.controller.text = selectedYear.toString();
                         Navigator.of(context).pop();
                       },

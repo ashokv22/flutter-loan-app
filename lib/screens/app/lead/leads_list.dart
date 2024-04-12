@@ -187,7 +187,7 @@ class _LeadsListState extends State<LeadsList> {
                                       ),
                                       SizedBox(
                                         width: 200,
-                                        child: Text(applicant.dsaName,
+                                        child: Text(applicant.dsaName == null ? '' : applicant.dsaName!,
                                           style: const TextStyle(
                                             fontSize: 18,
                                             fontWeight: FontWeight.w500

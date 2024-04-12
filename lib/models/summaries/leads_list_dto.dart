@@ -7,7 +7,7 @@ class LeadsListDTO {
   int id;
   String name;
   String status;
-  String dsaName;
+  String? dsaName;
   String model;
   String mobile;
   String applicantId;
@@ -18,7 +18,7 @@ class LeadsListDTO {
     required this.id,
     required this.name,
     required this.status,
-    required this.dsaName,
+    this.dsaName,
     required this.model,
     required this.mobile,
     required this.applicantId,
