@@ -203,4 +203,23 @@ class LoginPendingService {
     }
   }
 
+  Future<EntityStateManager> refreshStatus(int applicantId) async {
+    String endpoint = "api/application/loanApplication/lead/refreshStatus/$applicantId";
+    try {
+      final response = await authInterceptor.get(Uri.parse(endpoint));
+      if (response.statusCode == 200) {
+        final jsonResponse = json.decode(response.body);
+        EntityStateManager esm = EntityStateManager.fromJson(jsonResponse);
+        logger.i(esm.toJson());
+        return esm;
+      }
+      else {
+        throw Exception(response);
+      }
+    }
+    catch (e) {
+      throw  Exception(e);
+    }
+  }
+
 }

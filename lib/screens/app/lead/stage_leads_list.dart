@@ -6,6 +6,7 @@ import 'package:origination/models/stage.dart';
 import 'package:origination/models/summaries/leads_list_dto.dart';
 import 'package:origination/screens/app/lead/edit_lead_application.dart';
 import 'package:origination/screens/app/lead/search_new.dart';
+import 'package:origination/screens/app/lead_dashboard/rework.dart';
 // import 'package:origination/screens/app/login_pending/login_pending_home.dart';
 import 'package:origination/service/loan_application_service.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -170,6 +171,8 @@ class _StageLeadListState extends State<StageLeadList> {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 customSnackBar(isDarkTheme, "Lead is Submitted ${applicant.id}"),
                               );
+                            } else if (applicant.status == "REWORK") {
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => Rework(id: applicant.id)));
                             } else if (applicant.status == ApplicationStage.LOGIN_PENDING.name) {
                               // Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginPendingHome()));
                               // Edit Login Pending Leads

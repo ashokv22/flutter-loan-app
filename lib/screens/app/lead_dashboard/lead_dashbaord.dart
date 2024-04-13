@@ -7,6 +7,7 @@ import 'package:origination/models/summaries/dashboard_summary.dart';
 import 'package:origination/screens/app/lead/new_lead.dart';
 import 'package:origination/screens/app/lead/search_new.dart';
 import 'package:origination/screens/app/lead/stage_leads_list.dart';
+import 'package:origination/screens/app/lead_dashboard/submitted_and_refresh.dart';
 import 'package:origination/screens/app/login_pending/login_pending_home.dart';
 import 'package:origination/screens/pages/profile/profile_screen.dart';
 import 'package:origination/screens/widgets/side_menu.dart';
@@ -217,6 +218,8 @@ class _LeadDashboardState extends State<LeadDashboard> {
                               onTap: () {
                                 if (summary.stage == ApplicationStage.LOGIN_PENDING.name) {
                                   Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPendingHome(total: summary.count)));
+                                } else if (summary.stage == ApplicationStage.SUBMITTED.name) {
+                                  Navigator.push(context, MaterialPageRoute(builder: (context) => SubmittedAndRefresh(stage: summary.stage)));
                                 } else {
                                   Navigator.push(context, MaterialPageRoute(builder: (context) => StageLeadList(stage: summary.stage)));
                                 }
