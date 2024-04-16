@@ -13,6 +13,7 @@ import 'package:origination/models/applicant_dto.dart';
 import 'package:origination/models/entity_configuration.dart';
 import 'package:origination/screens/app/bureau/otp_validation/bureau_declration.dart';
 import 'package:origination/screens/app/bureau/screens/bureau_check_list.dart';
+import 'package:origination/screens/app/lead/multi_select_rd.dart';
 import 'package:origination/service/loan_application_service.dart';
 
 class EditLead extends StatefulWidget {
@@ -262,7 +263,19 @@ class _EditLeadState extends State<EditLead> {
       return TextInput(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field), isEditable: field.isEditable!, isReadable: field.isReadOnly!, isRequired: field.isRequired!,);
     } 
     else if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'ReferenceCode' || field.fieldMeta?.fieldUiProperties?.uiComponentName!.toLowerCase() == 'dropdown') {
-      return Referencecode(label: fieldName, referenceCode: field.fieldMeta!.referenceCodeClassifier!, controller: controller, onChanged: (newValue) => updateFieldValue(newValue!, field), isEditable: field.isEditable!, isReadable: field.isReadOnly!, isRequired: field.isRequired!);
+      if (field.fieldMeta!.fieldUiProperties!.isMultiselect == true) {
+        return MultiSelectRd(
+            label: fieldName, 
+            controller: controller,  
+            onChanged: (newValue) => updateFieldValue(newValue, field), 
+            referenceCode: field.fieldMeta!.referenceCodeClassifier!, 
+            isReadable: false, 
+            isEditable: true, 
+            isRequired: true,
+          );
+      } else {
+        return Referencecode(label: fieldName, referenceCode: field.fieldMeta!.referenceCodeClassifier!, controller: controller, onChanged: (newValue) => updateFieldValue(newValue!, field), isEditable: field.isEditable!, isReadable: field.isReadOnly!, isRequired: field.isRequired!);
+      }
     } 
     // else if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'DropDown') {
     //   return DropDown(label: fieldName, options: const ['Abcd', 'Def'], controller: controller, onChanged: (newValue) => updateFieldValue(newValue!, field));

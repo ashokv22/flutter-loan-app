@@ -13,6 +13,7 @@ import 'package:origination/core/widgets/section_title.dart';
 import 'package:origination/core/widgets/text_input.dart';
 import 'package:origination/core/widgets/switcher_input.dart';
 import 'package:origination/models/entity_configuration.dart';
+import 'package:origination/screens/app/lead/multi_select_rd.dart';
 import 'package:origination/service/loan_application_service.dart';
 import 'package:origination/service/login_flow_service.dart';
 import 'package:origination/service/util_service.dart';
@@ -237,7 +238,19 @@ class _SectionScreenRPState extends State<SectionScreenRP> {
       return TextInput(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field), isEditable: field.isEditable!, isReadable: field.isReadOnly!, isRequired: field.isRequired!,);
     } 
     else if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'Referencecode' || field.fieldMeta?.fieldUiProperties?.uiComponentName == 'DropDown') {
-      return Referencecode(label: fieldName, referenceCode: field.fieldMeta!.referenceCodeClassifier!, controller: controller, onChanged: (newValue) => updateFieldValue(newValue!, field), isEditable: field.isEditable!, isReadable: field.isReadOnly!, isRequired: field.isRequired!);
+      if (field.fieldMeta!.fieldUiProperties!.isMultiselect == true) {
+        return MultiSelectRd(
+            label: fieldName, 
+            controller: controller,  
+            onChanged: (newValue) => updateFieldValue(newValue, field), 
+            referenceCode: field.fieldMeta!.referenceCodeClassifier!, 
+            isReadable: false, 
+            isEditable: true, 
+            isRequired: true,
+          );
+      } else {
+        return Referencecode(label: fieldName, referenceCode: field.fieldMeta!.referenceCodeClassifier!, controller: controller, onChanged: (newValue) => updateFieldValue(newValue!, field), isEditable: field.isEditable!, isReadable: field.isReadOnly!, isRequired: field.isRequired!);
+      }
     } 
     // else if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'DropDown') {
     //   return DropDown(label: fieldName, options: const ['Abcd', 'Def'], controller: controller, onChanged: (newValue) => updateFieldValue(newValue!, field));
@@ -286,7 +299,7 @@ class _SectionScreenRPState extends State<SectionScreenRP> {
         return Text("$fieldName value: ${field.value}");
       }
     } 
-    return SizedBox(child: Text("${field.fieldMeta?.fieldUiProperties?.uiComponentName} is not handled"),);
+    return SizedBox(child: Text("${field.fieldMeta?.fieldUiProperties?.uiComponentName} is not handled \n for field ${field.fieldMeta!.displayTitle}"),);
   }
 
 
