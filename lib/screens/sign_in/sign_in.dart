@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:heroicons/heroicons.dart';
 import 'package:logger/logger.dart';
 import 'package:origination/environments/environment.dart';
 import 'package:origination/main.dart';
@@ -20,6 +21,7 @@ class _SignInPageState extends State<SignIn> {
   var logger = Logger();
   final SignInServiceImpl _signServiceImpl = SignInServiceImpl();
   bool _isLoading = false;
+  bool showPassword = false;
 
   TextEditingController userNameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
@@ -27,7 +29,7 @@ class _SignInPageState extends State<SignIn> {
   final FocusNode _passwordFocusNode = FocusNode();
   ServerType selectedServer = Environment.currentServerType;
 
-    @override
+  @override
   void initState() {
     super.initState();
     setData();
@@ -35,7 +37,7 @@ class _SignInPageState extends State<SignIn> {
 
   void setData() async {
     userNameController.text = "super_admin";
-    passwordController.text = "Welcome@123";
+    passwordController.text = "super_admin";
   }
 
   @override
@@ -85,6 +87,12 @@ class _SignInPageState extends State<SignIn> {
 
   void _handleForgotPassword(BuildContext context) {
     Navigator.pushNamed(context, '/forgotPassword');
+  }
+
+  void toggleShowPassword() { 
+    setState(() { 
+      showPassword = !showPassword; // Toggle the showPassword flag 
+    }); 
   }
 
   @override
@@ -164,6 +172,8 @@ class _SignInPageState extends State<SignIn> {
                             },
                             decoration: const InputDecoration(
                               border: InputBorder.none,
+                              contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+                              prefixIcon: HeroIcon(HeroIcons.serverStack),
                             ),
                             items: ServerType.values.map<DropdownMenuItem<ServerType>>((ServerType value) {
                               return DropdownMenuItem<ServerType>(
@@ -176,13 +186,15 @@ class _SignInPageState extends State<SignIn> {
                       ),
                       const SizedBox(height: 20.0),
                       SizedBox(
-                        height: 50,
+                        // height: 50,
                         child: TextField(
                           controller: userNameController,
                           focusNode: _userNameFocusNode,
                           decoration: const InputDecoration(
                             labelText: 'Username',
                             border: OutlineInputBorder(),
+                            contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+                            prefixIcon: HeroIcon(HeroIcons.userCircle)
                           ),
                         ),
                       ),
@@ -192,11 +204,17 @@ class _SignInPageState extends State<SignIn> {
                         child: TextField(
                           controller: passwordController,
                           focusNode: _passwordFocusNode,
-                          decoration: const InputDecoration(
+                          decoration: InputDecoration(
                             labelText: 'Password',
-                            border: OutlineInputBorder(),
+                            border: const OutlineInputBorder(),
+                            contentPadding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+                            prefixIcon: const HeroIcon(HeroIcons.lockClosed),
+                            suffixIcon: IconButton(
+                              icon: HeroIcon(showPassword ? HeroIcons.eye : HeroIcons.eyeSlash),
+                              onPressed: toggleShowPassword
+                            )
                           ),
-                          obscureText: true,
+                          obscureText: !showPassword,
                         ),
                       ),
                       const SizedBox(height: 16.0),
