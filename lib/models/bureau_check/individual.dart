@@ -11,23 +11,25 @@ class Individual {
   String? enquiryPurpose;
   int? internalRefNumber;
   double? loanAmount;
-  String? firstName;
+  String firstName;
   String? middleName;
-  String? lastName;
+  String lastName;
   String? fathersFirstName;
   String? fathersMiddleName;
   String? fathersLastName;
-  DateTime? dateOfBirth;
-  String? gender;
+  DateTime dateOfBirth;
+  String gender;
   String? maritalStatus;
-  String? mobileNumber;
+  String mobileNumber;
   String? alternateMobileNumber;
-  String? address1;
-  String? address2;
-  String? pinCode;
-  String? landMark;
-  String? city;
-  String? state;
+  String addressLine1;
+  String? addressLine2;
+  String pinCode;
+  String landMark;
+  String city;
+  String taluka;
+  String district;
+  String state;
   String? pan;
   String? voterIdNumber;
   ApplicantDeclarationStatus? status;
@@ -46,23 +48,25 @@ class Individual {
     this.enquiryPurpose,
     this.internalRefNumber,
     this.loanAmount,
-    this.firstName,
+    required this.firstName,
     this.middleName,
-    this.lastName,
+    required this.lastName,
     this.fathersFirstName,
     this.fathersMiddleName,
     this.fathersLastName,
-    this.dateOfBirth,
-    this.gender,
+    required this.dateOfBirth,
+    required this.gender,
     this.maritalStatus,
-    this.mobileNumber,
+    required this.mobileNumber,
     this.alternateMobileNumber,
-    this.address1,
-    this.address2,
-    this.pinCode,
-    this.landMark,
-    this.city,
-    this.state,
+    required this.addressLine1,
+    this.addressLine2,
+    required this.pinCode,
+    required this.landMark,
+    required this.taluka,
+    required this.district,
+    required this.city,
+    required this.state,
     this.pan,
     this.voterIdNumber,
     this.status,

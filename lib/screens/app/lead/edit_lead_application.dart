@@ -169,36 +169,6 @@ class _EditLeadState extends State<EditLead> {
                                                   const SizedBox(height: 20.0)
                                               ],
                                             ),
-                                    // Bottom buttons
-                                    // Align(
-                                    //   alignment: Alignment.bottomCenter,
-                                    //   child: SizedBox(
-                                    //     width: double.infinity,
-                                    //     height: 50,
-                                    //     child: OutlinedButton(
-                                    //       style: OutlinedButton.styleFrom(
-                                    //         shape: RoundedRectangleBorder(
-                                    //           borderRadius: BorderRadius.circular(30.0),
-                                    //         ),
-                                    //         side: const BorderSide(
-                                    //           color: Color.fromARGB(255, 3, 71, 244), // Border color same as the solid button color
-                                    //         ),
-                                    //         padding: const EdgeInsets.symmetric(vertical: 16.0),
-                                    //       ),
-                                    //       onPressed: () {
-                                    //         updateStage(entity);
-                                    //       },
-                                    //       child: const Text(
-                                    //         "Rework",
-                                    //         style: TextStyle(
-                                    //           fontSize: 16,
-                                    //           color: Color.fromARGB(255, 3, 71, 244), // Text color same as the solid button color
-                                    //         ),
-                                    //       ),
-                                    //     ),
-                                    //   ),
-                                    // ),
-                                    // const SizedBox(height: 15.0),
                                     Align(
                                       alignment: Alignment.bottomCenter,
                                       child: SizedBox(

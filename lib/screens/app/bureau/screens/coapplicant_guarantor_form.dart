@@ -52,6 +52,8 @@ class _CoApplicantGuarantorState extends State<CoApplicantGuarantor> {
   final TextEditingController landMark = TextEditingController();
   final TextEditingController city = TextEditingController();
   final TextEditingController state = TextEditingController();
+  final TextEditingController taluka = TextEditingController();
+  final TextEditingController district = TextEditingController();
   final TextEditingController panController= TextEditingController();
   final TextEditingController voterIdController= TextEditingController();
   late DateTime _selectedDate;
@@ -88,12 +90,14 @@ class _CoApplicantGuarantorState extends State<CoApplicantGuarantor> {
       gender: gender.text,
       maritalStatus: "Single",
       alternateMobileNumber: alternateMobile.text,
-      address1: address1.text,
-      address2: address2.text,
+      addressLine1: address1.text,
+      addressLine2: address2.text,
       pinCode: pincode.text,
       landMark: landMark.text,
       city: city.text,
       state: state.text,
+      taluka: taluka.text,
+      district: district.text,
       pan: panController.text,
       voterIdNumber: voterIdController.text,
       applicantId: widget.id,

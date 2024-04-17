@@ -53,6 +53,8 @@ class _ApplicantFormState extends State<ApplicantForm> {
   final TextEditingController pincode = TextEditingController();
   final TextEditingController landMark = TextEditingController();
   final TextEditingController city = TextEditingController();
+  final TextEditingController taluka = TextEditingController();
+  final TextEditingController district = TextEditingController();
   final TextEditingController state = TextEditingController();
   final TextEditingController panController= TextEditingController();
   final TextEditingController voterIdController= TextEditingController();
@@ -142,11 +144,13 @@ class _ApplicantFormState extends State<ApplicantForm> {
       gender: gender.text,
       maritalStatus: "Single",
       alternateMobileNumber: alternateMobile.text,
-      address1: address1.text,
-      address2: address2.text,
+      addressLine1: address1.text,
+      addressLine2: address2.text,
       pinCode: pincode.text,
       landMark: landMark.text,
       city: city.text,
+      taluka: taluka.text,
+      district: district.text,
       state: state.text,
       pan: panController.text,
       voterIdNumber: voterIdController.text,
@@ -158,11 +162,44 @@ class _ApplicantFormState extends State<ApplicantForm> {
       bureauService.saveIndividual(individual);
       Navigator.push(context, MaterialPageRoute(builder: (context) => BureauCheckList(id: widget.id)));
     } catch (e) {
-      logger.e(e.toString());
+      showError(e);
     }
     setState(() {
       isLoading = false;
     });
+  }
+
+  void showError(Object e) async {
+    return await showModalBottomSheet(
+      context: context,
+      builder: (BuildContext builder) {
+        return SizedBox(
+          height: 200.0, // Adjust the height as needed
+          child: Column(
+            children: [
+              Container(
+                height: 40.0,
+                color: Colors.grey[300],
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.close),
+                      onPressed: () => Navigator.of(context).pop(),
+                    ),
+                    const Text(
+                      'Error',
+                      style: TextStyle(fontSize: 18.0),
+                    ),
+                  ],
+                ),
+              ),
+              Text(e.toString(), style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400)),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   
@@ -233,6 +270,10 @@ class _ApplicantFormState extends State<ApplicantForm> {
                     const SizedBox(height: 10),
                     TextInput(label: "City", controller: city, onChanged: (newValue) {}, isEditable: true, isReadable: false, isRequired: true,),
                     const SizedBox(height: 10),
+                    TextInput(label: "Taluka", controller: taluka, onChanged: (newValue) {}, isEditable: true, isReadable: false, isRequired: true,),
+                    const SizedBox(height: 10),
+                    TextInput(label: "District", controller: district, onChanged: (newValue) {}, isEditable: true, isReadable: false, isRequired: true,),
+                    const SizedBox(height: 10),
                     TextInput(label: "State", controller: state, onChanged: (newValue) {}, isEditable: true, isReadable: false, isRequired: true,),
                     const SizedBox(height: 10),
                     TextInput(label: "PAN", controller: panController, onChanged: (newValue) {}, isEditable: true, isReadable: false, isRequired: true,),
@@ -247,9 +288,7 @@ class _ApplicantFormState extends State<ApplicantForm> {
                           width: double.infinity,
                           height: 55,
                           child: MaterialButton(
-                            onPressed: () {
-                              onSave();
-                            },
+                            onPressed: onSave,
                             color: const Color.fromARGB(255, 3, 71, 244),
                             textColor: Colors.white,
                             padding: const EdgeInsets.symmetric(vertical: 16.0),
