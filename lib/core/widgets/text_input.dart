@@ -23,7 +23,6 @@ class TextInput extends StatefulWidget {
 }
 
 class _TextInputState extends State<TextInput> {
-  // final TextEditingController _textEditingController = TextEditingController();
 
   @override
   void initState() {

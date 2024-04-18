@@ -17,7 +17,9 @@ class AuthInterceptor extends http.BaseClient {
     modifiedRequest.headers.addAll(request.headers);
 
     String token = await _authService.getAccessToken();
-    logger.i("URL and AccessToken: ${modifiedRequest.url}, $token");
+    if (!modifiedRequest.url.toString().contains("reference-codes")) {
+      logger.i("URL and AccessToken: ${modifiedRequest.url}, $token");
+    }
     modifiedRequest.headers['X-Auth-Token'] = token;
 
     return _inner.send(modifiedRequest);

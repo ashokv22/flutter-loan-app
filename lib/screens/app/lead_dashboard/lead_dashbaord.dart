@@ -124,17 +124,34 @@ class _LeadDashboardState extends State<LeadDashboard> {
                           builder: (context) {
                             return IconButton(
                               onPressed: () {
-                                logger.wtf("Opening drawer...");
                                 Scaffold.of(context).openDrawer();
                               },
                               icon: const HeroIcon(HeroIcons.bars3CenterLeft, color: Colors.white),
                             );
                           }
                         ),
-                        Text(
-                          "Hello ${userInfo['name']}\n${userInfo['branchData']['branchCode']}",
-                          style: const TextStyle(
-                              color: Colors.white, fontSize: 16),
+                        Column(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              width: 140,
+                              child: Text(
+                                "Hello ${userInfo['name']}",
+                                style: const TextStyle(color: Colors.white, fontSize: 16),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                            SizedBox(
+                              width: 140,
+                              child: Text(
+                                "${userInfo['branchData']['branchCode']}",
+                                style: const TextStyle(color: Colors.white, fontSize: 16),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
@@ -142,11 +159,12 @@ class _LeadDashboardState extends State<LeadDashboard> {
                       padding: const EdgeInsets.all(16.0),
                       child: Text(
                         textAlign: TextAlign.right,
-                        "${userInfo['branchData']['branch']} Branch\n${userInfo['branchData']['city']}",
+                        "${userInfo['branchData']['city']} \n${userInfo['branchData']['state']}",
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 16,
                         ),
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
                   ],

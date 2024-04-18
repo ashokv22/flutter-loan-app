@@ -80,6 +80,60 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                   Text(email, style: Theme.of(context).textTheme.bodyLarge),
                   const SizedBox(height: 10),
+                  Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8.0),
+                        gradient: const LinearGradient(
+                          begin: Alignment.centerLeft,
+                          end: Alignment.centerRight,
+                          colors: [
+                            Color.fromARGB(255, 28, 20, 247),
+                            Color(0xFF2c67f2),
+                          ],
+                        ),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20),
+                        child: Column(
+                          children: [
+                            const Text("Branch Details", textAlign: TextAlign.left, style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: Colors.white),),
+                            const SizedBox(height: 10,),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text("Branch code: ", style: TextStyle(color: Colors.white),),
+                                Text("${user['branchData']['branchCode']}", style: const TextStyle(color: Colors.white)),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text("Branch: ", style: TextStyle(color: Colors.white)),
+                                Flexible(child: Text("${user['branchData']['branch']}", textAlign: TextAlign.end, style: const TextStyle(color: Colors.white))),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text("City: ", style: TextStyle(color: Colors.white)),
+                                Text("${user['branchData']['city']}", style: const TextStyle(color: Colors.white)),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text("State: ", style: TextStyle(color: Colors.white)),
+                                Text("${user['branchData']['state']}", style: const TextStyle(color: Colors.white)),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
                   const SizedBox(height: 10),
                   ProfileMenuWidget(title: "Account", icon: LineAwesomeIcons.key, onPress: () {
                     Navigator.push(context, MaterialPageRoute(builder: (context) => const UpdateProfileScreen()));
