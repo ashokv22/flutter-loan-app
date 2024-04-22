@@ -54,7 +54,7 @@ class _ConsentScreenState extends State<ConsentScreen> {
       isLoading = true;
     });
     try {
-      await bureauService.initBureauCheck(widget.id);
+      // await bureauService.initBureauCheck(widget.id);
       setState(() {
         isLoading = false;
         // Navigator.push(context, MaterialPageRoute(builder: (context) => OtpValidation(id: widget.id, declaration: declaration,  mobile: widget.mobile)));

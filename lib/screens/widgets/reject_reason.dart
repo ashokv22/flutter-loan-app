@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
+import 'package:origination/core/widgets/number_input.dart';
 import 'package:origination/core/widgets/reference_code.dart';
 import 'package:origination/models/bureau_check/bc_check_list_dto.dart';
 import 'package:origination/service/bureau_check_service.dart';
@@ -27,6 +28,7 @@ class _RejectReasonState extends State<RejectReason> {
   Logger logger = Logger();
   bool isLoading = false;
   final bureauService = BureauCheckService();
+  TextEditingController cibilScore = TextEditingController();
 
   void updateValue(newValue, TextEditingController controller) {
     widget.controller.text = newValue;
@@ -41,7 +43,7 @@ class _RejectReasonState extends State<RejectReason> {
       isLoading = true;
     });
     try {
-      bool status = await bureauService.rejectIndividual(widget.id, widget.applicantType, widget.controller.text);
+      bool status = await bureauService.rejectIndividual(widget.id, widget.applicantType, widget.controller.text, cibilScore.text);
       if (status) {
         Navigator.pop(context);
       }
@@ -59,7 +61,7 @@ class _RejectReasonState extends State<RejectReason> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: MediaQuery.of(context).size.height * 0.32,
+      height: 320,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
@@ -85,6 +87,8 @@ class _RejectReasonState extends State<RejectReason> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Referencecode(label: "Reason", controller: widget.controller, referenceCode: "reject_reason", onChanged: (newValue) => updateValue(newValue, widget.controller), isEditable: true, isReadable: false, isRequired: true,),
+                  const SizedBox(height: 10,),
+                  NumberInput(label: "Cibil score", controller: cibilScore, onChanged: (newValue) => updateValue(newValue, cibilScore), isEditable: true, isReadable: false, isRequired: true,),
                 ],
               ),
             ),

@@ -45,6 +45,9 @@ class _BureauCheckListState extends State<BureauCheckList> {
     setState(() {
       checkListFuture = bureauService.getAllCheckLists(widget.id);
       checkListFuture.then((checkList) {
+        if (checkList.length == 0) {
+          isRecordsExist = false;
+        }
         if (checkList.any((check) => check.status == "PENDING")) {
           setState(() {
             pendingReports = true;
@@ -160,7 +163,7 @@ class _BureauCheckListState extends State<BureauCheckList> {
                     List<CheckListDTO> data  =snapshot.data!;
                     if (data.isEmpty) {
                       isRecordsExist = true;
-                      return const NoDataFound();
+                      return const Center(child: Text('No Records exist!', style: TextStyle(fontSize: 20)));
                     }
                     return ListView.builder(
                       itemCount: data.length,
@@ -341,7 +344,7 @@ class _BureauCheckListState extends State<BureauCheckList> {
                                               borderRadius: BorderRadius.circular(30),
                                             ),
                                           ),
-                                          child: const Text('Reject',style: TextStyle(color: Colors.red),),
+                                          child: const Text('Reject', style: TextStyle(color: Colors.red),),
                                         ),
                                       )
                                     ],
@@ -375,16 +378,14 @@ class _BureauCheckListState extends State<BureauCheckList> {
                   }
                 )
               ),
-              if (isRecordsExist) ...[Padding(
+              Padding(
                 padding: const EdgeInsets.only(bottom: 15.0, left: 10.0, right: 10.0),
                 child: Column(
                   children: [
                     const SizedBox(height: 10,),
-                    Visibility(
-                      visible: pendingReports == true,
-                      replacement: SizedBox(
+                    SizedBox(
                         width: double.infinity,
-                        height: 50,
+                        height: 45,
                         child: OutlinedButton(
                           style: OutlinedButton.styleFrom(
                             shape: RoundedRectangleBorder(
@@ -393,46 +394,22 @@ class _BureauCheckListState extends State<BureauCheckList> {
                             side: BorderSide(
                               color: isDarkTheme ? Colors.blue : Colors.white, // Border color same as the solid button color
                             ),
-                            padding: const EdgeInsets.symmetric(vertical: 16.0),
+                            padding: const EdgeInsets.symmetric(vertical: 12.0),
                           ),
                           onPressed: () {
                             updateStage();
                           },
                           child: proceedLoading ? const SizedBox(
-                              width: 20.0,
-                              height: 20.0,
+                              width: 10.0,
+                              height: 10.0,
                               child: CircularProgressIndicator(
                                 strokeWidth: 2.0,
                                 valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                               ),
                             )
-                            : Text("Proceed", style: TextStyle(fontSize: 16, color: isDarkTheme ? Colors.blue : Colors.white),),
+                            : Text("Proceed", style: TextStyle(fontSize: 14, color: isDarkTheme ? Colors.blue : Colors.white),),
                         ),
                       ),
-                      child: SizedBox(
-                        height: 45,
-                        width: double.infinity,
-                        child: MaterialButton(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30.0),
-                          ),
-                          color: const Color.fromARGB(255, 2, 161, 23),
-                          textColor: Colors.white,
-                          onPressed: () {
-                            generateReports();
-                          },
-                          child: pendingReportsLoading ? const SizedBox(
-                              width: 20.0,
-                              height: 20.0,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2.0,
-                                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                              ),
-                            )
-                            : Text("Generate Reports", style: TextStyle(fontSize: 16, color: isDarkTheme ? Colors.black : Colors.white),),
-                        ),
-                      ),
-                    ),
                     const SizedBox(height: 10,),
                     SizedBox(
                       height: 45,
@@ -456,79 +433,76 @@ class _BureauCheckListState extends State<BureauCheckList> {
                     ),
                   ],
                 ),
-              )]
+              ),
             ],
           ),
         ),
       ),
-      floatingActionButton: Visibility(
-        visible: isRecordsExist,
-        child: Padding(
-          padding: const EdgeInsets.only(bottom: 120.0),
-          child: SpeedDial(
-            buttonSize: const Size(56, 56),
-            icon: Icons.add,
-            activeIcon: Icons.close,
-            backgroundColor: const Color.fromARGB(255, 3, 71, 244),
-            foregroundColor: Colors.white,
-            activeBackgroundColor: Colors.black,
-            activeForegroundColor: Colors.white,
-            visible: true,
-            closeManually: false,
-            curve: Curves.bounceIn,
-            overlayColor: Colors.black,
-            overlayOpacity: 0.5,
-            onOpen: () => {},
-            onClose: () => {},
-            elevation: 8.0,
-            shape: const CircleBorder(),
-            children: [
-              SpeedDialChild(
-                child: const Icon(Icons.group_add),
-                backgroundColor: const Color.fromARGB(255, 3, 71, 244),
-                foregroundColor: Colors.white,
-                label: 'Commercial',
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(50)
-                ),
-                labelBackgroundColor: Colors.black,
-                labelStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: Colors.white),
-                onTap: () => {},
-                onLongPress: () {},
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: 120.0),
+        child: SpeedDial(
+          buttonSize: const Size(50, 50),
+          icon: Icons.add,
+          activeIcon: Icons.close,
+          backgroundColor: const Color.fromARGB(255, 3, 71, 244),
+          foregroundColor: Colors.white,
+          activeBackgroundColor: Colors.black,
+          activeForegroundColor: Colors.white,
+          visible: true,
+          closeManually: false,
+          curve: Curves.bounceIn,
+          overlayColor: Colors.black,
+          overlayOpacity: 0.5,
+          onOpen: () => {},
+          onClose: () => {},
+          elevation: 8.0,
+          shape: const CircleBorder(),
+          children: [
+            SpeedDialChild(
+              child: const Icon(Icons.group_add),
+              backgroundColor: const Color.fromARGB(255, 3, 71, 244),
+              foregroundColor: Colors.white,
+              label: 'Commercial',
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(50)
               ),
-              SpeedDialChild( //speed dial child
-                child: const Icon(Icons.person_add),
-                backgroundColor: const Color.fromARGB(255, 3, 71, 244),
-                foregroundColor: Colors.white,
-                label: 'Co Applicant / Guarantor',
-                labelBackgroundColor: Colors.black,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(50)
-                ),
-                labelStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: Colors.white),
-                onTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => CoApplicantGuarantor(id: widget.id)));
-                },
-                onLongPress: () {},
+              labelBackgroundColor: Colors.black,
+              labelStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: Colors.white),
+              onTap: () => {},
+              onLongPress: () {},
+            ),
+            SpeedDialChild( //speed dial child
+              child: const Icon(Icons.person_add),
+              backgroundColor: const Color.fromARGB(255, 3, 71, 244),
+              foregroundColor: Colors.white,
+              label: 'Co Applicant / Guarantor',
+              labelBackgroundColor: Colors.black,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(50)
               ),
-              SpeedDialChild( //speed dial child
-                child: const Icon(Icons.person_add),
-                backgroundColor: const Color.fromARGB(255, 3, 71, 244),
-                foregroundColor: Colors.white,
-                label: 'Applicant',
-                labelBackgroundColor: Colors.black,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(50)
-                ),
-                labelStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: Colors.white),
-                onTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => ApplicantForm(id: widget.id,)));
-                },
-                onLongPress: () {},
+              labelStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: Colors.white),
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => CoApplicantGuarantor(id: widget.id)));
+              },
+              onLongPress: () {},
+            ),
+            SpeedDialChild( //speed dial child
+              child: const Icon(Icons.person_add),
+              backgroundColor: const Color.fromARGB(255, 3, 71, 244),
+              foregroundColor: Colors.white,
+              label: 'Applicant',
+              labelBackgroundColor: Colors.black,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(50)
               ),
-              //add more menu item childs here
-            ],
-          ),
+              labelStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: Colors.white),
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => ApplicantForm(id: widget.id,)));
+              },
+              onLongPress: () {},
+            ),
+            //add more menu item childs here
+          ],
         ),
       ),
     );
@@ -559,39 +533,6 @@ class RejectLead extends StatelessWidget {
           child: const Text('No'),
         )
       ],
-    );
-  }
-}
-
-class NoDataFound extends StatelessWidget {
-  const NoDataFound({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      height: double.infinity,
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const Text('No Records exist!', style: TextStyle(fontSize: 20)),
-            const SizedBox(height: 10,),
-            MaterialButton(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(30.0),
-              ),
-              color: Colors.green,
-              textColor: Colors.white,
-              onPressed: () {},
-              child: const Text("Create Sameple Data", style: TextStyle(fontSize: 16, color: Colors.white),),
-            )
-          ],
-        )
-      )
     );
   }
 }

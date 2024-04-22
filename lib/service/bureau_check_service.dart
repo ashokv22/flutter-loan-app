@@ -40,6 +40,23 @@ class BureauCheckService {
     }
   }
 
+  /// Updated Init API for RP
+  Future<bool> initBureauCheckForRp(int id, String mobileNumber) async {
+    String endpoint = "api/application/bureauCheck/init?applicantId=$id&mobileNumber=$mobileNumber";
+    try {
+      final response = await authInterceptor.get(Uri.parse(endpoint));
+      if (response.statusCode == 200) {
+        return true;
+      }
+      else {
+        throw Exception('Failed to init bureau check. Error code: ${response.statusCode}');
+      }
+    }
+    catch (e) {
+      throw  Exception('An error occurred initializing the Bureau check: $e');
+    }
+  }
+
   // Validate OTP
   Future<OtpRequestDTO> validateBureauCheckOtp(int id, int otp, SaveDeclarationDTO declarationDTO) async {
     // String endpoint = "api/application/bureauCheck/validate?applicantId=$id";
@@ -82,11 +99,10 @@ class BureauCheckService {
     }
   }
 
-  Future<Individual> saveIndividual(Individual individual) async {
-    String endpoint = "api/application/individualCibil";
+  Future<http.Response> saveIndividualWithOTP(String otp, List<Individual> individual) async {
+    String endpoint = "api/application/bureauCheck/individualCibilList?otp=$otp";
     String token = await authService.getAccessToken();
-    try {
-      final response = await http.post(
+    final response = await http.post(
       Uri.parse(apiUrl + endpoint),
         headers: {
           'X-Auth-Token': token,
@@ -94,17 +110,7 @@ class BureauCheckService {
         },
         body: jsonEncode(individual),
       );
-      if (response.statusCode == 201) {
-        final data = json.decode(response.body);
-        Individual request = Individual.fromJson(data);
-        return request;
-      }
-      else {
-        throw Exception('Failed to init bureau check. Error code: ${response.statusCode}');
-      }
-    } catch (e) {
-      throw Exception("An error occurred while fetching data!: $e");
-    }
+    return response;
   }
 
   Future<List<Individual>> getIndividuals(int id) async {
@@ -133,14 +139,15 @@ class BureauCheckService {
     }
   }
 
-  Future<bool> rejectIndividual(int id, CibilType type, String reason) async {
+  Future<bool> rejectIndividual(int id, CibilType type, String reason, String cibilScore) async {
     String endpoint = "api/application/bureauCheck/rejectIndividual";
     try {
       final response = await authInterceptor.patch(Uri.parse(endpoint).replace(
         queryParameters: {
           'id': id.toString(),
           'type': type.name,
-          'reason': reason
+          'reason': reason,
+          'cibilScore': cibilScore,
         }
       ));
       if (response.statusCode == 200) {

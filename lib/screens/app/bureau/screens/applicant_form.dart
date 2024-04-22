@@ -10,8 +10,10 @@ import 'package:origination/core/widgets/mobile_input.dart';
 import 'package:origination/core/widgets/datepicker.dart';
 import 'package:origination/models/applicant_dto.dart';
 import 'package:origination/models/bureau_check/individual.dart';
-import 'package:origination/screens/app/bureau/screens/bureau_check_list.dart';
+import 'package:origination/models/utils/address_dto.dart';
+import 'package:origination/screens/app/bureau/otp_validation/new_flow/declaration_new.dart';
 import 'package:origination/service/bureau_check_service.dart';
+import 'package:origination/service/util_service.dart';
 
 class ApplicantForm extends StatefulWidget {
   const ApplicantForm({
@@ -30,6 +32,8 @@ class _ApplicantFormState extends State<ApplicantForm> {
   Logger logger = Logger();
   final bureauService = BureauCheckService();
   bool isLoading = false;
+  UtilService utilService = UtilService();
+  final GlobalKey<FormState> _formKey = GlobalKey();
   late Individual individual;
 
   // Controllers
@@ -56,6 +60,7 @@ class _ApplicantFormState extends State<ApplicantForm> {
   final TextEditingController taluka = TextEditingController();
   final TextEditingController district = TextEditingController();
   final TextEditingController state = TextEditingController();
+  final TextEditingController country = TextEditingController();
   final TextEditingController panController= TextEditingController();
   final TextEditingController voterIdController= TextEditingController();
   late DateTime _selectedDate;
@@ -95,13 +100,13 @@ class _ApplicantFormState extends State<ApplicantForm> {
         dob.text = responseData['dateOfBirth'];
         gender.text = responseData['gender'];
         alternateMobile.text = responseData['alternateMobileNumber'];
-        address1.text = responseData['address1'];
-        address2.text = responseData['address2'];
-        pincode.text = responseData['pincode'];
-        landMark.text = responseData['landmark'];
-        city.text = responseData['city'];
-        state.text = responseData['state'];
-        // Set other fields accordingly
+        // address1.text = responseData['address1'];
+        // address2.text = responseData['address2'];
+        // landMark.text = responseData['landmark'];
+        // city.text = responseData['city'];
+        // state.text = responseData['state'];
+        // country.text = responseData['country'];
+        // pincode.text = responseData['pincode'];
       });
     } catch (e) {
       logger.e('Error fetching individual data: $e');
@@ -132,7 +137,7 @@ class _ApplicantFormState extends State<ApplicantForm> {
       product: product.text,
       enquiryPurpose: enquiry.text,
       internalRefNumber: int.parse(internalRefNo.text),
-      loanAmount: double.parse(loanAMount.text),
+      loanAmount: 824600,
       firstName: firstName.text,
       middleName: middleName.text,
       lastName: lastName.text,
@@ -152,15 +157,16 @@ class _ApplicantFormState extends State<ApplicantForm> {
       taluka: taluka.text,
       district: district.text,
       state: state.text,
+      country: country.text,
       pan: panController.text,
       voterIdNumber: voterIdController.text,
       applicantId: widget.id,
+      commentsByRm: "nothing",
       type: IndividualType.APPLICANT,
       status: ApplicantDeclarationStatus.PENDING
     );
     try {
-      bureauService.saveIndividual(individual);
-      Navigator.push(context, MaterialPageRoute(builder: (context) => BureauCheckList(id: widget.id)));
+      Navigator.push(context, MaterialPageRoute(builder: (context) => DeclarationNew(individual: individual,)));
     } catch (e) {
       showError(e);
     }
@@ -227,88 +233,97 @@ class _ApplicantFormState extends State<ApplicantForm> {
             child: SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Referencecode(label: "Product", referenceCode: "product", controller: product, onChanged: (newValue) => onChange(newValue!, product), isEditable: true, isReadable: false, isRequired: true),
-                    const SizedBox(height: 10),
-                    Referencecode(label: "Enquiry", referenceCode: "enquiry", controller: enquiry, onChanged: (newValue) => onChange(newValue!, enquiry), isEditable: true, isReadable: false, isRequired: true),
-                    const SizedBox(height: 10),
-                    NumberInput(label: "Internal Ref No", controller: internalRefNo, onChanged: (newValue) {}, isEditable: true, isReadable: false, isRequired: true),
-                    const SizedBox(height: 10),
-                    NumberInput(label: "Loan Amount", controller: loanAMount, onChanged: (newValue) {}, isEditable: true, isReadable: false, isRequired: true),
-                    const SizedBox(height: 10),
-                    TextInput(label: "First Name", controller: firstName, onChanged: (newValue) {}, isEditable: true, isReadable: false, isRequired: true,),
-                    const SizedBox(height: 10),
-                    TextInput(label: "Middle Name", controller: middleName, onChanged: (newValue) {}, isEditable: true, isReadable: false, isRequired: true,),
-                    const SizedBox(height: 10),
-                    TextInput(label: "Last Name", controller: lastName, onChanged: (newValue) {}, isEditable: true, isReadable: false, isRequired: true,),
-                    const SizedBox(height: 10),
-                    TextInput(label: "Father's First Name", controller: fathersFn, onChanged: (newValue) {}, isEditable: true, isReadable: false, isRequired: true,),
-                    const SizedBox(height: 10),
-                    TextInput(label: "Father's Middle Name", controller: fathersMn, onChanged: (newValue) {}, isEditable: true, isReadable: false, isRequired: true,),
-                    const SizedBox(height: 10),
-                    TextInput(label: "Father's Last Name", controller: fathersLn, onChanged: (newValue) {}, isEditable: true, isReadable: false, isRequired: true,),
-                    const SizedBox(height: 10),
-                    MobileInput(label: "Mobile No", controller: mobile, onChanged: (newValue) {}, isEditable: true, isReadable: false, isRequired: true),
-                    const SizedBox(height: 10),
-                    DatePickerInput(label: "Date of Birth", controller: dob, onChanged: (newValue) => handleDateChanged(newValue), isEditable: true, isReadable: false, isRequired: true),
-                    const SizedBox(height: 10),
-                    Referencecode(label: "Gender", referenceCode: "gender", controller: gender, onChanged: (newValue) => onChange(newValue!, gender), isEditable: true, isReadable: false, isRequired: true),
-                    const SizedBox(height: 10),
-                    Referencecode(label: "Marital Status", referenceCode: "marital_status", controller: maritalStatus, onChanged: (newValue) => onChange(newValue!, maritalStatus), isEditable: true, isReadable: false, isRequired: true),
-                    const SizedBox(height: 10),
-                    MobileInput(label: "Alternate Mobile No", controller: alternateMobile, onChanged: (newValue) {}, isEditable: true, isReadable: false, isRequired: true),
-                    const SizedBox(height: 10),
-                    TextInput(label: "Address Line 1", controller: address1, onChanged: (newValue) {}, isEditable: true, isReadable: false, isRequired: true,),
-                    const SizedBox(height: 10),
-                    TextInput(label: "Address Line 2", controller: address2, onChanged: (newValue) {}, isEditable: true, isReadable: false, isRequired: true,),
-                    const SizedBox(height: 10),
-                    NumberInput(label: "Pincode", controller: pincode, onChanged: (newValue) {}, isEditable: true, isReadable: false, isRequired: true),
-                    const SizedBox(height: 10),
-                    TextInput(label: "Landmark", controller: landMark, onChanged: (newValue) {}, isEditable: true, isReadable: false, isRequired: true,),
-                    const SizedBox(height: 10),
-                    TextInput(label: "City", controller: city, onChanged: (newValue) {}, isEditable: true, isReadable: false, isRequired: true,),
-                    const SizedBox(height: 10),
-                    TextInput(label: "Taluka", controller: taluka, onChanged: (newValue) {}, isEditable: true, isReadable: false, isRequired: true,),
-                    const SizedBox(height: 10),
-                    TextInput(label: "District", controller: district, onChanged: (newValue) {}, isEditable: true, isReadable: false, isRequired: true,),
-                    const SizedBox(height: 10),
-                    TextInput(label: "State", controller: state, onChanged: (newValue) {}, isEditable: true, isReadable: false, isRequired: true,),
-                    const SizedBox(height: 10),
-                    TextInput(label: "PAN", controller: panController, onChanged: (newValue) {}, isEditable: true, isReadable: false, isRequired: true,),
-                    const SizedBox(height: 10),
-                    TextInput(label: "Voter Id", controller: voterIdController, onChanged: (newValue) {}, isEditable: true, isReadable: false, isRequired: true,),
-                    const SizedBox(height: 10.0),
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 1.0),
-                      child: Align(
-                        alignment: Alignment.bottomCenter,
-                        child: SizedBox(
-                          width: double.infinity,
-                          height: 55,
-                          child: MaterialButton(
-                            onPressed: onSave,
-                            color: const Color.fromARGB(255, 3, 71, 244),
-                            textColor: Colors.white,
-                            padding: const EdgeInsets.symmetric(vertical: 16.0),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30.0),
-                            ),
-                            child: isLoading ? const SizedBox(
-                              width: 20.0,
-                              height: 10.0,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2.0,
-                                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Referencecode(label: "Product", referenceCode: "product", controller: product, onChanged: (newValue) => onChange(newValue!, product), isEditable: true, isReadable: false, isRequired: true),
+                      const SizedBox(height: 10),
+                      Referencecode(label: "Enquiry", referenceCode: "enquiry", controller: enquiry, onChanged: (newValue) => onChange(newValue!, enquiry), isEditable: true, isReadable: false, isRequired: true),
+                      const SizedBox(height: 10),
+                      NumberInput(label: "Internal Ref No", controller: internalRefNo, onChanged: (newValue) {}, isEditable: true, isReadable: false, isRequired: true),
+                      const SizedBox(height: 10),
+                      NumberInput(label: "Loan Amount", controller: loanAMount, onChanged: (newValue) {}, isEditable: true, isReadable: false, isRequired: true),
+                      const SizedBox(height: 10),
+                      TextInput(label: "First Name", controller: firstName, onChanged: (newValue) {}, isEditable: true, isReadable: false, isRequired: true,),
+                      const SizedBox(height: 10),
+                      TextInput(label: "Middle Name", controller: middleName, onChanged: (newValue) {}, isEditable: true, isReadable: false, isRequired: true,),
+                      const SizedBox(height: 10),
+                      TextInput(label: "Last Name", controller: lastName, onChanged: (newValue) {}, isEditable: true, isReadable: false, isRequired: true,),
+                      const SizedBox(height: 10),
+                      TextInput(label: "Father's First Name", controller: fathersFn, onChanged: (newValue) {}, isEditable: true, isReadable: false, isRequired: true,),
+                      const SizedBox(height: 10),
+                      TextInput(label: "Father's Middle Name", controller: fathersMn, onChanged: (newValue) {}, isEditable: true, isReadable: false, isRequired: true,),
+                      const SizedBox(height: 10),
+                      TextInput(label: "Father's Last Name", controller: fathersLn, onChanged: (newValue) {}, isEditable: true, isReadable: false, isRequired: true,),
+                      const SizedBox(height: 10),
+                      MobileInput(label: "Mobile No", controller: mobile, onChanged: (newValue) {}, isEditable: true, isReadable: false, isRequired: true),
+                      const SizedBox(height: 10),
+                      DatePickerInput(label: "Date of Birth", controller: dob, onChanged: (newValue) => handleDateChanged(newValue), isEditable: true, isReadable: false, isRequired: true),
+                      const SizedBox(height: 10),
+                      Referencecode(label: "Gender", referenceCode: "gender", controller: gender, onChanged: (newValue) => onChange(newValue!, gender), isEditable: true, isReadable: false, isRequired: true),
+                      const SizedBox(height: 10),
+                      Referencecode(label: "Marital Status", referenceCode: "marital_status", controller: maritalStatus, onChanged: (newValue) => onChange(newValue!, maritalStatus), isEditable: true, isReadable: false, isRequired: true),
+                      const SizedBox(height: 10),
+                      MobileInput(label: "Alternate Mobile No", controller: alternateMobile, onChanged: (newValue) {}, isEditable: true, isReadable: false, isRequired: true),
+                      const SizedBox(height: 10),
+                      TextInput(label: "Address Line 1", controller: address1, onChanged: (newValue) {}, isEditable: true, isReadable: false, isRequired: true,),
+                      const SizedBox(height: 10),
+                      TextInput(label: "Address Line 2", controller: address2, onChanged: (newValue) {}, isEditable: true, isReadable: false, isRequired: true,),
+                      const SizedBox(height: 10),
+                      TextInput(label: "Landmark", controller: landMark, onChanged: (newValue) {}, isEditable: true, isReadable: false, isRequired: true,),
+                      const SizedBox(height: 10),
+                      TextInput(label: "City", controller: city, onChanged: (newValue) {}, isEditable: true, isReadable: false, isRequired: true,),
+                      const SizedBox(height: 10),
+                      TextInput(label: "Taluka", controller: taluka, onChanged: (newValue) {}, isEditable: true, isReadable: false, isRequired: true,),
+                      const SizedBox(height: 10),
+                      TextInput(label: "District", controller: district, onChanged: (newValue) {}, isEditable: true, isReadable: false, isRequired: true,),
+                      const SizedBox(height: 10),
+                      TextInput(label: "State", controller: state, onChanged: (newValue) {}, isEditable: true, isReadable: false, isRequired: true,),
+                      const SizedBox(height: 10),
+                      TextInput(label: "Country", controller: country, onChanged: (newValue) {}, isEditable: true, isReadable: false, isRequired: true,),
+                      const SizedBox(height: 10),
+                      NumberInput(label: "Pincode", controller: pincode, onChanged: (newValue) => setAddressData(newValue), isEditable: true, isReadable: false, isRequired: true),
+                      const SizedBox(height: 10),
+                      TextInput(label: "PAN", controller: panController, onChanged: (newValue) {}, isEditable: true, isReadable: false, isRequired: true,),
+                      const SizedBox(height: 10),
+                      TextInput(label: "Voter Id", controller: voterIdController, onChanged: (newValue) {}, isEditable: true, isReadable: false, isRequired: true,),
+                      const SizedBox(height: 10.0),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 1.0),
+                        child: Align(
+                          alignment: Alignment.bottomCenter,
+                          child: SizedBox(
+                            width: double.infinity,
+                            height: 55,
+                            child: MaterialButton(
+                              onPressed: () {
+                                if (_formKey.currentState!.validate()) {
+                                  onSave();
+                                }
+                              },
+                              color: const Color.fromARGB(255, 3, 71, 244),
+                              textColor: Colors.white,
+                              padding: const EdgeInsets.symmetric(vertical: 16.0),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30.0),
                               ),
-                            )
-                            : const Text('Save', style: TextStyle(fontSize: 18),),
+                              child: isLoading ? const SizedBox(
+                                width: 20.0,
+                                height: 10.0,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2.0,
+                                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                ),
+                              )
+                              : const Text('Save', style: TextStyle(fontSize: 18),),
+                            ),
                           ),
                         ),
-                      ),
-                    )
-                  ],
+                      )
+                    ],
+                  ),
                 ),
               ),
             )
@@ -318,4 +333,28 @@ class _ApplicantFormState extends State<ApplicantForm> {
       )
     );
   }
+
+  setAddressData(String pinCode) {
+    if (pinCode.length == 6) {
+      getAddressByPinCode(pinCode);
+    }
+  }
+
+  Future<void> getAddressByPinCode(String pinCode) async {
+    try {
+      logger.i("Getting address by pin code...");
+        AddressDTO addressDTO = await utilService.getAddressByPincode(pincode.text);
+        logger.d("Address: ${addressDTO.toJson()}");
+        setState(() {
+          city.text = addressDTO.city!;
+          district.text = addressDTO.district!;
+          state.text = addressDTO.state!;
+          taluka.text = addressDTO.city!;
+          country.text = addressDTO.country!;
+        });
+      } catch (e) {
+        throw Exception(e);
+      }
+  }
+
 }

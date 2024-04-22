@@ -70,7 +70,7 @@ class SignInServiceImpl implements SignInService {
   @override
   Future<void> resetPasswordInit(String email) async {
     final url = Uri.parse('$apiUrl/api/user-management/account/reset-password/init?email=$email');
-    final fetchResponse = await authInterceptor.post(url);
+    await authInterceptor.post(url);
   }
   
   @override

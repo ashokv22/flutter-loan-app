@@ -30,8 +30,10 @@ class Individual {
   String taluka;
   String district;
   String state;
+  String country;
   String? pan;
   String? voterIdNumber;
+  String? commentsByRm;
   ApplicantDeclarationStatus? status;
   int? applicantId;
   String? approvedBy;
@@ -67,8 +69,10 @@ class Individual {
     required this.district,
     required this.city,
     required this.state,
+    required this.country,
     this.pan,
     this.voterIdNumber,
+    this.commentsByRm,
     this.status,
     this.applicantId,
     this.approvedBy,

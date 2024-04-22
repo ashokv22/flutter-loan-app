@@ -11,7 +11,9 @@ class Environment {
     
     switch (type) {
       case ServerType.Local:
-        baseUrl = 'http://172.20.10.3:8080/';     // Local
+        // baseUrl = 'http://172.20.10.3:8080/';     // Local
+        baseUrl = 'http://192.168.137.60:8080/';       // Laptop hotspot
+        // baseUrl = 'http://192.168.2.120:8080/';     // Local Anusha
         break;
       case ServerType.LocalStatic:
         baseUrl = 'http://192.168.2.127:8080/';   // Local static

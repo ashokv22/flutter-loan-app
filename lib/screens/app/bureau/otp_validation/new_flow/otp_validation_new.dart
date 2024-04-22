@@ -1,31 +1,25 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
-import 'package:origination/models/bureau_check/declaration.dart';
-import 'package:origination/models/bureau_check/otp_verification/otp_request_dto.dart';
-// import 'package:origination/models/bureau_check/otp_verification/otp_validation_dto.dart';
-import 'package:origination/models/bureau_check/save_declaration_dto.dart';
+import 'package:origination/models/bureau_check/individual.dart';
+import 'package:origination/screens/app/bureau/screens/bureau_check_list.dart';
 import 'package:origination/service/bureau_check_service.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
-import 'package:origination/screens/app/bureau/screens/applicant_form.dart';
 
-class OtpValidation extends StatefulWidget {
-  const OtpValidation({
+class OtpValidationNew extends StatefulWidget {
+  const OtpValidationNew({
     super.key, 
-    required this.id,
-    required this.mobile, 
-    required this.declaration,
-    // required this.secretKey,
+    required this.individual,
   });
-  final int id;
-  final String mobile;
-  final DeclarationMasterDTO declaration;
-  // final String secretKey;
+
+  final Individual individual;
 
   @override
-  State<OtpValidation> createState() => _OtpValidationState();
+  State<OtpValidationNew> createState() => _OtpValidationNewState();
 }
 
-class _OtpValidationState extends State<OtpValidation> {
+class _OtpValidationNewState extends State<OtpValidationNew> {
   Logger logger = Logger();
   BureauCheckService bureauService = BureauCheckService();
 
@@ -38,32 +32,28 @@ class _OtpValidationState extends State<OtpValidation> {
       isLoading = true;
     });
     
-    try {
-      // OtpRequestDTO dto = OtpRequestDTO(otp: verificationCode, secret_key: widget.secretKey);
-      SaveDeclarationDTO saveDeclaration = SaveDeclarationDTO(
-        entityType: "Lead",
-        entityId: widget.id,
-        modeOfAcceptance: "OTP",
-        dateOfAcceptance: DateTime.now(),
-        status: "ACCEPTED",
-        declarationMasterId: widget.declaration.id
-      );
-      // OtpValidationDTO validation = OtpValidationDTO(requestDTO: dto, declarationDTO: saveDeclaration);
-      OtpRequestDTO response = await bureauService.validateBureauCheckOtp(widget.id, int.parse(verificationCode), saveDeclaration);
-      logger.d(response.toJson());
-      otpValidated = true;
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => ApplicantForm(id: widget.id,)),
-      );
-    } catch(e) {
-      setState(() {
-        isLoading = false;
-      });
-      logger.e('An error occurred while submitting Otp: $e');
-      showSnackBar('Invalid OTP or expired. Please try again!');
-    }
+    List<Individual> individuals = [];
+    individuals.add(widget.individual);
+    final response = await bureauService.saveIndividualWithOTP(verificationCode, individuals);
+    logger.i('Status: ${response.statusCode}, body: ${response.body}');
+    
+    setState(() {
+      if (response.statusCode == 201) {
+        otpValidated = true;
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => BureauCheckList(id: widget.individual.applicantId!)),
+        );
+      } else {
+        otpValidated = false;
+        showBottomSheetWithError(response.body);
+      }
+    });
+    setState(() {
+      isLoading = false;
+    });
   }
+  
 
   void showSnackBar(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
@@ -106,7 +96,7 @@ class _OtpValidationState extends State<OtpValidation> {
               child: Column(
                 children: [
                   const Text("OTP Verification", style: TextStyle(fontSize: 24, fontWeight: FontWeight.w600),),
-                  Text("Enter the OTP sent to ${widget.mobile}", style: const TextStyle(fontSize: 16),),
+                  Text("Enter the OTP sent to ${widget.individual.mobileNumber}", style: const TextStyle(fontSize: 16),),
                   const SizedBox(height: 50,),
                   OtpTextField(
                     textStyle: const TextStyle(fontSize: 22),
@@ -165,6 +155,32 @@ class _OtpValidationState extends State<OtpValidation> {
           ),
         )
         ),
+    );
+  }
+  
+  void showBottomSheetWithError(String errorMessage) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return Container(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const Text(
+                'Error',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(jsonDecode(errorMessage)['error']),
+            ],
+          ),
+        );
+      },
     );
   }
 }

@@ -68,7 +68,7 @@ class _PrimaryKycHomeState extends State<PrimaryKycHome> {
         setState(() {
           isLoading = true;
         });
-        PrimaryKycDTO dto = PrimaryKycDTO(
+        PrimaryKycDTO dto = PrimaryKycDTO (
           relatedPartyId: widget.relatedPartyId, 
           aadhaarNumber: aadhaarNumberController.text, 
           name: nameController.text, 
@@ -131,7 +131,7 @@ class _PrimaryKycHomeState extends State<PrimaryKycHome> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text("Primary KYC", style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),),
-                    Text("Mode: Adhar OCR", style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),),
+                    Text("Mode: Aadhaar OCR", style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),),
                   ],
                 ),
                 const SizedBox(height: 30,),

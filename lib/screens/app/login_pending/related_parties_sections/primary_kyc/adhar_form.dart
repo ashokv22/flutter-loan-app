@@ -108,13 +108,13 @@ class _AdharFormState extends State<AdharForm> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text("Primary KYC", style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),),
-                    Text("Mode: Adhar OCR", style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),),
+                    Text("Mode: Aadhaar OCR", style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),),
                   ],
                 ),
                 const SizedBox(height: 30,),
                 Column(
                   children: [
-                    TextInput(label: "Adhar Number", controller: aadhaarNumberController, onChanged: (value) {}, isEditable: true, isReadable: false, isRequired: true,),
+                    TextInput(label: "Aadhar Number", controller: aadhaarNumberController, onChanged: (value) {}, isEditable: true, isReadable: false, isRequired: true,),
                     const SizedBox(height: 10,),
                     TextInput(label: "Name", controller: nameController, onChanged: (value) {}, isEditable: true, isReadable: false, isRequired: true,),
                     const SizedBox(height: 10,),
