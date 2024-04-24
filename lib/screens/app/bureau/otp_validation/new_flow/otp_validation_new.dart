@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:logger/logger.dart';
 import 'package:origination/models/bureau_check/individual.dart';
 import 'package:origination/screens/app/bureau/screens/bureau_check_list.dart';
@@ -46,7 +47,7 @@ class _OtpValidationNewState extends State<OtpValidationNew> {
         );
       } else {
         otpValidated = false;
-        showBottomSheetWithError(response.body);
+        showBottomSheetWithError(response);
       }
     });
     setState(() {
@@ -158,10 +159,20 @@ class _OtpValidationNewState extends State<OtpValidationNew> {
     );
   }
   
-  void showBottomSheetWithError(String errorMessage) {
+  void showBottomSheetWithError(Response response) {
     showModalBottomSheet(
       context: context,
       builder: (context) {
+        final data = jsonDecode(response.body);
+        String error = '';
+        logger.e(data);
+        if (response.statusCode == 400) {
+          error = data['error'];
+        } else if (response.statusCode == 400) {
+          error = data['errors'];
+        } else {
+          error = "Internal Server Error ${data.toString()}";
+        }
         return Container(
           padding: const EdgeInsets.all(16),
           child: Column(
@@ -176,7 +187,7 @@ class _OtpValidationNewState extends State<OtpValidationNew> {
                 ),
               ),
               const SizedBox(height: 8),
-              Text(jsonDecode(errorMessage)['error']),
+              Text(error),
             ],
           ),
         );

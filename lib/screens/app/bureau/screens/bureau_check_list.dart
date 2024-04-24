@@ -43,7 +43,7 @@ class _BureauCheckListState extends State<BureauCheckList> {
 
   Future<void> refreshLeadsSummary() async {
     setState(() {
-      checkListFuture = bureauService.getAllCheckLists(widget.id);
+      checkListFuture = bureauService.getAllCheckListsAllStatus(widget.id);
       checkListFuture.then((checkList) {
         if (checkList.length == 0) {
           isRecordsExist = false;

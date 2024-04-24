@@ -161,8 +161,33 @@ class BureauCheckService {
     }
   }
 
-  Future<List<CheckListDTO>> getAllCheckLists(int id) async {
+  Future<List<CheckListDTO>> getAllCheckListsAllStatus(int id) async {
     String endpoint = "api/application/bureauCheck/all/$id";
+    try {
+      final response = await authInterceptor.get(Uri.parse(endpoint));
+      if (response.statusCode == 200) {
+        final List<dynamic> jsonResponse = jsonDecode(response.body);
+        List<CheckListDTO> list = [];
+        for (var data in jsonResponse) {
+          try {
+            CheckListDTO dto = CheckListDTO.fromJson(data);
+            list.add(dto);
+          } catch(e) {
+            logger.e(e.toString());
+          }
+        }
+        return list;
+      }
+      else {
+        throw Exception('Failed to init bureau check. Error code: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception("An error occurred while fetching data!: $e");
+    }
+  }
+
+  Future<List<CheckListDTO>> getAllCheckLists(int id) async {
+    String endpoint = "api/application/bureauCheck/getAllBureauChecks/$id";
     try {
       final response = await authInterceptor.get(Uri.parse(endpoint));
       if (response.statusCode == 200) {
