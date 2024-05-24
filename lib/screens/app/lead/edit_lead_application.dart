@@ -253,6 +253,17 @@ class _EditLeadState extends State<EditLead> {
     else if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'Phone') {
       return MobileInput(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field), isEditable: field.isEditable!, isReadable: field.isReadOnly!, isRequired: field.isRequired!);
     }
+    else if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'HIDDEN') {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text("HIDDEN Field $fieldName"),
+          const SizedBox(height: 10,),
+          TextInput(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field), isEditable: field.isEditable!, isReadable: field.isReadOnly!, isRequired: field.isRequired!)
+
+        ],
+      );
+    }
     return const SizedBox();
   }
 

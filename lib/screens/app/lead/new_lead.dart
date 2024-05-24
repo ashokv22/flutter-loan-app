@@ -27,11 +27,13 @@ class _NewLeadState extends State<NewLead> {
   final GlobalKey<FormState> _formKey = GlobalKey();
   late EntityConfigurationMetaData entity;
   bool isLoading = false;
+  Map<String, dynamic> userData = {};
   Map<String, TextEditingController> textEditingControllerMap = {};
 
   @override
   void initState() {
     super.initState();
+    getAccountInfo();
     refreshLeadsSummary();
   }
 
@@ -40,6 +42,10 @@ class _NewLeadState extends State<NewLead> {
       leadApplicationFuture = applicationService.getEntityLeadApplication();
     });
   }
+
+    void getAccountInfo() async {
+      userData = await authService.getLoggedUser();
+    }
 
   void onSave(EntityConfigurationMetaData entity) async {
     setState(() {
@@ -255,6 +261,20 @@ class _NewLeadState extends State<NewLead> {
     }
     else if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'Number') {
       return NumberInput(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field), isEditable: field.isEditable!, isReadable: field.isReadOnly!, isRequired: field.isRequired!);
+    }
+    else if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'HIDDEN') {
+      if (userData.isNotEmpty) {
+        controller.text = userData['branchData']['state'];
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text("HIDDEN Field $fieldName"),
+            const SizedBox(height: 10,),
+            TextInput(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field), isEditable: field.isEditable!, isReadable: field.isReadOnly!, isRequired: field.isRequired!)
+
+          ],
+        );
+      }
     }
     return const SizedBox();
   }
