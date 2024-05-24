@@ -37,7 +37,7 @@ class _SignInPageState extends State<SignIn> {
 
   void setData() async {
     userNameController.text = "super_admin";
-    passwordController.text = "super_admin";
+    passwordController.text = "super_admin@2024";
   }
 
   @override
@@ -69,7 +69,7 @@ class _SignInPageState extends State<SignIn> {
         context: context,
         builder: (context) => AlertDialog(
           title: const Text('Sign-in Error'),
-          content: const Text('Failed to sign in. Please try again.'),
+          content: Text(error.toString()),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),

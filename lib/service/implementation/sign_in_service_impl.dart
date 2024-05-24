@@ -12,11 +12,10 @@ final authService = AuthService();
 final authInterceptor = AuthInterceptor(http.Client(), authService);
 
 class SignInServiceImpl implements SignInService {
-
   AuthService authService = AuthService();
   Logger logger = Logger();
   final String apiUrl = Environment.baseUrl;
-  
+
   @override
   Future<void> signIn(String userName, String password) async {
     final url = Uri.parse('${apiUrl}api/user-management/sign-in');
@@ -28,15 +27,18 @@ class SignInServiceImpl implements SignInService {
       'userName': userName,
       'password': password,
     });
-    final response = await http.post(url, headers: headers, body: body);
-    if (response.statusCode == 200) {
-      final accessToken = response.headers['x-auth-token'];
-      logger.i("Access token", accessToken);
-      await authService.setAccessToken(accessToken!);
-      await getAccountInfo();
-    }
-    else {
-      logger.e(response.statusCode);
+    try {
+      final response = await http.post(url, headers: headers, body: body);
+      if (response.statusCode == 200) {
+        final accessToken = response.headers['x-auth-token'];
+        logger.i("Access token", accessToken);
+        await authService.setAccessToken(accessToken!);
+        await getAccountInfo();
+      } else {
+        throw Exception(response.body.toString());
+      }
+    } catch (e) {
+      throw Exception(e.toString());
     }
   }
 
@@ -63,39 +65,40 @@ class SignInServiceImpl implements SignInService {
     }
   }
 
-  Future<dynamic> forgotPassword(String userName) async {
-
-  }
+  Future<dynamic> forgotPassword(String userName) async {}
 
   @override
   Future<void> resetPasswordInit(String email) async {
-    final url = Uri.parse('$apiUrl/api/user-management/account/reset-password/init?email=$email');
+    final url = Uri.parse(
+        '$apiUrl/api/user-management/account/reset-password/init?email=$email');
     await authInterceptor.post(url);
   }
-  
+
   @override
   Future<void> checkResetKey(String token) async {
-    final url = Uri.parse('api/user-management/account/checkResetKey?key=$token');
+    final url =
+        Uri.parse('api/user-management/account/checkResetKey?key=$token');
     await authInterceptor.get(url, headers: {'skip': 'true'});
   }
 
   @override
-  Future<ResponseStatusDTO> resetPassword(UserCompositeDTO userCompositeDTO) async {
+  Future<ResponseStatusDTO> resetPassword(
+      UserCompositeDTO userCompositeDTO) async {
     final url = Uri.parse('api/user-management/account/reset-password/finish');
     try {
-      final fetchResponse = await authInterceptor.put(url, headers: {'Content-Type': 'application/json; charset=utf-8'});
+      final fetchResponse = await authInterceptor.put(url,
+          headers: {'Content-Type': 'application/json; charset=utf-8'});
       if (fetchResponse.statusCode == 200) {
         final response = json.decode(fetchResponse.body);
         return response;
+      } else {
+        logger.e(
+            'Failed to reset the password, Error code: ${fetchResponse.statusCode}');
       }
-      else {
-        logger.e('Failed to reset the password, Error code: ${fetchResponse.statusCode}');
-      }
-    }
-    catch (e) {
+    } catch (e) {
       logger.e('An error occurred while submitting the application: $e');
     }
-    return ResponseStatusDTO(status: '400', reasonCode: '', reason: 'Password reset failed');
+    return ResponseStatusDTO(
+        status: '400', reasonCode: '', reason: 'Password reset failed');
   }
-
 }
