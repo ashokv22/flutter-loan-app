@@ -257,5 +257,17 @@ class BureauCheckService {
     }
   }
 
+  Future<http.Response> getPdfUrlForIndividual(int id) async {
+    logger.i("Getting PDF url for individual: $id");
+    String endpoint = "api/application/cibilView/$id";
+    try {
+      final response = await authInterceptor.get(Uri.parse(endpoint));
+      logger.i(response.body);
+      return response;
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
 
 }

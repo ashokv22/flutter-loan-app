@@ -47,38 +47,38 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 children: [
 
                   /// -- IMAGE
-                  Stack(
-                    children: [
-                      SizedBox(
-                        width: 100,
-                        height: 100,
-                        child: ClipRRect(
-                            borderRadius: BorderRadius.circular(100), child: const Image(image: AssetImage('assets/images/female-04.jpg'))),
-                      ),
-                      Positioned(
-                        bottom: 0,
-                        right: 0,
-                        child: Container(
-                          width: 35,
-                          height: 35,
-                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(100), color: Colors.blueAccent[200]),
-                          child: const Icon(
-                            LineAwesomeIcons.alternate_pencil,
-                            size: 20,
-                          ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                    child: Row(
+                      children: [
+                        Stack(
+                          children: [
+                            SizedBox(
+                              width: 60,
+                              height: 60,
+                              child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(100), child: const Image(image: AssetImage('assets/images/female-04.jpg'))),
+                            ),
+                          ],
                         ),
-                      ),
-                    ],
+                        const SizedBox(width: 10),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("Hi $name", 
+                              style: TextStyle(
+                                fontSize: 20, 
+                                color: Theme.of(context).textTheme.displaySmall!.color,
+                                fontWeight: FontWeight.w400
+                              )
+                            ),
+                            Text(email, style: Theme.of(context).textTheme.bodyMedium),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                  const SizedBox(height: 10),
-                  Text("Hi $name", 
-                    style: TextStyle(
-                      fontSize: 24, 
-                      color: Theme.of(context).textTheme.displaySmall!.color,
-                      fontWeight: FontWeight.w400
-                    )
-                  ),
-                  Text(email, style: Theme.of(context).textTheme.bodyLarge),
                   const SizedBox(height: 10),
                   Padding(
                     padding: const EdgeInsets.all(10.0),

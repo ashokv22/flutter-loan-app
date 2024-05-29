@@ -34,8 +34,8 @@ class _PanCardWidgetState extends State<PanCardWidget> {
     SecondaryKYCDTO secondaryKYCDTO = SecondaryKYCDTO(
       id: null,
       isVerified: true,
-      name: "${widget.panData.title} ${widget.panData.firstname} ${widget.panData.middlename} ${widget.panData.lastname}",
-      fatherName: widget.panData.firstname,
+      name: widget.panData.name,
+      fatherName: widget.panData.fatherName,
       dateOfBirth: null,
       panNumber: widget.panData.panNo,
       relatedPartyId: widget.relatedPartyId,
@@ -100,7 +100,7 @@ class _PanCardWidgetState extends State<PanCardWidget> {
                           TextStyle(fontWeight: FontWeight.w300, fontSize: 16),
                     ),
                     const SizedBox(width: 5),
-                    Text('${widget.panData.firstname} ${widget.panData.lastname}',
+                    Text(widget.panData.name,
                         style: const TextStyle(
                             fontWeight: FontWeight.w400, fontSize: 18)),
                   ],

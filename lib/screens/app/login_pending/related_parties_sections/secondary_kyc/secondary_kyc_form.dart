@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
 import 'package:origination/models/login_flow/sections/related_party/pan_request_dto.dart';
+import 'package:origination/screens/app/login_pending/related_parties_sections/secondary_kyc/pan_form.dart';
 import 'package:origination/service/kyc_service.dart';
 
 import 'PanCardWidget.dart';
@@ -61,7 +62,7 @@ class _SecondaryKycFormState extends State<SecondaryKycForm> {
   void setData(PanRequestDTO panData) {
     setState(() {
       if (panNumberController.text.length == 10) {
-        nameController.text = "${panData.firstname} ${panData.lastname}";
+        nameController.text = panData.name;
         fatherNameController.text = "Venkateshappa";
         dobController.text = DateFormat('yyyy-MM-dd').format(DateTime.now());
         isPanValidated = true;
@@ -172,6 +173,21 @@ class _SecondaryKycFormState extends State<SecondaryKycForm> {
                 ),
                 const SizedBox(height: 10),
                 const Text("No Manual KYC as of now!", style: TextStyle(fontStyle: FontStyle.italic),),
+                const SizedBox(height: 10),
+                MaterialButton(
+                  height: 40,
+                  minWidth: 100,
+                  onPressed: () {
+                     Navigator.push(context, MaterialPageRoute(builder: (context) => PanCardForm(relatedPartyId: widget.relatedPartyId, type: widget.type)));
+                  },
+                  color: const Color.fromARGB(255, 6, 139, 26),
+                  textColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 16.0),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30.0),
+                  ),
+                  child: const Text('Go Manual'),
+                ),
                 const SizedBox(height: 150),
                 if(isPanValidated)...[FutureBuilder(
                   future: panRequestFuture,
@@ -188,14 +204,15 @@ class _SecondaryKycFormState extends State<SecondaryKycForm> {
                       );
                     } else if (snapshot.hasData) {
                       PanRequestDTO panData = snapshot.data!;
-                      if (panData.exist.toLowerCase() == "e") {
+                      if (panData.panStatus == "E") {
+                        logger.i("Pan card exists: $panData");
                         return PanCardWidget(
                           panData: panData,
                           isLoading: isLoading,
                           relatedPartyId: widget.relatedPartyId,
                           type: widget.type,
                         );
-                      } else if (panData.exist.toLowerCase() == "n") {
+                      } else if (panData.panStatus.toLowerCase() == "n") {
                         return Container(
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10),

@@ -5,18 +5,21 @@ class Environment {
 
   //Default Dev server
   static String baseUrl = 'http://13.127.65.162/server/';
-  static ServerType currentServerType = ServerType.Development;
+  static ServerType currentServerType = ServerType.Staging;
 
   static void setServerType(ServerType type) async {
     
     switch (type) {
       case ServerType.Local:
         // baseUrl = 'http://172.20.10.3:8080/';     // Local
-        baseUrl = 'http://192.168.137.60:8080/';       // Laptop hotspot
-        // baseUrl = 'http://192.168.2.120:8080/';     // Local Anusha
+        // baseUrl = 'http://172.20.10.3:8080/';       // Laptop hotspot
+        baseUrl = 'http://192.168.2.120:8080/';     // Local Anusha
         break;
       case ServerType.LocalStatic:
-        baseUrl = 'http://192.168.2.127:8080/';   // Local static
+        baseUrl = 'http://192.168.2.122:8080/';   // Local static
+        break;
+      case ServerType.Ft7Dev:
+        baseUrl = 'http://13.127.65.162/ft7-sandbox/'; // Ft7Dev
         break;
       case ServerType.Development:
         baseUrl = 'http://13.127.65.162/server/'; // Dev

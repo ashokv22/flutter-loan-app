@@ -3,6 +3,7 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:origination/main.dart';
 import 'package:origination/models/applicant_dto.dart';
 import 'package:origination/models/bureau_check/bc_check_list_dto.dart';
+import 'package:origination/screens/app/bureau/screens/pdf_view.dart';
 import 'package:origination/screens/widgets/reject_reason.dart';
 import 'package:origination/service/bureau_check_service.dart';
 import 'package:origination/service/loan_application_service.dart';
@@ -45,7 +46,7 @@ class _BureauCheckListState extends State<BureauCheckList> {
     setState(() {
       checkListFuture = bureauService.getAllCheckListsAllStatus(widget.id);
       checkListFuture.then((checkList) {
-        if (checkList.length == 0) {
+        if (checkList.isEmpty) {
           isRecordsExist = false;
         }
         if (checkList.any((check) => check.status == "PENDING")) {
@@ -220,8 +221,10 @@ class _BureauCheckListState extends State<BureauCheckList> {
                                         children: [
                                           IconButton(
                                             color: const Color.fromARGB(255, 3, 71, 244),
-                                            onPressed: () {},
-                                            icon: pendingReports == true ? const Icon(Icons.edit) : const Icon(Icons.visibility_rounded)) ,
+                                            onPressed: () {
+                                              Navigator.push(context, MaterialPageRoute(builder: (context) => PdfView(id: widget.id)));
+                                            },
+                                            icon: const Icon(Icons.visibility_rounded)) ,
                                         ],
                                       )
                                     else if (checkList.status == ApplicantDeclarationStatus.APPROVED.name)
