@@ -14,6 +14,7 @@ import 'package:origination/screens/widgets/side_menu.dart';
 import 'package:origination/service/auth_service.dart';
 import 'package:origination/service/loan_application_service.dart';
 import 'package:heroicons/heroicons.dart';
+import 'package:marquee/marquee.dart';
 
 import 'last_lead.dart';
 import 'recent_products_widget.dart';
@@ -137,11 +138,26 @@ class _LeadDashboardState extends State<LeadDashboard> {
                           children: [
                             SizedBox(
                               width: 140,
-                              child: Text(
-                                "Hello ${userInfo['name']}",
+                              height: 18,
+                              child: Marquee(
+                                text: "Hello ${userInfo['name']} ",
                                 style: const TextStyle(color: Colors.white, fontSize: 16),
-                                overflow: TextOverflow.ellipsis,
+                                scrollAxis: Axis.horizontal,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                blankSpace: 20.0,
+                                velocity: 70.0,
+                                pauseAfterRound: const Duration(seconds: 1),
+                                numberOfRounds: 1,
+                                accelerationDuration: const Duration(seconds: 1),
+                                accelerationCurve: Curves.linear,
+                                decelerationDuration: const Duration(milliseconds: 500),
+                                decelerationCurve: Curves.linear,
                               ),
+                              // child: Text(
+                              //   "Hello ${userInfo['name']}",
+                              //   style: const TextStyle(color: Colors.white, fontSize: 16),
+                              //   overflow: TextOverflow.ellipsis,
+                              // ),
                             ),
                             SizedBox(
                               width: 140,

@@ -7,6 +7,7 @@ import 'package:origination/screens/pages/profile/theme_selection_dialog.dart';
 import 'package:origination/screens/pages/profile/update_profile_screen.dart';
 import 'package:origination/service/auth_service.dart';
 import 'package:provider/provider.dart';
+import 'package:marquee/marquee.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -66,12 +67,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text("Hi $name", 
-                              style: TextStyle(
-                                fontSize: 20, 
-                                color: Theme.of(context).textTheme.displaySmall!.color,
-                                fontWeight: FontWeight.w400
-                              )
+                            SizedBox(
+                              width: 250,
+                              height: 25,
+                              child: Marquee(
+                                text: "Hi $name ",
+                                style: TextStyle(
+                                  fontSize: 20, 
+                                  color: Theme.of(context).textTheme.displaySmall!.color,
+                                  fontWeight: FontWeight.w400
+                                ),
+                                scrollAxis: Axis.horizontal,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                blankSpace: 20.0,
+                                velocity: 70.0,
+                                pauseAfterRound: const Duration(seconds: 1),
+                                accelerationDuration: const Duration(seconds: 1),
+                                accelerationCurve: Curves.linear,
+                                decelerationDuration: const Duration(milliseconds: 500),
+                                decelerationCurve: Curves.linear,
+                              ),
                             ),
                             Text(email, style: Theme.of(context).textTheme.bodyMedium),
                           ],

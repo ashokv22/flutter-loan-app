@@ -65,6 +65,7 @@ dependencies:
   google_fonts: ^6.2.0
   lottie: ^3.1.0
   flutter_cached_pdfview: ^0.4.2
+  marquee: ^2.2.3
 
 dev_dependencies:
   flutter_test:
