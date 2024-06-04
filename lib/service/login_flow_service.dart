@@ -6,6 +6,7 @@ import 'package:origination/environments/environment.dart';
 import 'package:origination/models/applicant/entity_state_manager.dart';
 import 'package:origination/models/entity_configuration.dart';
 import 'package:origination/models/login_flow/login_pending_products_dto.dart';
+import 'package:origination/models/login_flow/sections/application_reject_reason_history.dart';
 import 'package:origination/models/login_flow/sections/document_upload/document_checklist_dto.dart';
 import 'package:origination/models/login_flow/sections/loan_application_entity.dart';
 import 'package:origination/models/login_flow/sections/loan_submit_dto.dart';
@@ -145,8 +146,8 @@ class LoginPendingService {
     return response;
   }
 
-  Future<List<DocumentChecklistDTO>> getApplicationDocuments(int applicationId) async {
-    String endpoint = "api/application/documents/$applicationId/checklist?category=PRE_SANCTION";
+  Future<List<DocumentChecklistDTO>> getApplicationDocuments(int applicationId, String category) async {
+    String endpoint = "api/application/documents/$applicationId/checklist?category=$category";
     try {
       final response = await authInterceptor.get(Uri.parse(endpoint));
       if (response.statusCode == 200) {
@@ -179,15 +180,19 @@ class LoginPendingService {
     }
   }
 
-  Future<EntityStateManager> getDeviations(int applicantId) async {
-    String endpoint = "api/application/loanApplication/lead/deviation/$applicantId";
+  Future<List<ApplicationRejectReasonHistory>> getDeviations(int applicantId) async {
+    String endpoint = "api/application/loanApplication/deviations/$applicantId";
     try {
       final response = await authInterceptor.get(Uri.parse(endpoint));
       if (response.statusCode == 200) {
         final jsonResponse = json.decode(response.body);
         logger.i("Response: ", jsonResponse);
-        EntityStateManager esm = EntityStateManager.fromJson(jsonResponse);
-        return esm;
+        List<ApplicationRejectReasonHistory> list = [];
+        for (var data in jsonResponse) {
+          ApplicationRejectReasonHistory item = ApplicationRejectReasonHistory.fromJson(data);
+          list.add(item);
+        }
+        return list;
       }
       else {
         throw Exception(response);

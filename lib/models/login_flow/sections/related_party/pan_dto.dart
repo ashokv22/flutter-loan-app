@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
-part 'pan.g.dart';
+part 'pan_dto.g.dart';
 
 @JsonSerializable()
 class Pan {
@@ -19,5 +19,5 @@ class Pan {
     required this.isVerified,
   });
   factory Pan.fromJson(Map<String, dynamic> json) => _$PanFromJson(json);
-  Map<String, dynamic> toJson() => _$PanDTOToJson(this);
+  Map<String, dynamic> toJson() => _$PanToJson(this);
 }

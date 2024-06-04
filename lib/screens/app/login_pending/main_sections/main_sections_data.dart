@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:origination/models/login_flow/sections/loan_application_entity.dart';
 import 'package:origination/screens/app/bureau/screens/bureau_check_list.dart';
+import 'package:origination/screens/app/login_pending/main_sections/document_upload/document_upload_main.dart';
 import 'package:origination/screens/app/login_pending/main_sections/helper_widgets/confirm_delete_sheet.dart';
 import 'package:origination/screens/app/login_pending/main_sections/helper_widgets/submit_dialog.dart';
 import 'package:origination/screens/app/login_pending/main_sections/document_upload.dart';
@@ -141,7 +142,8 @@ class _MainSectionsDataState extends State<MainSectionsData> {
                                       //   Navigator.push(context, MaterialPageRoute(builder: (context) => const TypeaheadTest()));  
                                       // } 
                                       else if (section.sectionName == "DocumentUpload") {
-                                        Navigator.push(context, MaterialPageRoute(builder: (context) => DocumentUpload(id: widget.id)));  
+                                        // Navigator.push(context, MaterialPageRoute(builder: (context) => DocumentUpload(id: widget.id)));  
+                                        Navigator.push(context, MaterialPageRoute(builder: (context) => DocumentUploadMain(id: widget.id)));  
                                       } 
                                       else if (section.sectionName == "CheckList") {
                                         Navigator.push(context, MaterialPageRoute(builder: (context) => BureauCheckList(id: widget.id,)));  
@@ -230,7 +232,7 @@ class _MainSectionsDataState extends State<MainSectionsData> {
                             ),
                             // const Spacer(),
                             Text("Completed sections: ${widget.completedSections}"),
-                            widget.completedSections >= 10 ? Padding(
+                            widget.completedSections >= 8 ? Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Align(
                                 alignment: Alignment.bottomCenter,

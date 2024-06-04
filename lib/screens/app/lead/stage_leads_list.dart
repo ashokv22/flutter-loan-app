@@ -292,16 +292,20 @@ class _StageLeadListState extends State<StageLeadList> {
                                       ),
                                     ),
                                     // const SizedBox(height: 10),
-                                    Text(
-                                      applicant.model,
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        color: Theme.of(context).textTheme.displayMedium!.color,
-                                        fontWeight: FontWeight.w300,
+                                    SizedBox(
+                                      width: 100,
+                                      child: Text(
+                                        applicant.model,
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          color: Theme.of(context).textTheme.displayMedium!.color,
+                                          fontWeight: FontWeight.w300,
+                                        ),
+                                        maxLines: 1,
+                                        softWrap: false,
+                                        overflow: TextOverflow.ellipsis,
+                                        textAlign: TextAlign.end,
                                       ),
-                                      maxLines: 1,
-                                      softWrap: false,
-                                      overflow: TextOverflow.ellipsis,
                                     ),
                                     // const SizedBox(height: 10),
                                     Container(
@@ -312,7 +316,12 @@ class _StageLeadListState extends State<StageLeadList> {
                                           colors: [Colors.red, Colors.redAccent]
                                         ) : applicant.status == "SUBMITTED" ? const LinearGradient(
                                           colors: [Colors.deepPurple, Colors.deepPurpleAccent]
-                                        ) : const LinearGradient(
+                                        ) : applicant.status == "APPROVED" ? const LinearGradient(
+                                          colors: [Color.fromARGB(255, 173, 1, 185), Color.fromARGB(255, 238, 0, 255)]
+                                        ) : applicant.status == "WAITING_FOR_APPROVAL" ? const LinearGradient(
+                                          colors: [Color.fromARGB(255, 254, 18, 30), Color.fromARGB(255, 250, 146, 0)]
+                                        ) :
+                                        const LinearGradient(
                                           colors: [Colors.blue, Colors.blueAccent]
                                         ),
                                         shape: RoundedRectangleBorder(

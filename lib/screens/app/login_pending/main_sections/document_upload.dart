@@ -10,14 +10,15 @@ import 'package:flutter/material.dart';
 import 'package:origination/core/utils/colors.dart';
 import 'package:image_picker/image_picker.dart';
 
-
 class DocumentUpload extends StatefulWidget {
   const DocumentUpload({
-    super.key, 
-    required this.id
+    super.key,
+    required this.id,
+    required this.category,
   });
 
   final int id;
+  final String category;
 
   @override
   State<DocumentUpload> createState() => _DocumentUploadState();
@@ -40,7 +41,7 @@ class _DocumentUploadState extends State<DocumentUpload> {
 
   Future<List<DocumentChecklistDTO>> fetchApplicationDocuments() async {
     try {
-      return await loginFlowService.getApplicationDocuments(widget.id);
+      return await loginFlowService.getApplicationDocuments(widget.id, widget.category);
     } catch (e) {
       throw Exception('Failed to fetch application documents: $e');
     }
@@ -50,16 +51,17 @@ class _DocumentUploadState extends State<DocumentUpload> {
     ScaffoldMessenger(child: Text(msg));
   }
 
-
   @override
   Widget build(BuildContext context) {
     final isDarkTheme = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          onPressed: () {Navigator.pop(context);},
-          icon: const Icon(CupertinoIcons.arrow_left)),
-        title: const Text("Document Upload", style: TextStyle(fontSize: 18))),
+          leading: IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: const Icon(CupertinoIcons.arrow_left)),
+          title: Text(widget.category, style: TextStyle(fontSize: 18))),
       body: Container(
         decoration: BoxDecoration(
           gradient: isDarkTheme
@@ -127,15 +129,18 @@ class _DocumentListItemState extends State<DocumentListItem> {
       decoration: BoxDecoration(
         color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(8.0),
-        border: isDarkTheme ? Border.all(color: Colors.white12, width: 1.0) : null,
-        boxShadow: isDarkTheme ? null : [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.5),
-            spreadRadius: 2,
-            blurRadius: 6,
-            offset: const Offset(2, 3),
-          )
-        ],
+        border:
+            isDarkTheme ? Border.all(color: Colors.white12, width: 1.0) : null,
+        boxShadow: isDarkTheme
+            ? null
+            : [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.5),
+                  spreadRadius: 2,
+                  blurRadius: 6,
+                  offset: const Offset(2, 3),
+                )
+              ],
       ),
       child: Column(
         children: [
@@ -145,27 +150,36 @@ class _DocumentListItemState extends State<DocumentListItem> {
               Flexible(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [Text(widget.document.documentName, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),],
+                  children: [
+                    Text(widget.document.documentName,
+                        style: const TextStyle(
+                            fontSize: 14, fontWeight: FontWeight.w600)),
+                  ],
                 ),
               ),
-              if (widget.document.uploadedDocuments != null)
-                ...[
-                  const SizedBox(width: 0),
-                  IconButton(
-                    onPressed: () {},
-                    icon: const Icon(Icons.delete, color: Colors.red),
-                  ),
-                ]
-              else if (_uploading)
+              if (widget.document.uploadedDocuments != null) ...[
+                const SizedBox(width: 0),
+                IconButton(
+                  onPressed: () {},
+                  icon: const Icon(Icons.delete, color: Colors.red),
+                ),
+              ] else if (_uploading)
                 SizedBox(
                   width: 25,
                   height: 25,
-                  child: CircularProgressIndicator(value: _uploadProgress, strokeWidth: 3.0,),
+                  child: CircularProgressIndicator(
+                    value: _uploadProgress,
+                    strokeWidth: 3.0,
+                  ),
                 )
               else
                 IconButton(
                   onPressed: _selectedImages.isEmpty ? pickImage : uploadImages,
-                  icon: _selectedImages.isEmpty ? const Icon(Icons.file_open, color: ColorConstants.primaryColor) : const Icon(Icons.cloud_upload, color: ColorConstants.primaryColor),
+                  icon: _selectedImages.isEmpty
+                      ? const Icon(Icons.file_open,
+                          color: ColorConstants.primaryColor)
+                      : const Icon(Icons.cloud_upload,
+                          color: ColorConstants.primaryColor),
                 ),
             ],
           ),
@@ -173,33 +187,47 @@ class _DocumentListItemState extends State<DocumentListItem> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               if (widget.document.uploadedDocuments != null)
-                ...widget.document.uploadedDocuments!.map((application) => FutureBuilder<Uint8List?>(
-                      future: fetchImage(application.fileId),
-                      builder: (context, imageSnapshot) {
-                        if (imageSnapshot.connectionState == ConnectionState.waiting) {
-                          return const CircularProgressIndicator();
-                        } else if (imageSnapshot.hasError) {
-                          return Text('Error: ${imageSnapshot.error}');
-                        } else {
-                          return GestureDetector(
-                            onTap: () {
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => ImageFullView(image: imageSnapshot.data!)));
-                            },
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(6.0),
-                              child: imageSnapshot.data != null ? Image.memory(imageSnapshot.data!, height: 60,) : const Text("File not found"),
-                            ),
-                          );
-                        }
-                      },
-                    ))
+                ...widget.document.uploadedDocuments!
+                    .map((application) => FutureBuilder<Uint8List?>(
+                          future: fetchImage(application.fileId),
+                          builder: (context, imageSnapshot) {
+                            if (imageSnapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return const CircularProgressIndicator();
+                            } else if (imageSnapshot.hasError) {
+                              return Text('Error: ${imageSnapshot.error}');
+                            } else {
+                              return GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => ImageFullView(
+                                              image: imageSnapshot.data!)));
+                                },
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(6.0),
+                                  child: imageSnapshot.data != null
+                                      ? Image.memory(
+                                          imageSnapshot.data!,
+                                          height: 60,
+                                        )
+                                      : const Text("File not found"),
+                                ),
+                              );
+                            }
+                          },
+                        ))
               else
                 ..._selectedImages.map((image) {
                   return Container(
                     margin: const EdgeInsets.all(8),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(6.0),
-                      child: Image.file(File(image.path), height: 60,),
+                      child: Image.file(
+                        File(image.path),
+                        height: 60,
+                      ),
                     ),
                   );
                 }).toList(),
@@ -244,6 +272,7 @@ class _DocumentListItemState extends State<DocumentListItem> {
     }
     return true;
   }
+
   Future<void> uploadImages() async {
     setState(() {
       _uploading = true;

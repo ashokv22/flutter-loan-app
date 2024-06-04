@@ -153,11 +153,6 @@ class _LeadDashboardState extends State<LeadDashboard> {
                                 decelerationDuration: const Duration(milliseconds: 500),
                                 decelerationCurve: Curves.linear,
                               ),
-                              // child: Text(
-                              //   "Hello ${userInfo['name']}",
-                              //   style: const TextStyle(color: Colors.white, fontSize: 16),
-                              //   overflow: TextOverflow.ellipsis,
-                              // ),
                             ),
                             SizedBox(
                               width: 140,
@@ -250,7 +245,7 @@ class _LeadDashboardState extends State<LeadDashboard> {
                           else {
                             return GestureDetector(
                               onTap: () {
-                                if (summary.stage == ApplicationStage.LOGIN_PENDING.name) {
+                                if (summary.stage.toLowerCase() == "login pending") {
                                   Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPendingHome(total: summary.count)));
                                 } else if (summary.stage == ApplicationStage.SUBMITTED.name) {
                                   Navigator.push(context, MaterialPageRoute(builder: (context) => SubmittedAndRefresh(stage: summary.stage)));
@@ -308,14 +303,18 @@ class _LeadDashboardState extends State<LeadDashboard> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                summary.stage,
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                  color: isDarkTheme
-                      ? Colors.blueAccent[400]
-                      : const Color.fromARGB(255, 3, 71, 244),
+              SizedBox(
+                width: 220,
+                child: Text(
+                  summary.stage,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                    color: isDarkTheme
+                        ? Colors.blueAccent[400]
+                        : const Color.fromARGB(255, 3, 71, 244),
+                  ),
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
               Text(

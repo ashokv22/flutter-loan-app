@@ -13,7 +13,7 @@ class DashBoardSummaryDTO {
     return DashBoardSummaryDTO(
       stage: json['stage'],
       count: json['count'],
-      loanAmount: json['loanAmount'],
+      loanAmount: json['loanAmount'].toDouble(),
     );
   }
 

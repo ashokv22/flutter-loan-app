@@ -5,7 +5,7 @@ import 'package:logger/logger.dart';
 import 'package:origination/models/login_flow/sections/loan_application_entity.dart';
 import 'package:origination/screens/app/bureau/screens/bureau_check_list.dart';
 import 'package:origination/screens/app/login_pending/main_sections/deviations.dart';
-import 'package:origination/screens/app/login_pending/main_sections/document_upload.dart';
+import 'package:origination/screens/app/login_pending/main_sections/document_upload/document_upload_main.dart';
 import 'package:origination/screens/app/login_pending/main_sections/helper_widgets/submit_dialog.dart';
 import 'package:origination/screens/app/login_pending/main_sections/section_data.dart';
 import 'package:origination/screens/app/login_pending/related_parties_sections/related_parties.dart';
@@ -130,7 +130,7 @@ class _ReworkState extends State<Rework> {
                                         Navigator.push(context, MaterialPageRoute(builder: (context) => RelatedParties(id: widget.id,)));
                                       }
                                       else if (section.sectionName == "DocumentUpload") {
-                                        Navigator.push(context, MaterialPageRoute(builder: (context) => DocumentUpload(id: widget.id)));  
+                                        Navigator.push(context, MaterialPageRoute(builder: (context) => DocumentUploadMain(id: widget.id)));  
                                       } 
                                       else if (section.sectionName == "CheckList") {
                                         Navigator.push(context, MaterialPageRoute(builder: (context) => BureauCheckList(id: widget.id,)));  
