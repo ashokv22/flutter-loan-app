@@ -7,6 +7,7 @@ import 'package:origination/models/summaries/leads_list_dto.dart';
 import 'package:origination/screens/app/lead/edit_lead_application.dart';
 import 'package:origination/screens/app/lead/search_new.dart';
 import 'package:origination/screens/app/lead_dashboard/rework.dart';
+import 'package:origination/screens/app/login_pending/main_sections/main_sections_data.dart';
 // import 'package:origination/screens/app/login_pending/login_pending_home.dart';
 import 'package:origination/service/loan_application_service.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -173,13 +174,12 @@ class _StageLeadListState extends State<StageLeadList> {
                               );
                             } else if (applicant.status == "REWORK") {
                               Navigator.push(context, MaterialPageRoute(builder: (context) => Rework(id: applicant.id)));
-                            } else if (applicant.status == ApplicationStage.LOGIN_PENDING.name) {
-                              // Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginPendingHome()));
-                              // Edit Login Pending Leads
+                            }
+                            else if (['LEAD', 'WAITING_FOR_APPROVAL', 'APPROVED'].contains(applicant.status)) {
                               Navigator.push(context, MaterialPageRoute(builder: (context) => EditLead(id: applicant.id, applicantId: int.parse(applicant.applicantId))));
                             } else {
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => EditLead(id: applicant.id, applicantId: int.parse(applicant.applicantId))));
-                            }
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => MainSectionsData(id: applicant.id, completedSections: 10)));
+                            } 
                           },
                           child: Container(
                             // margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),

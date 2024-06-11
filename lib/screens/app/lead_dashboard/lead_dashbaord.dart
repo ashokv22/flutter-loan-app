@@ -239,10 +239,10 @@ class _LeadDashboardState extends State<LeadDashboard> {
                         itemCount: summaries.length,
                         itemBuilder: (context, index) {
                           DashBoardSummaryDTO summary = summaries[index];
-                          if (summary.count <= 0) {
-                            return Container();                            
-                          }
-                          else {
+                          // if (summary.count <= 0) {
+                          //   return Container();                            
+                          // }
+                          // else {
                             return GestureDetector(
                               onTap: () {
                                 if (summary.stage.toLowerCase() == "login pending") {
@@ -255,7 +255,7 @@ class _LeadDashboardState extends State<LeadDashboard> {
                               },
                               child: leadItem(context, isDarkTheme, summary),
                             );
-                          }
+                          // }
                         },
                       );
                     } else {
