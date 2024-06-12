@@ -31,12 +31,6 @@ class _TextInputState extends State<TextInput> {
   }
 
   @override
-  void dispose() {
-    widget.controller.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return SizedBox(
       child: TextFormField(

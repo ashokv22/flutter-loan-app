@@ -7,6 +7,7 @@ import 'package:origination/screens/app/login_pending/main_sections/document_upl
 import 'package:origination/screens/app/login_pending/main_sections/helper_widgets/confirm_delete_sheet.dart';
 import 'package:origination/screens/app/login_pending/main_sections/helper_widgets/submit_dialog.dart';
 import 'package:origination/screens/app/login_pending/main_sections/document_upload.dart';
+import 'package:origination/screens/app/login_pending/main_sections/post_sanction/post_sanction_main.dart';
 // import 'package:origination/screens/app/login_pending/main_sections/land_and_crop_details.dart';
 // import 'package:origination/screens/app/login_pending/number_advanced.dart';
 import 'package:origination/screens/app/login_pending/related_parties_sections/related_parties.dart';
@@ -151,9 +152,9 @@ class _MainSectionsDataState extends State<MainSectionsData> {
                                       else if (section.sectionName == "Deviation") {
                                         Navigator.push(context, MaterialPageRoute(builder: (context) => Deviations(applicantId: widget.id,)));  
                                       }
-                                      // else if (section.sectionName == "LandAndCropDetails") {
-                                      //   Navigator.push(context, MaterialPageRoute(builder: (context) => LandAndCropDetials(id: widget.id, displayTitle: section.displayTitle, sectionName: section.sectionName,)));  
-                                      // }
+                                      else if (section.sectionName == "PostSanction") {
+                                        Navigator.push(context, MaterialPageRoute(builder: (context) => PostSanctionMainList(applicantId: widget.id)));  
+                                      }
                                       else {
                                         Navigator.push(context, MaterialPageRoute(builder: (context) => SectionScreenEmpty(id: widget.id, title: title,)));
                                       }

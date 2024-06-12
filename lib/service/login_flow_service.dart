@@ -222,4 +222,15 @@ class LoginPendingService {
     }
   }
 
+  Future<http.Response> getDealerDetails(int applicantId) async {
+    String endpoint = "api/application/dealerAccountDetails/$applicantId";
+    try {
+      final response = await authInterceptor.get(Uri.parse(endpoint));
+      return response;
+    }
+    catch (e) {
+      throw  Exception(e);
+    }
+  }
+
 }
