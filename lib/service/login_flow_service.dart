@@ -233,4 +233,14 @@ class LoginPendingService {
     }
   }
 
+  Future<http.Response> getLoanAdditionalData(int applicantId) async {
+    String endpoint = "api/application/loanAdditionalData/search-applicant/$applicantId";
+    try {
+      final response = await authInterceptor.get(Uri.parse(endpoint));
+      return response;
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
 }

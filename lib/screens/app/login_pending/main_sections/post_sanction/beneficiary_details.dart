@@ -2,17 +2,22 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:origination/core/widgets/reference_code.dart';
 import 'package:origination/core/widgets/text_input.dart';
+import 'package:origination/models/login_flow/sections/post_sanction/loan_additional_data.dart';
 import 'package:origination/service/login_flow_service.dart';
 
+// ignore: must_be_immutable
 class BeneficiaryDetails extends StatefulWidget {
-  const BeneficiaryDetails({
+  BeneficiaryDetails({
     super.key,
     required this.applicantId,
+    this.loanAdditionalData,
   });
 
   final int applicantId;
+  LoanAdditionalDataDTO? loanAdditionalData; // Nullable
 
   @override
   State<BeneficiaryDetails> createState() => _BeneficiaryDetailsState();
@@ -21,6 +26,8 @@ class BeneficiaryDetails extends StatefulWidget {
 class _BeneficiaryDetailsState extends State<BeneficiaryDetails> {
   final _customerFormKey = GlobalKey<FormState>();
   final _dealerFormKey = GlobalKey<FormState>();
+
+  final logger = Logger();
 
   final loginPendingService = LoginPendingService();
 
@@ -45,6 +52,27 @@ class _BeneficiaryDetailsState extends State<BeneficiaryDetails> {
 
   bool _isDealerDataFetched = false;
   bool _isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    logger.i(widget.loanAdditionalData?.toJson());
+    if (widget.loanAdditionalData?.id != null) {
+      if (widget.loanAdditionalData!.preSanction!) {
+        if (widget.loanAdditionalData!.beneficiaryType == 'Customer') {
+          setState(() {
+            _selectedRole.text = widget.loanAdditionalData!.beneficiaryType!;
+            _customerNameController.text = widget.loanAdditionalData!.bankAccountType!;
+            _accountNumberController.text = widget.loanAdditionalData!.beneficiaryAccountNumber!;
+            _reEnterAccountNumberController.text = widget.loanAdditionalData!.beneficiaryAccountNumber!;
+            _ifscCodeController.text = widget.loanAdditionalData!.beneficiaryIfscCode!;
+            _bankNameController.text = widget.loanAdditionalData!.beneficiaryName!;
+          });
+
+        }
+      }
+    }
+  }
 
   // dispose controllers
   @override
@@ -182,17 +210,20 @@ class _BeneficiaryDetailsState extends State<BeneficiaryDetails> {
                                     onSave();
                                   }
                                 } else if (_selectedRole.text == "Customer") {
-                                  if (_customerFormKey.currentState!.validate()) {
+                                  if (_customerFormKey.currentState!
+                                      .validate()) {
                                     onSave();
                                   }
                                 }
                               },
                               color: const Color.fromARGB(255, 6, 139, 26),
                               textColor: Colors.white,
-                              padding: const EdgeInsets.symmetric(vertical: 16.0),
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 16.0),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(30.0),
-                              ),child: _isLoading
+                              ),
+                              child: _isLoading
                                   ? const SizedBox(
                                       width: 15.0,
                                       height: 15.0,

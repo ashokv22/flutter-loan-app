@@ -1,6 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
+import 'package:origination/models/login_flow/sections/post_sanction/loan_additional_data.dart';
 import 'package:origination/screens/app/login_pending/main_sections/post_sanction/beneficiary_details.dart';
+import 'package:origination/screens/app/login_pending/main_sections/post_sanction/security_cheque_details.dart';
+import 'package:origination/service/login_flow_service.dart';
 
 class PostSanctionMainList extends StatefulWidget {
   const PostSanctionMainList({
@@ -15,6 +21,28 @@ class PostSanctionMainList extends StatefulWidget {
 }
 
 class _PostSanctionMainListState extends State<PostSanctionMainList> {
+  late LoanAdditionalDataDTO loanAdditionalData;
+  final loginPendingService = LoginPendingService();
+  final logger = Logger();
+
+  @override
+  void initState() {
+    super.initState();
+    // Call the API to fetch data
+    fetchData();
+  }
+
+  Future<void> fetchData() async {
+    final response =
+        await loginPendingService.getLoanAdditionalData(widget.applicantId);
+
+    if (response.statusCode == 200) {
+      final jsonResponse = json.decode(response.body);
+      loanAdditionalData = LoanAdditionalDataDTO.fromJson(jsonResponse);
+      logger.i(loanAdditionalData.toJson());
+    } else {}
+  }
+
   @override
   Widget build(BuildContext context) {
     final isDarkTheme = Theme.of(context).brightness == Brightness.dark;
@@ -51,7 +79,8 @@ class _PostSanctionMainListState extends State<PostSanctionMainList> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => BeneficiaryDetails(applicantId: widget.applicantId)));
+                        builder: (context) => BeneficiaryDetails(
+                            applicantId: widget.applicantId, loanAdditionalData: loanAdditionalData)));
               },
               child: Container(
                 margin:
@@ -93,7 +122,7 @@ class _PostSanctionMainListState extends State<PostSanctionMainList> {
             ),
             GestureDetector(
               onTap: () {
-                // Navigator.push(context, MaterialPageRoute(builder: (context) => RelatedParties(id: widget.id,)));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => SecurityChequeDetails(applicantId: widget.applicantId, loanAdditionalData: loanAdditionalData,)));
               },
               child: Container(
                 margin:
