@@ -192,14 +192,18 @@ class _SubmittedAndRefreshState extends State<SubmittedAndRefresh> {
                                       Column(
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
-                                          Text(
-                                            applicant.name,
-                                            style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w500,
-                                              color: isDarkTheme
-                                                  ? Colors.blueAccent[400]
-                                                  : const Color.fromARGB(255, 3, 71, 244),
+                                          SizedBox(
+                                            width: 150,
+                                            child: Text(
+                                              applicant.name,
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w500,
+                                                color: isDarkTheme
+                                                    ? Colors.blueAccent[400]
+                                                    : const Color.fromARGB(255, 3, 71, 244),
+                                                overflow: TextOverflow.ellipsis
+                                              ),
                                             ),
                                           ),
                                           Text(
@@ -240,16 +244,17 @@ class _SubmittedAndRefreshState extends State<SubmittedAndRefresh> {
                                             fontWeight: FontWeight.w500,
                                             overflow: TextOverflow.ellipsis),
                                       ),
-                                      Text(
-                                        applicant.model,
-                                        style: TextStyle(
-                                          fontSize: 12,
-                                          color: Theme.of(context).textTheme.displayMedium!.color,
-                                          fontWeight: FontWeight.w300,
+                                      SizedBox(
+                                        width: 100,
+                                        child: Text(
+                                          applicant.model,
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            color: Theme.of(context).textTheme.displayMedium!.color,
+                                            fontWeight: FontWeight.w300,
+                                          ),
+                                          overflow: TextOverflow.ellipsis,
                                         ),
-                                        maxLines: 1,
-                                        softWrap: false,
-                                        overflow: TextOverflow.ellipsis,
                                       ),
                                     ],
                                   ),

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_cached_pdfview/flutter_cached_pdfview.dart';
 import 'package:logger/logger.dart';
 import 'package:origination/service/bureau_check_service.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class PdfView extends StatefulWidget {
   const PdfView({
@@ -22,6 +23,8 @@ class _PdfViewState extends State<PdfView> {
 
   BureauCheckService bureauCheckService = BureauCheckService();
   String pdfUrl = '';
+  var errorBody = {};
+  bool isLoading = false;
   Logger logger = Logger();
 
   @override
@@ -31,16 +34,33 @@ class _PdfViewState extends State<PdfView> {
   }
 
   Future<void> fetchPdfUrl() async {
-    final response = await bureauCheckService.getPdfUrlForIndividual(widget.id);
-
-    if (response.statusCode == 200) {
+    try {
       setState(() {
-        var data = jsonDecode(response.body)['result']['cibilData'];
-        pdfUrl = data[0]['cibilPdfUrl'];
+        isLoading = true;
       });
-    } else {
-      throw Exception('Failed to load PDF URL');
+      final response = await bureauCheckService.getBureauReport(widget.id);
+
+      if (response.statusCode == 200) {
+        final jsonResponse = json.decode(response.body);
+        errorBody = jsonResponse;
+        if (jsonResponse['result'] != null) {
+          pdfUrl = jsonResponse['result']['cibilData'][0]['cibilPdfUrl'];
+        }
+        setState(() {
+          var data = jsonDecode(response.body)['result']['cibilData'];
+          pdfUrl = data[0]['cibilPdfUrl'];
+        });
+      } else {
+        throw Exception('Failed to load PDF URL');
+      }
+    } catch (e) {
+      throw Exception('An error occurred while getting the data: $e');
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
     }
+
   }
 
   @override
@@ -52,13 +72,31 @@ class _PdfViewState extends State<PdfView> {
             onPressed: () {
               Navigator.pop(context);
             },
-            icon: const Icon(CupertinoIcons.arrow_left,)),
+            icon: const Icon(CupertinoIcons.arrow_left,),
+        ),
+        title: const Text("PDF View", style: TextStyle(fontSize: 18)),
       ),
       // backgroundColor: Colors.black,
       body: Center(
-        child: pdfUrl.isEmpty
+        child: isLoading
             ? const CircularProgressIndicator()
-            : PDF(
+            : pdfUrl.isEmpty
+              ? Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text('Generating PDF may take a while!', style: TextStyle(fontSize: 16),),
+                  Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Text(
+                      '${errorBody.toString()}\n',
+                      style: GoogleFonts.sourceCodePro(
+                      fontSize: 14.0,
+                      ),
+                    ),
+                  )
+                ],
+              )
+              : PDF(
                 enableSwipe: true,
                 swipeHorizontal: true,
                 autoSpacing: false,

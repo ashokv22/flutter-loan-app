@@ -269,5 +269,21 @@ class BureauCheckService {
     }
   }
 
+  Future<http.Response> getBureauReport(int id) async {
+    logger.i("Fetching applicant data...");
+    String endpoint = "api/application/cibilView/$id";
+    try {
+      final response = await authInterceptor.get(Uri.parse(endpoint));
+      if (response.statusCode == 200) {
+        logger.i(response.body);
+        return response;
+      } else {
+        throw Exception('Failed to fetch individual data: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Failed to fetch individual data: $e');
+    }
+  }
+
 
 }

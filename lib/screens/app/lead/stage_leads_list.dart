@@ -244,13 +244,17 @@ class _StageLeadListState extends State<StageLeadList> {
                                     Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        Text(
-                                          applicant.name,
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w500,
-                                            color: isDarkTheme ? Colors.blueAccent[400] : const Color.fromARGB(255, 3, 71, 244),
-                                            // color: Color.fromARGB(255, 3, 71, 244),
+                                        SizedBox(
+                                          width: 150,
+                                          child: Text(
+                                            applicant.name,
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w500,
+                                              color: isDarkTheme ? Colors.blueAccent[400] : const Color.fromARGB(255, 3, 71, 244),
+                                              // color: Color.fromARGB(255, 3, 71, 244),
+                                              overflow: TextOverflow.ellipsis
+                                            ),
                                           ),
                                         ),
                                         Text(applicant.mobile,

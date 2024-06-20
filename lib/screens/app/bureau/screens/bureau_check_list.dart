@@ -3,6 +3,7 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:origination/main.dart';
 import 'package:origination/models/applicant_dto.dart';
 import 'package:origination/models/bureau_check/bc_check_list_dto.dart';
+import 'package:origination/screens/app/bureau/screens/accept_with_score.dart';
 import 'package:origination/screens/app/bureau/screens/pdf_view.dart';
 import 'package:origination/screens/widgets/reject_reason.dart';
 import 'package:origination/service/bureau_check_service.dart';
@@ -116,6 +117,7 @@ class _BureauCheckListState extends State<BureauCheckList> {
   Widget build(BuildContext context) {
     final isDarkTheme = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       appBar: AppBar(
         leading: IconButton(
           onPressed: () {
@@ -203,15 +205,19 @@ class _BureauCheckListState extends State<BureauCheckList> {
                                       children: [
                                         Text(type.name,
                                           style: const TextStyle(
-                                            fontSize: 14,
+                                            fontSize: 12,
                                           ),
                                         ),
-                                        Text(
-                                          checkList.name,
-                                          style: const TextStyle(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.w700,
-                                            // color: Color.fromARGB(255, 3, 71, 244),
+                                        SizedBox(
+                                          width: 200,
+                                          child: Text(
+                                            checkList.name,
+                                            style: const TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.w700,
+                                              overflow: TextOverflow.ellipsis
+                                              // color: Color.fromARGB(255, 3, 71, 244),
+                                            ),
                                           ),
                                         ),
                                       ],
@@ -222,7 +228,7 @@ class _BureauCheckListState extends State<BureauCheckList> {
                                           IconButton(
                                             color: const Color.fromARGB(255, 3, 71, 244),
                                             onPressed: () {
-                                              Navigator.push(context, MaterialPageRoute(builder: (context) => PdfView(id: widget.id)));
+                                              Navigator.push(context, MaterialPageRoute(builder: (context) => PdfView(id: checkList.id)));
                                             },
                                             icon: const Icon(Icons.visibility_rounded)) ,
                                         ],
@@ -296,6 +302,7 @@ class _BureauCheckListState extends State<BureauCheckList> {
                                           onPressed: () {
                                             showDialog(
                                               context: context,
+
                                               builder: (BuildContext context) {
                                                 return AlertDialog(
                                                   title: const Text('Please Confirm'),
@@ -304,8 +311,18 @@ class _BureauCheckListState extends State<BureauCheckList> {
                                                   actions: [
                                                     TextButton(
                                                       onPressed: () {
-                                                        approveCibil(checkList.id, type);
+                                                        // approveCibil(checkList.id, type);
                                                         Navigator.of(context).pop();
+                                                        showModalBottomSheet(
+                                                          isScrollControlled: true,
+                                                          context: context,
+                                                          builder: (BuildContext context) {
+                                                            return AnimatedPadding(
+                                                                duration: Duration(milliseconds: 150),
+                                                                padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+                                                                child: ApproveWithScore(id: checkList.id, applicantType: type));
+                                                          },
+                                                        );
                                                       },
                                                       child: const Text('Yes')),
                                                     TextButton(
