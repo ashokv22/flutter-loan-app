@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:origination/my_theme.dart';
+import 'package:origination/screens/pages/profile/information.dart';
 import 'package:origination/screens/pages/profile/profile_menu_widget.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:origination/screens/sign_in/sign_in.dart';
@@ -163,7 +164,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     );
                   }),
                   ProfileMenuWidget(title: "User Management", icon: LineAwesomeIcons.user_check, onPress: () {}),
-                  ProfileMenuWidget(title: "Information", icon: Icons.info_outline, onPress: () {}),
+                  ProfileMenuWidget(title: "Information", icon: Icons.info_outline, onPress: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => const InformationScreen()));
+                  }),
                   ProfileMenuWidget(
                       title: "Logout",
                       icon: LineAwesomeIcons.alternate_sign_out,
