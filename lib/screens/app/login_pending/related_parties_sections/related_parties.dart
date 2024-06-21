@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:heroicons/heroicons.dart';
 import 'package:logger/logger.dart';
 // import 'package:origination/core/widgets/dropdown.dart';
 import 'package:origination/core/widgets/custom/related_parties_dropdown.dart';
@@ -9,6 +10,7 @@ import 'package:origination/models/bureau_check/bc_check_list_dto.dart';
 import 'package:origination/models/login_flow/sections/loan_application_entity.dart';
 import 'package:origination/models/login_flow/sections/related_party/primary_kyc_dto.dart';
 import 'package:origination/models/login_flow/sections/related_party/secondary_kyc_dto.dart';
+import 'package:origination/screens/app/login_pending/main_sections/helper_widgets/confirm_delete_sheet.dart';
 import 'package:origination/screens/app/login_pending/related_parties_sections/primary_kyc/primary_kyc_home.dart';
 import 'package:origination/screens/app/login_pending/related_parties_sections/secondary_kyc/secondary_kyc_home.dart';
 import 'package:origination/screens/app/login_pending/related_parties_sections/section_data_rp.dart';
@@ -200,16 +202,42 @@ class _RelatedPartiesState extends State<RelatedParties> {
                         ),
                       ),
                       if (section.status == "COMPLETED")
-                        const Icon(
-                          CupertinoIcons.checkmark_alt_circle_fill,
-                          color: Color.fromARGB(255, 0, 152, 58),
-                          size: 22,  
+                        Row(
+                          children: [
+                            const Icon(
+                              CupertinoIcons.checkmark_alt_circle_fill,
+                              color: Color.fromARGB(255, 0, 152, 58),
+                              size: 22,
+                            ),
+                            const SizedBox(width: 10,),
+                            InkWell(
+                              onTap: () {
+                                showModalBottomSheet(
+                                  context: context,
+                                  builder: (context) => SizedBox(
+                                      width: MediaQuery.of(context).size.width,
+                                      child: ConfirmDeleteSheet(
+                                          onDeleted: () {
+                                            _fetchLoanSection(selectedType);
+                                          },
+                                          loanApplicationId: relatedPartyId,
+                                          section: section
+                                      )),
+                                );
+                              },
+                              child: const HeroIcon(
+                                HeroIcons.trash,
+                                color: Colors.red,
+                                size: 22,
+                              ),
+                            ),
+                          ],
                         )
                       else
                         Icon(
                           CupertinoIcons.chevron_right_circle,
                           color: Theme.of(context).iconTheme.color,
-                          size: 22,  
+                          size: 22,
                         )
                     ],
                   ),

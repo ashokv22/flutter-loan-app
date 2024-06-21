@@ -94,7 +94,7 @@ class _ReferencecodeState extends State<Referencecode> {
                   if (refernceCodes != null)
                     ...refernceCodes!.map((option) {
                       return DropdownMenuItem<String>(
-                        value: option.code,
+                        value: option.name,
                         child: SizedBox(
                           width: 280,
                           child: Text(

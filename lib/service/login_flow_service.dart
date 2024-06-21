@@ -101,7 +101,7 @@ class LoginPendingService {
   }
 
   Future<void> deleteSection(int loanApplicationId, String sectionName) async {
-    final url = Uri.parse('api/application/loanApplication/sectionsData/$loanApplicationId?sectionName=$sectionName');
+    final url = Uri.parse('api/application/loanApplication/sectionsData/$loanApplicationId?entitySubType=$sectionName');
     try {
       final response = await authInterceptor.delete(url);
       logger.i('Response: $response');
