@@ -19,11 +19,11 @@ class KycService {
   final String apiUrl = Environment.baseUrl;
 
   // Init OTP
-  Future<PrimaryKycDTO> savePrimaryManualKyc(String type, int id, PrimaryKycDTO dto) async {
+  Future<http.Response> savePrimaryManualKyc(String type, int id, PrimaryKycDTO dto) async {
     logger.i("Saving Aadhaar Primary KYC...");
     String url = '${apiUrl}api/application/loanApplication/sectionsData/relatedParty/primaryKyc/$type/$id';
     String token = await authService.getAccessToken();
-    final response = await http.post(
+    return await http.post(
       Uri.parse(url),
       headers: {
         'X-Auth-Token': token,
@@ -31,15 +31,7 @@ class KycService {
       },
       body: jsonEncode(dto),
     );
-    if (response.statusCode == 200) {
-      final data = json.decode(response.body);
-      logger.i(data);
-      PrimaryKycDTO request = PrimaryKycDTO.fromJson(data);
-      return request;
-    }
-    else {
-      throw Exception('Failed to init bureau check. Error code: ${response.statusCode}');
-    }
+    
   }
 
   Future<PanRequestDTO> validatePan(int id, String panNumber) async {

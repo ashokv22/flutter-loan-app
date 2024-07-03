@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:origination/screens/admin/configs/config_service.dart';
 import 'package:origination/screens/widgets/custom_snackbar.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ConfigControllers extends StatefulWidget {
   const ConfigControllers({super.key});
@@ -19,6 +21,32 @@ class _ConfigControllersState extends State<ConfigControllers> {
 
   final configService = ConfigService();
   final logger = Logger();
+
+  @override
+  void initState() {
+    super.initState();
+    _loadDedupePref();
+  }
+
+  Future<void> _loadDedupePref() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      enableCibilFallback = prefs.getBool('enableDedupe') ?? false;
+    });
+  }
+
+  Future<void> _updateDedupePref(bool value) async {
+    setState(() {
+      isLoading = true;
+    });
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('enableDedupe', value);
+    setState(() {
+      enableCibilFallback = value;
+      isLoading = false;
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +80,64 @@ class _ConfigControllersState extends State<ConfigControllers> {
             Padding(
               padding: const EdgeInsets.all(12.0),
               child: Column(children: [
-                // Dedupe
+                Container(
+                  alignment: Alignment.centerLeft,
+                  child: const Text("Features", style: TextStyle(fontSize: 16, ), textAlign: TextAlign.start),
+                ),
+                const SizedBox(height: 12.0),
+                Container(
+                  height: 50,
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).cardColor,
+                    borderRadius: BorderRadius.circular(8.0),
+                    border: isDarkTheme
+                        ? Border.all(color: Colors.white12, width: 1.0)
+                        : null,
+                    boxShadow: isDarkTheme
+                        ? null
+                        : [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        spreadRadius: 2,
+                        blurRadius: 6,
+                        offset: const Offset(2, 3),
+                      )
+                    ],
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(6.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          'Enable Dedupe',
+                          style: TextStyle(fontSize: 14),
+                        ),
+                        // isLoading
+                        //     ? const SizedBox(
+                        //   width: 20.0,
+                        //   height: 20.0,
+                        //   child: CircularProgressIndicator(
+                        //     strokeWidth: 2.0,
+                        //   ),
+                        // )
+                        //     :
+                        CupertinoSwitch(
+                          value: enableCibilFallback,
+                          onChanged: (bool value) {
+                            // _updateDedupePref(value);
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 12.0),
+                Container(
+                  alignment: Alignment.centerLeft,
+                  child: const Text("Fallbacks", style: TextStyle(fontSize: 16, ), textAlign: TextAlign.start),
+                ),
+                const SizedBox(height: 12.0),
                 Container(
                   height: 50,
                   decoration: BoxDecoration(

@@ -9,14 +9,14 @@ part of 'login_pending_products_dto.dart';
 LoginPendingProductsDTO _$LoginPendingProductsDTOFromJson(
         Map<String, dynamic> json) =>
     LoginPendingProductsDTO(
-      id: json['id'] as int,
+      id: (json['id'] as num).toInt(),
       product: json['product'] as String,
       loanAmount: (json['loanAmount'] as num).toDouble(),
       applicants: (json['applicants'] as List<dynamic>)
           .map((e) => Individual.fromJson(e as Map<String, dynamic>))
           .toList(),
-      completedSections: json['completedSections'] as int,
-      totalSections: json['totalSections'] as int,
+      completedSections: (json['completedSections'] as num).toInt(),
+      totalSections: (json['totalSections'] as num).toInt(),
       sectionsPending: (json['sectionsPending'] as List<dynamic>?)
           ?.map((e) => e as String)
           .toList(),

@@ -8,8 +8,8 @@ part of 'primary_kyc_dto.dart';
 
 PrimaryKycDTO _$PrimaryKycDTOFromJson(Map<String, dynamic> json) =>
     PrimaryKycDTO(
-      id: json['id'] as int?,
-      relatedPartyId: json['relatedPartyId'] as int,
+      id: (json['id'] as num?)?.toInt(),
+      relatedPartyId: (json['relatedPartyId'] as num).toInt(),
       aadhaarNumber: json['aadhaarNumber'] as String,
       name: json['name'] as String,
       fatherName: json['fatherName'] as String?,

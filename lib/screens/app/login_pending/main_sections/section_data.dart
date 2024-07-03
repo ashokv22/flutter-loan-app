@@ -41,6 +41,7 @@ class _SectionScreenEmptyState extends State<SectionScreenEmpty> {
   var logger = Logger();
   bool isLoading = false;
   Map<String, TextEditingController> textEditingControllerMap = {};
+  Section? sectionData;
 
   @override
   void initState() {
@@ -172,6 +173,7 @@ class _SectionScreenEmptyState extends State<SectionScreenEmpty> {
                       );
                     } else {
                       Section section = snapshot.data!;
+                      sectionData = section;
                       if (section.sectionName == null) {
                         return const SizedBox(
                           width: double.infinity,
@@ -280,7 +282,7 @@ class _SectionScreenEmptyState extends State<SectionScreenEmpty> {
 
     if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'TextBox') {
       if (['Integer', 'BigDecimal'].toList().contains(field.fieldMeta?.dataType)) {
-        return NumberInput(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field), isEditable: field.isEditable!, isReadable: field.isReadOnly!, isRequired: field.isRequired!);
+        return NumberInput(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field), isEditable: true, isReadable: field.isReadOnly!, isRequired: field.isRequired!);
       } else {
         return TextInput(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field), isEditable: field.isEditable!, isReadable: field.isReadOnly!, isRequired: field.isRequired!);
       }
@@ -359,6 +361,7 @@ class _SectionScreenEmptyState extends State<SectionScreenEmpty> {
   void updateFieldValue(String newValue, Field field) {
     setState(() {
       field.value = newValue;
+      setTotalAcresOfLand();
     });
   }
 
@@ -380,4 +383,17 @@ class _SectionScreenEmptyState extends State<SectionScreenEmpty> {
     ),
   );
 }
+  void setTotalAcresOfLand() {
+    if (widget.title == "LandAndCropDetails") {
+      String landAcres = textEditingControllerMap['Acres Of Own Land']!.text;
+      String cropAcres = textEditingControllerMap['Acres Of Lease Land']!.text;
+      TextEditingController controller = textEditingControllerMap['Total Acers Of Land']!;
+      String totalAcres = (int.parse(landAcres) + int.parse(cropAcres)).toString();
+      setState(() {
+        sectionData!.subSections?[1].fields?[8].value = totalAcres;
+        controller.text = totalAcres;
+      });
+      logger.i("Updating total acres: $totalAcres to ${sectionData!.subSections?[1].fields?[8].value}");
+    }
+  }
 }

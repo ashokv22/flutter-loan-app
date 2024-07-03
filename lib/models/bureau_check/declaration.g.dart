@@ -9,7 +9,7 @@ part of 'declaration.dart';
 DeclarationMasterDTO _$DeclarationMasterDTOFromJson(
         Map<String, dynamic> json) =>
     DeclarationMasterDTO(
-      id: json['id'] as int,
+      id: (json['id'] as num).toInt(),
       entityType: json['entityType'] as String,
       declarationContent: json['declarationContent'] as String,
       fromDate: DateTime.parse(json['fromDate'] as String),

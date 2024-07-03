@@ -36,8 +36,8 @@ class _SignInPageState extends State<SignIn> {
   }
 
   void setData() async {
-    userNameController.text = "super_admin";
-    passwordController.text = "super_admin@2024";
+    userNameController.text = "support";
+    passwordController.text = "support@2024";
   }
 
   @override

@@ -6,6 +6,7 @@ import 'package:origination/models/utils/server_type.dart';
 import 'package:origination/screens/admin/configs/config_controllers.dart';
 import 'package:origination/screens/admin/reference_codes/reference_codes_search.dart';
 import 'package:origination/screens/admin/users/users_list.dart';
+import 'package:origination/screens/app/lead/dedupe/dedupe_form.dart';
 import 'package:origination/screens/sign_in/sign_in.dart';
 import 'package:origination/service/auth_service.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
@@ -110,6 +111,17 @@ class SideMenu extends StatelessWidget {
                 selected: selectedItemIndex == 3,
                 onTap: () {
                   onItemClicked(3);
+                },
+              ),
+              ListTile(
+                leading: const Icon(CupertinoIcons.profile_circled),
+                title: const Text('Dedupe Test'),
+                selected: selectedItemIndex == 3,
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const DedupeForm()),
+                  );
                 },
               ),
               ExpansionTile(

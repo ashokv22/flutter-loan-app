@@ -1,2 +1,2 @@
 // ignore: constant_identifier_names
-enum ServerType { Local, LocalStatic, Ft7Dev, Development, Staging }
+enum ServerType { Local, LocalStatic, Ft7Dev, Development, Staging, KlUatLos }

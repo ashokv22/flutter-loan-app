@@ -9,10 +9,10 @@ part of 'loan_additional_data.dart';
 LoanAdditionalDataDTO _$LoanAdditionalDataDTOFromJson(
         Map<String, dynamic> json) =>
     LoanAdditionalDataDTO(
-      id: json['id'] as int,
-      applicationId: json['applicationId'] as int,
-      partnerId: json['partnerId'] as int?,
-      partnerLoanId: json['partnerLoanId'] as int?,
+      id: (json['id'] as num).toInt(),
+      applicationId: (json['applicationId'] as num).toInt(),
+      partnerId: (json['partnerId'] as num?)?.toInt(),
+      partnerLoanId: (json['partnerLoanId'] as num?)?.toInt(),
       partnerDisbursementConfirmation:
           json['partnerDisbursementConfirmation'] as String?,
       kpclLoanApproval: json['kpclLoanApproval'] as String?,
@@ -24,7 +24,7 @@ LoanAdditionalDataDTO _$LoanAdditionalDataDTOFromJson(
           : DateTime.parse(json['emiStartDate'] as String),
       insurancePremiumAmount:
           (json['insurancePremiumAmount'] as num?)?.toDouble(),
-      loanTenure: json['loanTenure'] as int?,
+      loanTenure: (json['loanTenure'] as num?)?.toInt(),
       totalEmiFromExistingLoans:
           (json['totalEmiFromExistingLoans'] as num?)?.toDouble(),
       requestedDisbursementDate: json['requestedDisbursementDate'] == null

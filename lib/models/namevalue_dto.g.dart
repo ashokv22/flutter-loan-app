@@ -7,7 +7,7 @@ part of 'namevalue_dto.dart';
 // **************************************************************************
 
 NameValueDTO _$NameValueDTOFromJson(Map<String, dynamic> json) => NameValueDTO(
-      id: json['id'] as int?,
+      id: (json['id'] as num?)?.toInt(),
       classifier: json['classifier'] as String?,
       name: json['name'] as String?,
       code: json['code'] as String?,

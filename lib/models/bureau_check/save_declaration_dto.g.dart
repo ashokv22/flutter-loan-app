@@ -8,15 +8,15 @@ part of 'save_declaration_dto.dart';
 
 SaveDeclarationDTO _$SaveDeclarationDTOFromJson(Map<String, dynamic> json) =>
     SaveDeclarationDTO(
-      id: json['id'] as int?,
+      id: (json['id'] as num?)?.toInt(),
       entityType: json['entityType'] as String?,
-      entityId: json['entityId'] as int?,
+      entityId: (json['entityId'] as num?)?.toInt(),
       modeOfAcceptance: json['modeOfAcceptance'] as String?,
       dateOfAcceptance: json['dateOfAcceptance'] == null
           ? null
           : DateTime.parse(json['dateOfAcceptance'] as String),
       status: json['status'] as String?,
-      declarationMasterId: json['declarationMasterId'] as int?,
+      declarationMasterId: (json['declarationMasterId'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$SaveDeclarationDTOToJson(SaveDeclarationDTO instance) =>

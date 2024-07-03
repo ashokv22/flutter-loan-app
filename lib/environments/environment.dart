@@ -27,6 +27,10 @@ class Environment {
       case ServerType.Staging:
         baseUrl = 'http://13.127.140.32/server/'; // Staging
         break;
+      case ServerType.KlUatLos:
+        // baseUrl = 'http://13.234.158.142/kl-uat/'; // KL UAT LOS
+        baseUrl = 'http://13.234.158.142/kl-uat/';
+        break;
     }
     currentServerType = type;
     await saveServerType(type);

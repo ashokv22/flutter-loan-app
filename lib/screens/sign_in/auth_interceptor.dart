@@ -22,6 +22,11 @@ class AuthInterceptor extends http.BaseClient {
     }
     modifiedRequest.headers['X-Auth-Token'] = token;
 
+    // Check if request method is POST and data is present
+    if (request.method == 'POST') {
+      modifiedRequest.headers['Content-Type'] = 'application/json';
+    }
+
     return _inner.send(modifiedRequest);
   }
   

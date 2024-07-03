@@ -7,7 +7,7 @@ part of 'leads_list_dto.dart';
 // **************************************************************************
 
 LeadsListDTO _$LeadsListDTOFromJson(Map<String, dynamic> json) => LeadsListDTO(
-      id: json['id'] as int,
+      id: (json['id'] as num).toInt(),
       name: json['name'] as String,
       status: json['status'] as String,
       dsaName: json['dsaName'] as String?,

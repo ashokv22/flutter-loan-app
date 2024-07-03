@@ -7,11 +7,11 @@ part of 'individual.dart';
 // **************************************************************************
 
 Individual _$IndividualFromJson(Map<String, dynamic> json) => Individual(
-      id: json['id'] as int?,
+      id: (json['id'] as num?)?.toInt(),
       type: $enumDecodeNullable(_$IndividualTypeEnumMap, json['type']),
       product: json['product'] as String?,
       enquiryPurpose: json['enquiryPurpose'] as String?,
-      internalRefNumber: json['internalRefNumber'] as int?,
+      internalRefNumber: (json['internalRefNumber'] as num?)?.toInt(),
       loanAmount: (json['loanAmount'] as num?)?.toDouble(),
       firstName: json['firstName'] as String,
       middleName: json['middleName'] as String?,
@@ -38,7 +38,7 @@ Individual _$IndividualFromJson(Map<String, dynamic> json) => Individual(
       commentsByRm: json['commentsByRm'] as String?,
       status: $enumDecodeNullable(
           _$ApplicantDeclarationStatusEnumMap, json['status']),
-      applicantId: json['applicantId'] as int?,
+      applicantId: (json['applicantId'] as num?)?.toInt(),
       approvedBy: json['approvedBy'] as String?,
       appovedDate: json['appovedDate'] == null
           ? null

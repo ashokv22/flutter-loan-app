@@ -37,21 +37,16 @@ class _ReferencecodeState extends State<Referencecode> {
   Future<void> fetchData() async {
     try {
       final options = await applicationService.getReferenceCodes(widget.referenceCode);
-      final filteredOptions = options.where((option) => option.code != null && option.code!.isNotEmpty).toList();
       setState(() {
-        refernceCodes = filteredOptions.isEmpty ? null : filteredOptions; // Set referenceCodes to null if the filteredOptions is empty
+        refernceCodes = options.where((option) => option.name != null && option.name!.isNotEmpty).toList(); // Set referenceCodes to null if the filteredOptions is empty
         isLoading = false;
-      });
-      // Check if the selectedValue is present in the fetched options
-      if (selectedValue != null && refernceCodes != null) {
-        final selectedExists = refernceCodes!.any((option) => option.code == selectedValue);
-        if (!selectedExists) {
-          // Set selectedValue to null if it's not present in the fetched options
-          setState(() {
+        if (selectedValue != null && refernceCodes != null) {
+          final selectedExists = refernceCodes!.any((option) => option.name == selectedValue);
+          if (!selectedExists) {
             selectedValue = null;
-          });
+          }
         }
-      }
+      });
     } catch(e) {
       logger.e(e);
       setState(() {
@@ -94,7 +89,7 @@ class _ReferencecodeState extends State<Referencecode> {
                   if (refernceCodes != null)
                     ...refernceCodes!.map((option) {
                       return DropdownMenuItem<String>(
-                        value: option.name,
+                        value: option.name!,
                         child: SizedBox(
                           width: 280,
                           child: Text(
