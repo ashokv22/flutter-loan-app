@@ -2,13 +2,15 @@ import 'package:flutter/material.dart';
 
 class CustomSnackBar extends StatefulWidget {
   final String message;
+  final String type;
   final bool isDarkTheme;
 
   // ignore: prefer_const_constructors_in_immutables, use_key_in_widget_constructors
-  CustomSnackBar({required this.message, required this.isDarkTheme});
+  CustomSnackBar({required this.message, required this.type, required this.isDarkTheme});
 
-  static void show(BuildContext context, {required String message, required bool isDarkTheme}) {
-    final snackBar = CustomSnackBar(message: message, isDarkTheme: isDarkTheme);
+  static void show(BuildContext context,
+      {required String message, required String type, required bool isDarkTheme}) {
+    final snackBar = CustomSnackBar(message: message, type: type, isDarkTheme: isDarkTheme);
     final scaffoldMessenger = ScaffoldMessenger.of(context);
     scaffoldMessenger.removeCurrentSnackBar();
     scaffoldMessenger.showSnackBar(
@@ -32,7 +34,8 @@ class CustomSnackBar extends StatefulWidget {
   _CustomSnackBarState createState() => _CustomSnackBarState();
 }
 
-class _CustomSnackBarState extends State<CustomSnackBar> with SingleTickerProviderStateMixin {
+class _CustomSnackBarState extends State<CustomSnackBar>
+    with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
 
   @override
@@ -58,12 +61,28 @@ class _CustomSnackBarState extends State<CustomSnackBar> with SingleTickerProvid
       builder: (context, child) {
         return Row(
           children: <Widget>[
-            Icon(
-              Icons.info_outline,
-              color: widget.isDarkTheme ? Colors.black : Colors.white,
-            ),
+            if (widget.type.toLowerCase() == "success") ...[
+              const Icon(
+                Icons.check_circle,
+                color: Colors.green,
+              ),
+            ] else if (widget.type.toLowerCase() == "warn") ...[
+              Icon(
+                Icons.warning,
+                color: widget.isDarkTheme ? Colors.black : Colors.white,
+              ),
+            ] else ...[
+              const Icon(
+                Icons.error,
+                color: Colors.red,
+              ),
+            ],
             const SizedBox(width: 5),
-            Text(widget.message, style: TextStyle(color: widget.isDarkTheme ? Colors.black : Colors.white),),
+            Text(
+              widget.message,
+              style: TextStyle(
+                  color: widget.isDarkTheme ? Colors.black : Colors.white),
+            ),
           ],
         );
       },

@@ -13,7 +13,7 @@ class ConfigService {
   final apiUrl = Environment.baseUrl;
 
   Future<http.Response> updateCibilFallback(bool status) async {
-    String endpoint = "api/application/configs/cibilFallback?fallback=$status";
+    String endpoint = "api/application/configuration/cibilFallback?fallback=$status";
     try {
       final response = await authInterceptor.put(Uri.parse(endpoint));
       return response;
@@ -21,4 +21,25 @@ class ConfigService {
       throw Exception(e);
     }
   }
+
+  Future<http.Response> getProperties() async {
+    String endpoint = "api/application/configuration/configs";
+    try {
+      final response = await authInterceptor.get(Uri.parse(endpoint));
+      return response;
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  Future<http.Response> updateProperties(String property, dynamic value) async {
+    String endpoint = "api/application/configuration/property/$property?value=$value";
+    try {
+      final response = await authInterceptor.put(Uri.parse(endpoint));
+      return response;
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
 }
