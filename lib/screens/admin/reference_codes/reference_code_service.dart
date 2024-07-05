@@ -10,8 +10,6 @@ import 'package:origination/service/auth_service.dart';
 final authService = AuthService();
 
 class ReferenceCodeService {
-
-
   final authInterceptor = AuthInterceptor(http.Client(), authService);
   Logger logger = Logger();
   final apiUrl = Environment.baseUrl;
@@ -41,5 +39,17 @@ class ReferenceCodeService {
     }
   }
 
-  updateReferenceCode(String id, String text, String text2, String text3) {}
+  Future<http.Response> updateReferenceCode(ReferenceCodeDTO referenceCodeDTO) async {
+    String endpoint = "api/sjs-core/reference-codes";
+    logger.i(referenceCodeDTO.toJson());
+    try {
+      final payload = jsonEncode(referenceCodeDTO.toJson());
+      return await http.put(Uri.parse(apiUrl + endpoint), headers: {
+        'Content-type': 'application/json',
+        'X-AUTH-TOKEN': await authService.getAccessToken()
+      }, body: payload);
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
 }

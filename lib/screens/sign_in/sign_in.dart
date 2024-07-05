@@ -1,7 +1,11 @@
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:heroicons/heroicons.dart';
 import 'package:logger/logger.dart';
+import 'package:origination/core/exceptions/authentication_exception.dart';
 import 'package:origination/environments/environment.dart';
 import 'package:origination/main.dart';
 import 'package:origination/models/utils/server_type.dart';
@@ -22,6 +26,9 @@ class _SignInPageState extends State<SignIn> {
   final SignInServiceImpl _signServiceImpl = SignInServiceImpl();
   bool _isLoading = false;
   bool showPassword = false;
+  String _errorMessage = '';
+
+  final GlobalKey<FormState> _formKey = GlobalKey();
 
   TextEditingController userNameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
@@ -50,6 +57,7 @@ class _SignInPageState extends State<SignIn> {
   void _handleLogin() async {
     setState(() {
       _isLoading = true;
+      _errorMessage = '';
     });
 
     final userName = userNameController.text;
@@ -63,6 +71,10 @@ class _SignInPageState extends State<SignIn> {
               MaterialPageRoute(builder: (context) => const Home()),
             );
           }
+    } on AuthenticationException catch (error) {
+      _errorMessage = error.message;
+    } on SocketException catch (e) {
+      _errorMessage = "Network error. Please check your connection and try again.";
     } catch (error) {
       logger.e(error.toString());
       showDialog(
@@ -132,126 +144,159 @@ class _SignInPageState extends State<SignIn> {
               child: Expanded(
                 child: Container(
                   padding: const EdgeInsets.all(20.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Row(
-                        children: [
-                          Text(
-                            'Log in',
-                            style: TextStyle(
-                              fontSize: 32,
-                              fontWeight: FontWeight.w700,
-                              fontFamily: 'Open Sans',
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Row(
+                          children: [
+                            Text(
+                              'Log in',
+                              style: TextStyle(
+                                fontSize: 32,
+                                fontWeight: FontWeight.w700,
+                                fontFamily: 'Open Sans',
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 60.0),
+                        InputDecorator(
+                          decoration: const InputDecoration(
+                            labelText: "Server",
+                            border: OutlineInputBorder(),
+                            isDense: true,
+                            contentPadding: EdgeInsets.symmetric(horizontal: 12.0),
+                          ),
+                          child: DropdownButtonHideUnderline(
+                            child: DropdownButtonFormField<ServerType>(
+                              value: selectedServer,
+                              onChanged: (ServerType? newValue) {
+                                setState(() {
+                                  selectedServer = newValue!;
+                                  Environment.setServerType(selectedServer);
+                                  AuthService.signOut().then((_) =>
+                                    Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(builder: (context) => const SignIn()),
+                                    )
+                                  );
+                                });
+                              },
+                              decoration: const InputDecoration(
+                                border: InputBorder.none,
+                                contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+                                prefixIcon: HeroIcon(HeroIcons.serverStack),
+                              ),
+                              items: ServerType.values.map<DropdownMenuItem<ServerType>>((ServerType value) {
+                                return DropdownMenuItem<ServerType>(
+                                  value: value,
+                                  child: Text(value.toString().split('.').last, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.normal),),
+                                );
+                              }).toList(),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 20.0),
+                        SizedBox(
+                          // height: 50,
+                          child: TextFormField(
+                            controller: userNameController,
+                            focusNode: _userNameFocusNode,
+                            decoration: const InputDecoration(
+                              labelText: 'Username',
+                              border: OutlineInputBorder(),
+                              contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+                              prefixIcon: HeroIcon(HeroIcons.userCircle)
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Username is required';
+                              }
+                              return null;
+                            }
+                          ),
+                        ),
+                        const SizedBox(height: 20.0),
+                        SizedBox(
+                          height: 50,
+                          child: TextFormField(
+                            controller: passwordController,
+                            focusNode: _passwordFocusNode,
+                            decoration: InputDecoration(
+                              labelText: 'Password',
+                              border: const OutlineInputBorder(),
+                              contentPadding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+                              prefixIcon: const HeroIcon(HeroIcons.lockClosed),
+                              suffixIcon: IconButton(
+                                icon: HeroIcon(showPassword ? HeroIcons.eye : HeroIcons.eyeSlash),
+                                onPressed: toggleShowPassword
+                              )
+                            ),
+                            obscureText: !showPassword,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Password is required';
+                              }
+                              return null;
+                            }
+                          ),
+                        ),
+                        const SizedBox(height: 16.0),
+                        if (_errorMessage.isNotEmpty) ...[
+                          Positioned(
+                            bottom: 20.0, // Adjust position as needed
+                            left: 20.0, // Adjust position as needed
+                            child: Text(
+                              _errorMessage,
+                              style: const TextStyle(
+                                color: Colors.red,
+                                fontSize: 14.0, // Adjust font size as needed
+                              ),
                             ),
                           ),
                         ],
-                      ),
-                      const SizedBox(height: 60.0),
-                      InputDecorator(
-                        decoration: const InputDecoration(
-                          labelText: "Server",
-                          border: OutlineInputBorder(),
-                          isDense: true,
-                          contentPadding: EdgeInsets.symmetric(horizontal: 12.0),
-                        ),
-                        child: DropdownButtonHideUnderline(
-                          child: DropdownButtonFormField<ServerType>(
-                            value: selectedServer,
-                            onChanged: (ServerType? newValue) {
-                              setState(() {
-                                selectedServer = newValue!;
-                                Environment.setServerType(selectedServer);
-                                AuthService.signOut().then((_) => 
-                                  Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(builder: (context) => const SignIn()),
-                                  )
-                                );
-                              });
-                            },
-                            decoration: const InputDecoration(
-                              border: InputBorder.none,
-                              contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
-                              prefixIcon: HeroIcon(HeroIcons.serverStack),
-                            ),
-                            items: ServerType.values.map<DropdownMenuItem<ServerType>>((ServerType value) {
-                              return DropdownMenuItem<ServerType>(
-                                value: value,
-                                child: Text(value.toString().split('.').last, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.normal),),
-                              );
-                            }).toList(),
+                        const SizedBox(height: 16.0),
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: TextButton(
+                            onPressed: () => _handleForgotPassword(context),
+                            child: const Text('Forgot password?'),
                           ),
                         ),
-                      ),
-                      const SizedBox(height: 20.0),
-                      SizedBox(
-                        // height: 50,
-                        child: TextField(
-                          controller: userNameController,
-                          focusNode: _userNameFocusNode,
-                          decoration: const InputDecoration(
-                            labelText: 'Username',
-                            border: OutlineInputBorder(),
-                            contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
-                            prefixIcon: HeroIcon(HeroIcons.userCircle)
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 20.0),
-                      SizedBox(
-                        height: 50,
-                        child: TextField(
-                          controller: passwordController,
-                          focusNode: _passwordFocusNode,
-                          decoration: InputDecoration(
-                            labelText: 'Password',
-                            border: const OutlineInputBorder(),
-                            contentPadding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
-                            prefixIcon: const HeroIcon(HeroIcons.lockClosed),
-                            suffixIcon: IconButton(
-                              icon: HeroIcon(showPassword ? HeroIcons.eye : HeroIcons.eyeSlash),
-                              onPressed: toggleShowPassword
-                            )
-                          ),
-                          obscureText: !showPassword,
-                        ),
-                      ),
-                      const SizedBox(height: 16.0),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: TextButton(
-                          onPressed: () => _handleForgotPassword(context),
-                          child: const Text('Forgot password?'),
-                        ),
-                      ),
-                      const SizedBox(height: 16.0),
-                      Align(
-                        alignment: Alignment.bottomCenter,
-                        child: SizedBox(
-                          width: double.infinity,
-                          child: MaterialButton(
-                            onPressed: _handleLogin,
-                            color: const Color.fromARGB(255, 3, 71, 244),
-                            textColor: Colors.white,
-                            padding: const EdgeInsets.symmetric(vertical: 16.0),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30.0),
-                            ),
-                            child: _isLoading
-                                ? const SizedBox(
-                              width: 20.0,
-                              height: 20.0,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2.0,
-                                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                        const SizedBox(height: 16.0),
+                        Align(
+                          alignment: Alignment.bottomCenter,
+                          child: SizedBox(
+                            width: double.infinity,
+                            child: MaterialButton(
+                              onPressed: () {
+                                if(_formKey.currentState!.validate()) {
+                                  _handleLogin();
+                                }
+                              },
+                              color: const Color.fromARGB(255, 3, 71, 244),
+                              textColor: Colors.white,
+                              padding: const EdgeInsets.symmetric(vertical: 16.0),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30.0),
                               ),
-                            )
-                                : const Text('Log In'),
+                              child: _isLoading
+                                  ? const SizedBox(
+                                width: 20.0,
+                                height: 20.0,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2.0,
+                                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                ),
+                              )
+                                  : const Text('Log In'),
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),

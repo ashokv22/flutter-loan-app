@@ -15,6 +15,12 @@ ReferenceCodeDTO _$ReferenceCodeDTOFromJson(Map<String, dynamic> json) =>
       code: json['code'] as String,
       parentClassifier: json['parentClassifier'] as String?,
       parentReferenceCode: json['parentReferenceCode'] as String?,
+      status: (json['status'] as num).toInt(),
+      field1: json['field1'] as String?,
+      field2: json['field2'] as String?,
+      field3: json['field3'] as String?,
+      field4: json['field4'] as String?,
+      field5: json['field5'] as String?,
     );
 
 Map<String, dynamic> _$ReferenceCodeDTOToJson(ReferenceCodeDTO instance) =>
@@ -26,4 +32,10 @@ Map<String, dynamic> _$ReferenceCodeDTOToJson(ReferenceCodeDTO instance) =>
       'code': instance.code,
       'parentClassifier': instance.parentClassifier,
       'parentReferenceCode': instance.parentReferenceCode,
+      'status': instance.status,
+      'field1': instance.field1,
+      'field2': instance.field2,
+      'field3': instance.field3,
+      'field4': instance.field4,
+      'field5': instance.field5,
     };

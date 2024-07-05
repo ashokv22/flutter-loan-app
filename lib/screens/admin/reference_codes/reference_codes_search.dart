@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:origination/screens/admin/reference_codes/reference_code_edit.dart';
 import 'package:origination/screens/admin/reference_codes/reference_code_service.dart';
 import 'package:origination/models/admin/reference_code_dto.dart';
 
@@ -11,12 +12,11 @@ class ReferenceCodeSearch extends StatefulWidget {
 }
 
 class _ReferenceCodeSearchState extends State<ReferenceCodeSearch> {
-  String _selectedFilter = 'code';
+  String _selectedFilter = 'classifier';
   final TextEditingController _searchController = TextEditingController();
 
   ReferenceCodeService service = ReferenceCodeService();
   List<ReferenceCodeDTO> _searchResult = [];
-  bool _isLoading = false;
 
   void _onFilterPressed() async {
     List<ReferenceCodeDTO> data = await service.filterRefsUnPaged(_selectedFilter, _searchController.text);
@@ -126,7 +126,7 @@ class _ReferenceCodeSearchState extends State<ReferenceCodeSearch> {
                           DataCell(IconButton(
                             icon: const Icon(Icons.edit, color: Color.fromARGB(255, 3, 71, 244),),
                             onPressed: () {
-                              _showEditDialog(item);
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => ReferenceCodeEdit(item: item)));
                             },
                           )),
                         ]);
@@ -139,101 +139,6 @@ class _ReferenceCodeSearchState extends State<ReferenceCodeSearch> {
           ],
         )
       ),
-    );
-  }
-
-  void _showEditDialog(ReferenceCodeDTO item) {
-    final TextEditingController classifierController =
-        TextEditingController(text: item.classifier);
-    final TextEditingController codeController =
-        TextEditingController(text: item.code);
-    final TextEditingController nameController =
-        TextEditingController(text: item.name);
-
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Edit Reference Code'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 10),
-              RoundedTextField(
-                controller: classifierController,
-                labelText: 'Classifier',
-              ),
-              const SizedBox(height: 10),
-              RoundedTextField(
-                controller: codeController,
-                labelText: 'Code',
-              ),
-              const SizedBox(height: 10),
-              RoundedTextField(
-                controller: nameController,
-                labelText: 'Name',
-              ),
-            ],
-          ),
-          actions: [
-            SizedBox(
-              width: double.infinity,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: OutlinedButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      child: const Text('Cancel'),
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: () async {
-                        setState(() {
-                          _isLoading = true;
-                        });
-                        final bool success = await service.updateReferenceCode(
-                          item.id,
-                          classifierController.text,
-                          codeController.text,
-                          nameController.text,
-                        );
-                        setState(() {
-                          _isLoading = false;
-                          if (success) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Update successful'),
-                                backgroundColor: Colors.green,
-                              ),
-                            );
-                          } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Update failed'),
-                                backgroundColor: Colors.red,
-                              ),
-                            );
-                          }
-                        });
-                      },
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all<Color>(const Color.fromARGB(255, 3, 71, 244)),
-                      ),
-                      child: _isLoading ? CircularProgressIndicator() : Text('Update'),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        );
-      },
     );
   }
 }

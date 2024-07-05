@@ -263,18 +263,18 @@ class _NewLeadState extends State<NewLead> {
       return NumberInput(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field), isEditable: field.isEditable!, isReadable: field.isReadOnly!, isRequired: field.isRequired!);
     }
     else if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'HIDDEN') {
-      if (userData.isNotEmpty) {
+      if (userData.isNotEmpty && field.fieldMeta?.variable == 'state') {
         controller.text = userData['branchData']['state'];
+      }     
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text("HIDDEN Field $fieldName"),
             const SizedBox(height: 10,),
-            TextInput(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field), isEditable: field.isEditable!, isReadable: field.isReadOnly!, isRequired: field.isRequired!)
+            TextInput(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field), isEditable: true, isReadable: false, isRequired: false)
 
           ],
         );
-      }
     }
     return const SizedBox();
   }

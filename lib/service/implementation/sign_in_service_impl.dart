@@ -1,6 +1,8 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
+import 'package:origination/core/exceptions/authentication_exception.dart';
 import 'package:origination/environments/environment.dart';
 import 'package:origination/models/response_status_dto.dart';
 import 'package:origination/models/user_composite_dto.dart';
@@ -35,10 +37,19 @@ class SignInServiceImpl implements SignInService {
         await authService.setAccessToken(accessToken!);
         await getAccountInfo();
       } else {
-        throw Exception(response.body.toString());
+        // throw Exception(response.body.toString());
+        if (response.statusCode == 401) {
+          throw AuthenticationException("Invalid username or password"); // Specific message for 401
+        } else if (response.statusCode == 500) {
+          throw Exception("Internal Server Error. Please try again later."); // Generic message for 500
+        } else {
+          throw Exception("Unexpected error: ${response.statusCode}"); // Handle other status codes
+        }
       }
+    } on SocketException catch (e) {
+      throw Exception("Network error. Please check your connection and try again.");
     } catch (e) {
-      throw Exception(e.toString());
+      rethrow; // Re-throw for further handling (consider logging or showing a generic error message)
     }
   }
 
