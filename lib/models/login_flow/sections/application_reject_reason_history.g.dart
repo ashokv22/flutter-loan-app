@@ -9,12 +9,12 @@ part of 'application_reject_reason_history.dart';
 ApplicationRejectReasonHistory _$ApplicationRejectReasonHistoryFromJson(
         Map<String, dynamic> json) =>
     ApplicationRejectReasonHistory(
-      id: (json['id'] as num).toInt(),
+      id: json['id'] as int,
       actionRequired: json['actionRequired'] as String?,
       reasonForRejection: json['reasonForRejection'] as String?,
       documentRejectionReason: json['documentRejectionReason'] as String?,
       reviewerRemarks: json['reviewerRemarks'] as String?,
-      submitId: (json['submitId'] as num).toInt(),
+      submitId: json['submitId'] as int,
       historyDateTime: DateTime.parse(json['historyDateTime'] as String),
     );
 

@@ -362,6 +362,22 @@ class _SectionScreenEmptyState extends State<SectionScreenEmpty> {
     setState(() {
       field.value = newValue;
       setTotalAcresOfLand();
+      if (widget.title == "LoanDetails") {
+        updateAssetAge(newValue, field);
+      }
+    });
+  }
+
+  void updateAssetAge(String newValue, Field field) {
+    setState(() {
+      if (field.fieldMeta?.fieldName == "dateOfManufacturing") {
+        String product = sectionData!.subSections?[0].fields?[3].value ?? "";
+        if (["used tractor", "refinance"].contains(product.toLowerCase())) {
+          TextEditingController controller = textEditingControllerMap['Asset Age']!;
+          int assetAge = DateTime.now().year - DateTime.parse(field.value!).year;
+          controller.text = assetAge.toString();
+        }
+      }
     });
   }
 
@@ -379,7 +395,7 @@ class _SectionScreenEmptyState extends State<SectionScreenEmpty> {
             ]),
     ),
     child: const Center(
-      child: Text('There\'s something wrong! We till we make a snap 🫰.'),
+      child: Text('There\'s something wrong! Wait till we make a snap 🫰.'),
     ),
   );
 }

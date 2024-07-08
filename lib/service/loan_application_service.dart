@@ -211,7 +211,7 @@ class LoanApplicationService {
   }
 
   Future<List<NameValueDTO>> getReferenceCodes(String classifier) async {
-    String endpoint = "api/sjs-core/_refs/reference-codes/parentcodes/$classifier?status=1";
+    String endpoint = "api/sjs-core/_refs/reference-codes/parent-codes/$classifier?status=1";
     try {
       final response = await authInterceptor.get(Uri.parse(endpoint));
       if (response.statusCode == 200) {

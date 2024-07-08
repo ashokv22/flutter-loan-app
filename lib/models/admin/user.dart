@@ -14,6 +14,7 @@ class User {
   String? role;
   String? branchCode;
   String? branchSetCode;
+  String? hrmsId;
   User({
     required this.login,
     required this.firstName,
@@ -25,6 +26,7 @@ class User {
     this.role,
     this.branchCode,
     this.branchSetCode,
+    this.hrmsId,
   });
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);

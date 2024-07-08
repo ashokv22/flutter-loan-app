@@ -7,7 +7,7 @@ part of 'applicant_dto.dart';
 // **************************************************************************
 
 ApplicantDTO _$ApplicantDTOFromJson(Map<String, dynamic> json) => ApplicantDTO(
-      id: (json['id'] as num?)?.toInt(),
+      id: json['id'] as int?,
       cifId: json['cifId'] as String?,
       cifSubType: json['cifSubType'] as String?,
       title: json['title'] as String?,

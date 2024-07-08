@@ -7,7 +7,7 @@ part of 'bc_check_list_dto.dart';
 // **************************************************************************
 
 CheckListDTO _$CheckListDTOFromJson(Map<String, dynamic> json) => CheckListDTO(
-      id: (json['id'] as num).toInt(),
+      id: json['id'] as int,
       type: $enumDecode(_$CibilTypeEnumMap, json['type']),
       name: json['name'] as String,
       status: json['status'] as String,

@@ -35,4 +35,13 @@ class UsersService {
       throw Exception(e);
     }
   }
+
+  Future<http.Response> createUser(User userDTO) async {
+    String endpoint = "api/user-management/users";
+    try {
+      return await authInterceptor.post(Uri.parse(endpoint), body: jsonEncode(userDTO));
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
 }

@@ -8,7 +8,7 @@ part of 'entity_state_manager.dart';
 
 EntityStateManager _$EntityStateManagerFromJson(Map<String, dynamic> json) =>
     EntityStateManager(
-      id: (json['id'] as num).toInt(),
+      id: json['id'] as int,
       entityType: json['entityType'] as String?,
       entityId: json['entityId'] as String,
       applicationReferenceNum: json['applicationReferenceNum'] as String,

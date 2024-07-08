@@ -17,6 +17,7 @@ User _$UserFromJson(Map<String, dynamic> json) => User(
       role: json['role'] as String?,
       branchCode: json['branchCode'] as String?,
       branchSetCode: json['branchSetCode'] as String?,
+      hrmsId: json['hrmsId'] as String?,
     );
 
 Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
@@ -30,4 +31,5 @@ Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
       'role': instance.role,
       'branchCode': instance.branchCode,
       'branchSetCode': instance.branchSetCode,
+      'hrmsId': instance.hrmsId,
     };

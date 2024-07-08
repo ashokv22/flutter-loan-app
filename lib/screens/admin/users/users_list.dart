@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:origination/models/admin/user.dart';
+import 'package:origination/screens/admin/users/new_user.dart';
 import 'package:origination/screens/admin/users/users_service.dart';
 
 class UsersList extends StatefulWidget {
@@ -35,6 +36,18 @@ class _UsersListState extends State<UsersList> {
       appBar: AppBar(
         leading: IconButton(onPressed: () {Navigator.pop(context);}, icon: const Icon(CupertinoIcons.arrow_left)),
         title: const Text("Users", style: TextStyle(fontSize: 16)),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const CreateUser()),
+          );
+        },
+        mini: false,
+        shape: const CircleBorder(),
+        backgroundColor: const Color.fromARGB(255, 3, 71, 244),
+        child: const Icon(Icons.person_add_alt_rounded, color: Colors.white,),
       ),
       body: Container(
         decoration: BoxDecoration(

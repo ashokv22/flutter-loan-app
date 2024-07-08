@@ -7,7 +7,7 @@ part of 'pan_dto.dart';
 // **************************************************************************
 
 Pan _$PanFromJson(Map<String, dynamic> json) => Pan(
-      relatedPartyId: (json['relatedPartyId'] as num).toInt(),
+      relatedPartyId: json['relatedPartyId'] as int,
       panNumber: json['panNumber'] as String,
       name: json['name'] as String,
       fatherName: json['fatherName'] as String,

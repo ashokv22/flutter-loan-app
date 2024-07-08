@@ -114,7 +114,7 @@ class SideMenu extends StatelessWidget {
                 },
               ),
               ListTile(
-                leading: const Icon(CupertinoIcons.profile_circled),
+                leading: const Icon(CupertinoIcons.hourglass_tophalf_fill),
                 title: const Text('Dedupe Test'),
                 selected: selectedItemIndex == 3,
                 onTap: () {
@@ -131,7 +131,7 @@ class SideMenu extends StatelessWidget {
                 childrenPadding: const EdgeInsets.only(left:20), //children padding
                 children: [
                   ListTile(
-                    leading: const Icon(Icons.science_outlined),
+                    leading: const HeroIcon(HeroIcons.beaker),
                     title: const Text('Configs'),
                     selected: selectedItemIndex == 1,
                     onTap: () {

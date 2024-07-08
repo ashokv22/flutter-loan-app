@@ -9,7 +9,7 @@ part of 'loan_application_entity.dart';
 LoanApplicationEntity _$LoanApplicationEntityFromJson(
         Map<String, dynamic> json) =>
     LoanApplicationEntity(
-      id: (json['id'] as num).toInt(),
+      id: json['id'] as int,
       entityType: json['entityType'] as String,
       entitySubType: json['entitySubType'] as String,
       displayTitle: json['displayTitle'] as String,
@@ -37,7 +37,7 @@ Map<String, dynamic> _$LoanApplicationEntityToJson(
     };
 
 LoanSection _$LoanSectionFromJson(Map<String, dynamic> json) => LoanSection(
-      id: (json['id'] as num?)?.toInt(),
+      id: json['id'] as int?,
       sectionName: json['sectionName'] as String,
       displayTitle: json['displayTitle'] as String,
       status: json['status'] as String,

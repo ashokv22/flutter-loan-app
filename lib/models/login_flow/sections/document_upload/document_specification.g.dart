@@ -10,7 +10,7 @@ DocumentSpecificationDTO _$DocumentSpecificationDTOFromJson(
         Map<String, dynamic> json) =>
     DocumentSpecificationDTO(
       category: $enumDecode(_$DocumentCategoryEnumMap, json['category']),
-      productId: (json['productId'] as num).toInt(),
+      productId: json['productId'] as int,
       isMandatory: json['isMandatory'] as bool?,
     );
 
