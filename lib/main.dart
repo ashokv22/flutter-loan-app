@@ -34,7 +34,7 @@ void main() async {
 }
 
 class SideMenuApp extends StatefulWidget {
-  const SideMenuApp({Key? key}) : super(key: key);
+  const SideMenuApp({super.key});
 
   @override
   State<SideMenuApp> createState() => _SideMenuAppState();

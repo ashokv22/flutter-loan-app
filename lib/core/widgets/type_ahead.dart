@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:logger/logger.dart';
 import 'package:origination/models/namevalue_dto.dart';
 import 'package:origination/service/loan_application_service.dart';
-import 'package:flutter_typeahead/flutter_typeahead.dart';
 
 class TypeAhead extends StatefulWidget {
   const TypeAhead({
@@ -57,34 +57,37 @@ class _TypeAheadState extends State<TypeAhead> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        TypeAheadFormField<NameValueDTO>(
-          textFieldConfiguration: TextFieldConfiguration(
-            controller: widget.controller,
-            onChanged: (value) => widget.onChanged(value),
-            decoration: InputDecoration(
-              prefixIcon: const Icon(CupertinoIcons.search, size: 18),
-              suffixIcon: widget.controller.text.isNotEmpty
-              ? IconButton(
-                  onPressed: () {
-                    setState(() {
-                      widget.controller.clear();
-                    });
-                  },
-                  icon: const Icon(CupertinoIcons.clear, size: 18),
-                )
-              : null,
-              labelText: widget.label,
-              border: const OutlineInputBorder(),
-              isDense: true,
-              contentPadding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
-            ),
-            enabled: widget.isEditable,
-          ),
+        TypeAheadField<NameValueDTO>(
+          controller: widget.controller,
           suggestionsCallback: (pattern) => fetchOptions(pattern),
+          builder: (context, controller, focusNode) {
+            return TextField(
+              enabled: widget.isEditable,
+              controller: widget.controller,
+              focusNode: focusNode,
+              decoration: InputDecoration(
+                prefixIcon: const Icon(CupertinoIcons.search, size: 18),
+                suffixIcon: widget.controller.text.isNotEmpty
+                ? IconButton(
+                    onPressed: () {
+                      setState(() {
+                        widget.controller.clear();
+                      });
+                    },
+                    icon: const Icon(CupertinoIcons.clear, size: 18),
+                  )
+                : null,
+                labelText: widget.label,
+                border: const OutlineInputBorder(),
+                isDense: true,
+                contentPadding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+              )
+            );
+          },
           itemBuilder: (context, NameValueDTO option) => ListTile(
             title: Text(option.name ?? ""),
           ),
-          onSuggestionSelected: (option) {
+          onSelected: (option) {
             setState(() {
               selectedValue = option.code;
               widget.controller.text = option.name!;

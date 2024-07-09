@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:origination/core/widgets/number_input.dart';
 import 'package:origination/models/bureau_check/bc_check_list_dto.dart';
-import 'package:origination/models/bureau_check/individual.dart';
 // import 'package:origination/models/bureau_check/individual.dart';
 import 'package:origination/service/bureau_check_service.dart';
 

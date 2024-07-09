@@ -6,7 +6,7 @@ import 'package:logger/logger.dart';
 import 'package:origination/service/auth_service.dart';
 
 class UpdateProfileScreen extends StatefulWidget {
-  const UpdateProfileScreen({Key? key}) : super(key: key);
+  const UpdateProfileScreen({super.key});
 
   @override
   State<UpdateProfileScreen> createState() => _UpdateProfileScreenState();
@@ -68,7 +68,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                           height: 35,
                           decoration:
                           BoxDecoration(borderRadius: BorderRadius.circular(100), color: Colors.blue),
-                          child: const Icon(LineAwesomeIcons.camera, color: Colors.black, size: 20),
+                          child: const Icon(LineAwesomeIcons.camera_solid, color: Colors.black, size: 20),
                         ),
                       ),
                     ],
@@ -93,7 +93,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                           const SizedBox(height: 20),
                           TextFormField(
                             decoration: InputDecoration(
-                              label: const Text("Email"), prefixIcon: const Icon(LineAwesomeIcons.envelope_1),
+                              label: const Text("Email"), prefixIcon: const Icon(LineAwesomeIcons.envelope_solid),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(30),
                               ),
@@ -103,7 +103,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                           const SizedBox(height: 30 - 20),
                           TextFormField(
                             decoration: InputDecoration(
-                              label: const Text("Mobile Number"), prefixIcon: const Icon(LineAwesomeIcons.phone),
+                              label: const Text("Mobile Number"), prefixIcon: const Icon(LineAwesomeIcons.phone_alt_solid),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(30),
                               ),  

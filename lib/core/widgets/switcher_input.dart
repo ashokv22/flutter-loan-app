@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 
 class SwitcherInput extends StatefulWidget {
   const SwitcherInput({
-    Key? key,
+    super.key,
     required this.label,
     required this.controller,
     required this.onChanged,
     required this.trueLabel,
     required this.falseLabel,
-  }) : super(key: key);
+  });
 
   final String label;
   final TextEditingController controller;

@@ -2,16 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:origination/core/utils/currency_input_formatter.dart';
-import 'package:origination/core/widgets/custom/multi_select_dropdown.dart';
-import 'package:origination/core/widgets/custom/yearpicker.dart';
-import 'package:origination/core/widgets/address_fields.dart';
 import 'package:origination/core/widgets/text_input.dart';
 // import 'package:origination/screens/app/login_pending/number_advanced.dart';
 // import 'package:origination/core/widgets/check_box.dart';
 // import 'package:origination/core/widgets/switcher_input.dart';
 // import 'package:origination/core/widgets/type_ahead.dart';
 // import 'package:origination/models/entity_configuration.dart';
-import 'package:origination/core/widgets/custom/location_widget.dart';
 import 'package:origination/models/entity_configuration.dart';
 
 class TypeaheadTest extends StatefulWidget {

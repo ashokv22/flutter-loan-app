@@ -126,8 +126,8 @@ class _PrimaryKycHomeState extends State<PrimaryKycHome> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Center(
-              child: const Text(
+            const Center(
+              child: Text(
                 'Error',
                 style: TextStyle(
                   fontSize: 20,

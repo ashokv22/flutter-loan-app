@@ -186,7 +186,7 @@ class LoginPendingService {
       final response = await authInterceptor.get(Uri.parse(endpoint));
       if (response.statusCode == 200) {
         final jsonResponse = json.decode(response.body);
-        logger.i("Response: ", jsonResponse);
+        logger.i("Response: $jsonResponse");
         List<ApplicationRejectReasonHistory> list = [];
         for (var data in jsonResponse) {
           ApplicationRejectReasonHistory item = ApplicationRejectReasonHistory.fromJson(data);

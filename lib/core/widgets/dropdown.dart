@@ -51,7 +51,7 @@ class _DropDownState extends State<DropDown> {
                     value: option,
                     child: Text(option),
                   );
-                }).toList(),
+                }),
               ],
               onChanged: widget.onChanged,
               decoration: const InputDecoration(

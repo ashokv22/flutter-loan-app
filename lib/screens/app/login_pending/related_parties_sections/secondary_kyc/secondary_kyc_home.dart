@@ -105,7 +105,7 @@ class _SecondaryKycHomeState extends State<SecondaryKycHome> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30.0),
                         ),
-                        child:  Text('Continue'),
+                        child:  const Text('Continue'),
                       ),
                     ),
                   ),

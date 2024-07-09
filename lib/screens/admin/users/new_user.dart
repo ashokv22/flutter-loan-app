@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:origination/models/admin/user.dart';
-import 'package:origination/models/user_composite_dto.dart';
 import 'package:origination/screens/admin/users/users_service.dart';
 
 class CreateUser extends StatefulWidget {

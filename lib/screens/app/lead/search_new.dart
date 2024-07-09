@@ -7,7 +7,7 @@ import 'package:origination/service/loan_application_service.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 class SearchPage extends StatefulWidget {
-  const SearchPage({Key? key}) : super(key: key);
+  const SearchPage({super.key});
 
   @override
   State<SearchPage> createState() => _SearchPageState();

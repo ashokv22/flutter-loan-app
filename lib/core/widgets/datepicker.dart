@@ -10,14 +10,14 @@ class DatePickerInput extends StatefulWidget {
   final bool isRequired;
 
   const DatePickerInput({
-    Key? key,
+    super.key,
     required this.label,
     required this.controller,
     required this.onChanged,
     required this.isReadable,
     required this.isEditable,
     required this.isRequired,
-  }) : super(key: key);
+  });
   
   @override
   _DatePickerInputState createState() => _DatePickerInputState();

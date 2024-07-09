@@ -61,7 +61,7 @@ class _DocumentUploadState extends State<DocumentUpload> {
                 Navigator.pop(context);
               },
               icon: const Icon(CupertinoIcons.arrow_left)),
-          title: Text(widget.category, style: TextStyle(fontSize: 18))),
+          title: Text(widget.category, style: const TextStyle(fontSize: 18))),
       body: Container(
         decoration: BoxDecoration(
           gradient: isDarkTheme
@@ -107,9 +107,9 @@ class DocumentListItem extends StatefulWidget {
   final DocumentChecklistDTO document;
 
   const DocumentListItem({
-    Key? key,
+    super.key,
     required this.document,
-  }) : super(key: key);
+  });
 
   @override
   State<DocumentListItem> createState() => _DocumentListItemState();
@@ -230,7 +230,7 @@ class _DocumentListItemState extends State<DocumentListItem> {
                       ),
                     ),
                   );
-                }).toList(),
+                }),
             ],
           )
         ],
@@ -252,12 +252,10 @@ class _DocumentListItemState extends State<DocumentListItem> {
     final picker = ImagePicker();
     final pickedImages = await picker.pickMultiImage();
 
-    if (pickedImages != null) {
-      setState(() {
-        _selectedImages = pickedImages;
-      });
+    setState(() {
+      _selectedImages = pickedImages;
+    });
     }
-  }
 
   Future<bool> requestPermission() async {
     final status = await Permission.camera.request();

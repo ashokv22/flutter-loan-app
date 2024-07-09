@@ -14,7 +14,6 @@ import 'package:origination/service/auth_service.dart';
 final authService = AuthService();
 
 class LoanApplicationService {
-  
   final authInterceptor = AuthInterceptor(http.Client(), authService);
   Logger logger = Logger();
   final apiUrl = Environment.baseUrl;
@@ -26,30 +25,31 @@ class LoanApplicationService {
 
     String endpoint = "api/application/loanApplication/lead?product=Tractor";
 
-    final fetchResponse = await http.post(Uri.parse(apiUrl + endpoint), headers: {
-      'Content-type': 'application/json',
-      'X-AUTH-TOKEN': token
-      }, 
-      body: payload);
+    final fetchResponse = await http.post(Uri.parse(apiUrl + endpoint),
+        headers: {'Content-type': 'application/json', 'X-AUTH-TOKEN': token},
+        body: payload);
     if (fetchResponse.statusCode == 201) {
       logger.i('Application submitted successfully');
     } else {
-      logger.e('Failed to submit Loan Application. Error code: ${fetchResponse.statusCode}');
+      logger.e(
+          'Failed to submit Loan Application. Error code: ${fetchResponse.statusCode}');
     }
   }
 
   Future<void> updateLead(EntityConfigurationMetaData metaData) async {
     String endpoint = "api/application/loanApplication/lead";
     final payload = jsonEncode(metaData.toJson());
-    final fetchResponse = await http.put(Uri.parse(apiUrl + endpoint), headers: {
-      'Content-type': 'application/json',
-      'X-AUTH-TOKEN': await authService.getAccessToken()
-      }, 
-      body: payload);
+    final fetchResponse = await http.put(Uri.parse(apiUrl + endpoint),
+        headers: {
+          'Content-type': 'application/json',
+          'X-AUTH-TOKEN': await authService.getAccessToken()
+        },
+        body: payload);
     if (fetchResponse.statusCode == 201 || fetchResponse.statusCode == 200) {
       logger.i('Application updated successfully');
     } else {
-      logger.e('Failed to update Loan Application. Error code: ${fetchResponse.statusCode}');
+      logger.e(
+          'Failed to update Loan Application. Error code: ${fetchResponse.statusCode}');
     }
   }
 
@@ -62,8 +62,7 @@ class LoanApplicationService {
       } else {
         logger.i('Failed to get data. Error code: ${response.statusCode}');
       }
-    }
-    catch (e) {
+    } catch (e) {
       logger.e('An error occurred while submitting the application: $e');
     }
     return <String, dynamic>{};
@@ -78,13 +77,11 @@ class LoanApplicationService {
         return jsonResponse
             .map((data) => DashBoardSummaryDTO.fromJson(data))
             .toList();
-      }
-      else {
+      } else {
         logger.i('Failed to get data. Error code: ${response.statusCode}');
-          return [];
+        return [];
       }
-    }
-    catch (e) {
+    } catch (e) {
       logger.e('An error occurred while getting the data: $e');
       return [];
     }
@@ -95,14 +92,13 @@ class LoanApplicationService {
     // int page = 0;
     // int size = 10;
     try {
-      final response = await authInterceptor.get(Uri.parse(endpoint).replace(
-        queryParameters: {
-          'stage': stage,
-          // 'page': page.toString(),
-          // 'size': size.toString(),
-          // 'sort': "ASC"
-        }
-      ));
+      final response = await authInterceptor
+          .get(Uri.parse(endpoint).replace(queryParameters: {
+        'stage': stage,
+        // 'page': page.toString(),
+        // 'size': size.toString(),
+        // 'sort': "ASC"
+      }));
       if (response.statusCode == 200) {
         final List<dynamic> jsonResponse = jsonDecode(response.body);
         List<LeadsListDTO> list = [];
@@ -111,13 +107,11 @@ class LoanApplicationService {
           list.add(app);
         }
         return list;
-      }
-      else {
+      } else {
         logger.i('Failed to get data. Error code: ${response.statusCode}');
-          return [];
+        return [];
       }
-    }
-    catch (e) {
+    } catch (e) {
       logger.e('An error occurred while getting the data: $e');
       return [];
     }
@@ -129,12 +123,11 @@ class LoanApplicationService {
     int size = 10;
     try {
       final response = await authInterceptor.get(Uri.parse(endpoint).replace(
-        queryParameters: {
-          'page': page.toString(),
-          'size': size.toString(),
-          'sort': "ASC"
-        }
-      ));
+          queryParameters: {
+            'page': page.toString(),
+            'size': size.toString(),
+            'sort': "ASC"
+          }));
       if (response.statusCode == 200) {
         final List<dynamic> jsonResponse = jsonDecode(response.body);
         List<LeadsListDTO> list = [];
@@ -143,33 +136,32 @@ class LoanApplicationService {
           list.add(app);
         }
         return list;
-      }
-      else {
+      } else {
         logger.i('Failed to get data. Error code: ${response.statusCode}');
-          return [];
+        return [];
       }
-    }
-    catch (e) {
+    } catch (e) {
       logger.e('An error occurred while getting the data: $e');
       return [];
     }
   }
 
   Future<EntityConfigurationMetaData> getEntityLeadApplication() async {
-    String endpoint = "api/application/entityConfigurationByEntityTypeAndEntitySubType?entityType=Lead&entitySubType=Tractor";
+    String endpoint =
+        "api/application/entityConfigurationByEntityTypeAndEntitySubType?entityType=Lead&entitySubType=Tractor";
     try {
       final response = await authInterceptor.get(Uri.parse(endpoint));
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
-        EntityConfigurationMetaData entity = EntityConfigurationMetaData.fromJson(data);
+        EntityConfigurationMetaData entity =
+            EntityConfigurationMetaData.fromJson(data);
         return entity;
+      } else {
+        throw Exception(
+            'Failed to get data. Error code: ${response.statusCode}');
       }
-      else {
-        throw Exception('Failed to get data. Error code: ${response.statusCode}');
-      }
-    }
-    catch (e) {
-      throw  Exception('An error occurred while getting the data: $e');
+    } catch (e) {
+      throw Exception('An error occurred while getting the data: $e');
     }
   }
 
@@ -177,18 +169,18 @@ class LoanApplicationService {
     String endpoint = "api/application/loanApplication/lead/$id";
     try {
       final response = await authInterceptor.get(Uri.parse(endpoint));
-      logger.d(id, response.statusCode);
+      logger.d("Id: $id, statusCode: ${response.statusCode}");
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
-        EntityConfigurationMetaData entity = EntityConfigurationMetaData.fromJson(data);
+        EntityConfigurationMetaData entity =
+            EntityConfigurationMetaData.fromJson(data);
         return entity;
+      } else {
+        throw Exception(
+            'Failed to get data. Error code: ${response.statusCode}');
       }
-      else {
-        throw Exception('Failed to get data. Error code: ${response.statusCode}');
-      }
-    }
-    catch (e) {
-      throw  Exception('An error occurred while getting the data: $e');
+    } catch (e) {
+      throw Exception('An error occurred while getting the data: $e');
     }
   }
 
@@ -200,18 +192,18 @@ class LoanApplicationService {
         final data = json.decode(response.body);
         ApplicantDTO applicant = ApplicantDTO.fromJson(data);
         return applicant;
+      } else {
+        throw Exception(
+            'Failed to get data. Error code: ${response.statusCode}');
       }
-      else {
-        throw Exception('Failed to get data. Error code: ${response.statusCode}');
-      }
-    }
-    catch (e) {
-      throw  Exception('An error occurred while getting the data: $e');
+    } catch (e) {
+      throw Exception('An error occurred while getting the data: $e');
     }
   }
 
   Future<List<NameValueDTO>> getReferenceCodes(String classifier) async {
-    String endpoint = "api/sjs-core/_refs/reference-codes/parent-codes/$classifier?status=1";
+    String endpoint =
+        "api/sjs-core/_refs/reference-codes/parent-codes/$classifier?status=1";
     try {
       final response = await authInterceptor.get(Uri.parse(endpoint));
       if (response.statusCode == 200) {
@@ -222,18 +214,19 @@ class LoanApplicationService {
           list.add(app);
         }
         return list;
+      } else {
+        throw Exception(
+            'Failed to get data. Error code: ${response.statusCode}');
       }
-      else {
-        throw Exception('Failed to get data. Error code: ${response.statusCode}');
-      }
-    }
-    catch (e) {
-      throw  Exception('An error occurred while getting the data: $e');
+    } catch (e) {
+      throw Exception('An error occurred while getting the data: $e');
     }
   }
 
-  Future<List<NameValueDTO>> searchReferenceCodes(String classifier, String query) async {
-    String endpoint = "api/sjs-core/_refs/reference-codes/search/$classifier?name=$query";
+  Future<List<NameValueDTO>> searchReferenceCodes(
+      String classifier, String query) async {
+    String endpoint =
+        "api/sjs-core/_refs/reference-codes/search/$classifier?name=$query";
     try {
       final response = await authInterceptor.get(Uri.parse(endpoint));
       if (response.statusCode == 200) {
@@ -244,143 +237,145 @@ class LoanApplicationService {
           list.add(app);
         }
         return list;
+      } else {
+        throw Exception(
+            'Failed to get data. Error code: ${response.statusCode}');
       }
-      else {
-        throw Exception('Failed to get data. Error code: ${response.statusCode}');
-      }
-    }
-    catch (e) {
-      throw  Exception('An error occurred while getting the data: $e');
+    } catch (e) {
+      throw Exception('An error occurred while getting the data: $e');
     }
   }
 
   Future<ApplicantDTO> updateStage(int id, String stage) async {
-    String endpoint = "api/application/loanApplication/lead/updateStage/$id?status=$stage";
+    String endpoint =
+        "api/application/loanApplication/lead/updateStage/$id?status=$stage";
     try {
       final response = await authInterceptor.put(Uri.parse(endpoint));
       if (response.statusCode == 200) {
         final jsonResponse = json.decode(response.body);
         ApplicantDTO applicant = ApplicantDTO.fromJson(jsonResponse);
         return applicant;
+      } else {
+        throw Exception(
+            'Failed to get data. Error code: ${response.statusCode}');
       }
-      else {
-        throw Exception('Failed to get data. Error code: ${response.statusCode}');
-      }
-    }
-    catch (e) {
-      throw  Exception('An error occurred while getting the data: $e');
+    } catch (e) {
+      throw Exception('An error occurred while getting the data: $e');
     }
   }
 
   Future<Section> getSection(String sectionName) async {
-    String endpoint = "api/application/entitySection/sectionName?sectionName=$sectionName";
+    String endpoint =
+        "api/application/entitySection/sectionName?sectionName=$sectionName";
     try {
       final response = await authInterceptor.get(Uri.parse(endpoint));
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         Section section = Section.fromJson(data);
         return section;
+      } else {
+        throw Exception(
+            'Failed to get data. Error code: ${response.statusCode}');
       }
-      else {
-        throw Exception('Failed to get data. Error code: ${response.statusCode}');
-      }
-    }
-    catch (e) {
-      throw  Exception('An error occurred while getting the data: $e');
+    } catch (e) {
+      throw Exception('An error occurred while getting the data: $e');
     }
   }
 
-  Future<ApplicantDTO> updateToRework(int id, EntityConfigurationMetaData data) async {
+  Future<ApplicantDTO> updateToRework(
+      int id, EntityConfigurationMetaData data) async {
     String endpoint = "api/application/loanApplication/lead/rework/$id";
     final payload = jsonEncode(data.toJson());
     try {
-      final response = await http.put(Uri.parse(apiUrl + endpoint), headers: {
-      'Content-type': 'application/json',
-      'X-AUTH-TOKEN': await authService.getAccessToken()
-      }, 
-      body: payload);
+      final response = await http.put(Uri.parse(apiUrl + endpoint),
+          headers: {
+            'Content-type': 'application/json',
+            'X-AUTH-TOKEN': await authService.getAccessToken()
+          },
+          body: payload);
       logger.d(response.statusCode);
       if (response.statusCode == 200 || response.statusCode == 201) {
         final jsonResponse = json.decode(response.body);
         ApplicantDTO applicant = ApplicantDTO.fromJson(jsonResponse);
         return applicant;
+      } else {
+        throw Exception(
+            'Failed to get data. Error code: ${response.statusCode}');
       }
-      else {
-        throw Exception('Failed to get data. Error code: ${response.statusCode}');
-      }
-    }
-    catch (e) {
-      throw  Exception('An error occurred while getting the data: $e');
+    } catch (e) {
+      throw Exception('An error occurred while getting the data: $e');
     }
   }
 
   Future<String> approveCibil(int id, String type, int cibilScore) async {
-    String endpoint = "api/application/bureauCheck/approveIndividual?id=$id&type=$type&cibilScore=$cibilScore";
+    String endpoint =
+        "api/application/bureauCheck/approveIndividual?id=$id&type=$type&cibilScore=$cibilScore";
     try {
       final response = await authInterceptor.patch(Uri.parse(endpoint));
       if (response.statusCode == 200) {
         final jsonResponse = json.decode(response.body);
         return jsonResponse;
+      } else {
+        throw Exception(
+            'Failed to get data. Error code: ${response.statusCode}');
       }
-      else {
-        throw Exception('Failed to get data. Error code: ${response.statusCode}');
-      }
-    }
-    catch (e) {
-      throw  Exception('An error occurred while getting the data: $e');
+    } catch (e) {
+      throw Exception('An error occurred while getting the data: $e');
     }
   }
 
   Future<void> deleteLead(int id) async {
     String endpoint = "api/application/loanApplication/lead/$id";
     try {
-      final response = await http.delete(Uri.parse(apiUrl + endpoint), headers: {
-      'X-AUTH-TOKEN': await authService.getAccessToken()
-      });
+      final response = await http.delete(Uri.parse(apiUrl + endpoint),
+          headers: {'X-AUTH-TOKEN': await authService.getAccessToken()});
       logger.d(response.statusCode);
       if (response.statusCode == 200) {
         logger.i(response.statusCode);
       }
       if (response.statusCode != 200) {
-        throw Exception('Lead is not in Lead state. Error code: ${response.statusCode}');
+        throw Exception(
+            'Lead is not in Lead state. Error code: ${response.statusCode}');
       }
-    }
-    catch (e) {
-      throw  Exception('An error occurred while getting the data: $e');
+    } catch (e) {
+      throw Exception('An error occurred while getting the data: $e');
     }
   }
 
-  Future<http.Response> saveSection(int applicantId, String sectionName, Section data) async {
-    String endpoint = "api/application/loanApplication/sectionsData/$applicantId/Application/All?sectionName=$sectionName";
-      logger.wtf(endpoint);
-      final response = await http.post(Uri.parse(apiUrl + endpoint), headers: {
-        'X-AUTH-TOKEN': await authService.getAccessToken(),
-        'Content-Type': 'application/json',
-        }, 
-        body: jsonEncode(data)
-      );
-      return response;
+  Future<http.Response> saveSection(
+      int applicantId, String sectionName, Section data) async {
+    String endpoint =
+        "api/application/loanApplication/sectionsData/$applicantId/Application/All?sectionName=$sectionName";
+    logger.wtf(endpoint);
+    final response = await http.post(Uri.parse(apiUrl + endpoint),
+        headers: {
+          'X-AUTH-TOKEN': await authService.getAccessToken(),
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode(data));
+    return response;
   }
 
-  Future<void> saveSectionRP(int applicantId, String entitySubType, String sectionName, Section data) async {
-    String endpoint = "api/application/loanApplication/sectionsData/relatedParty/Application/$entitySubType/$applicantId?sectionName=$sectionName";
+  Future<void> saveSectionRP(int applicantId, String entitySubType,
+      String sectionName, Section data) async {
+    String endpoint =
+        "api/application/loanApplication/sectionsData/relatedParty/Application/$entitySubType/$applicantId?sectionName=$sectionName";
     try {
-      final response = await http.post(Uri.parse(apiUrl + endpoint), headers: {
-        'X-AUTH-TOKEN': await authService.getAccessToken(),
-        'Content-Type': 'application/json',
-        }, 
-        body: jsonEncode(data)
-      );
+      final response = await http.post(Uri.parse(apiUrl + endpoint),
+          headers: {
+            'X-AUTH-TOKEN': await authService.getAccessToken(),
+            'Content-Type': 'application/json',
+          },
+          body: jsonEncode(data));
       logger.d(response.statusCode);
       if (response.statusCode == 200) {
         logger.i(response.statusCode);
+      } else {
+        throw Exception(
+            'There\'s a problem while saving Section $sectionName. Error code: ${response.statusCode}');
       }
-      else {
-        throw Exception('There\'s a problem while saving Section $sectionName. Error code: ${response.statusCode}');
-      }
-    }
-    catch (e) {
-      throw  Exception('An error occurred while getting the data: $e');
+    } catch (e) {
+      throw Exception('An error occurred while getting the data: $e');
     }
   }
 
@@ -390,12 +385,11 @@ class LoanApplicationService {
     int size = 1;
     try {
       final response = await authInterceptor.get(Uri.parse(endpoint).replace(
-        queryParameters: {
-          'page': page.toString(),
-          'size': size.toString(),
-          'sort': "id,DESC"
-        }
-      ));
+          queryParameters: {
+            'page': page.toString(),
+            'size': size.toString(),
+            'sort': "id,DESC"
+          }));
       if (response.statusCode == 200) {
         final List<dynamic> jsonResponse = jsonDecode(response.body);
         List<ApplicantDTO> list = [];
@@ -404,13 +398,12 @@ class LoanApplicationService {
           list.add(app);
         }
         return list;
-      }
-      else {
+      } else {
         logger.i('Failed to get data. Error code: ${response.statusCode}');
-        throw Exception('There\'s a problem while saving Section getting Lead. Error code: ${response.statusCode}');
+        throw Exception(
+            'There\'s a problem while saving Section getting Lead. Error code: ${response.statusCode}');
       }
-    }
-    catch (e) {
+    } catch (e) {
       logger.e('An error occurred while getting the data: $e');
       throw Exception('An error occurred while getting the data: $e');
     }
@@ -430,14 +423,11 @@ class LoanApplicationService {
           list.add(app);
         }
         return list;
-      }
-      else {
+      } else {
         throw Exception(response);
       }
-    }
-    catch (e) {
-      throw  Exception(e);
+    } catch (e) {
+      throw Exception(e);
     }
   }
-
-} 
+}

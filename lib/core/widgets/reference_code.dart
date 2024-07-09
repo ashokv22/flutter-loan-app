@@ -5,7 +5,7 @@ import 'package:origination/service/loan_application_service.dart';
 
 class Referencecode extends StatefulWidget {
   const Referencecode({
-    Key? key,
+    super.key,
     required this.label,
     required this.controller,
     required this.onChanged,
@@ -13,7 +13,7 @@ class Referencecode extends StatefulWidget {
     required this.isReadable,
     required this.isEditable,
     required this.isRequired,
-  }) : super(key: key);
+  });
 
   final String label;
   final TextEditingController controller;
@@ -101,7 +101,7 @@ class _ReferencecodeState extends State<Referencecode> {
                           )
                         ),
                       );
-                    }).toList(),
+                    }),
                 ],
                 onChanged: (newValue) {
                   setState(() {

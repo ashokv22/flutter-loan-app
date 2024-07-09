@@ -82,7 +82,7 @@ class SideMenu extends StatelessWidget {
                 ],
               ),
               ListTile(
-                leading: const Icon(LineAwesomeIcons.home),
+                leading: const Icon(LineAwesomeIcons.home_solid),
                 title: const Text('Home',),
                 selected: selectedItemIndex == 0,
                 onTap: () {
@@ -203,7 +203,7 @@ class SideMenu extends StatelessWidget {
               // const Spacer(),
               // const Divider(),
               ListTile(
-                leading: const Icon(LineAwesomeIcons.alternate_sign_out),
+                leading: const Icon(LineAwesomeIcons.sign_out_alt_solid),
                 title: const Text('Sign out'),
                 selected: selectedItemIndex == 5,
                 onTap: () {

@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:origination/models/login_flow/sections/application_reject_reason_history.dart';
 import 'package:origination/service/login_flow_service.dart';
 

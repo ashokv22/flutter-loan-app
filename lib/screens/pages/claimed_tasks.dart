@@ -4,7 +4,7 @@ import 'package:origination/models/task_data.dart';
 import 'package:origination/service/application_service.dart';
 
 class ClaimedTasks extends StatefulWidget {
-  const ClaimedTasks({Key? key}) : super(key: key);
+  const ClaimedTasks({super.key});
 
   @override
   // ignore: library_private_types_in_public_api

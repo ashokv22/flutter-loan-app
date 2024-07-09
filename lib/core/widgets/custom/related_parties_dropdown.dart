@@ -5,12 +5,12 @@ import 'package:origination/service/bureau_check_service.dart';
 
 class RelatedPartiedsDropdown extends StatefulWidget {
   const RelatedPartiedsDropdown({
-    Key? key,
+    super.key,
     required this.label,
     required this.controller,
     required this.onChanged,
     required this.id
-  }) : super(key: key);
+  });
 
   final int id;
   final String label;
@@ -99,7 +99,7 @@ class _RelatedPartiedsDropdownState extends State<RelatedPartiedsDropdown> {
                           ),
                         ),
                       );
-                    }).toList(),
+                    }),
                 ],
                 onChanged: (newValue) {
                   setState(() {

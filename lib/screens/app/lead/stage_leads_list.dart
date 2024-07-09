@@ -28,7 +28,7 @@ class _StageLeadListState extends State<StageLeadList> {
   Logger logger = Logger();
   LoanApplicationService applicationService = LoanApplicationService();
   
-  Set<int> selectedIds = Set<int>();
+  Set<int> selectedIds = <int>{};
 
   void toggleSelection(int id) {
     setState(() {

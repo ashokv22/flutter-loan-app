@@ -130,10 +130,10 @@ class _SectionScreenEmptyState extends State<SectionScreenEmpty> {
     context: context,
     builder: (BuildContext context) {
       return Container(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Text(
           message,
-          style: TextStyle(fontSize: 16.0),
+          style: const TextStyle(fontSize: 16.0),
         ),
       );
     },

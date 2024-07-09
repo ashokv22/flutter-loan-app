@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 
 class CustomYearPicker extends StatefulWidget {
   const CustomYearPicker({
-    Key? key,
+    super.key,
     required this.label,
     required this.controller,
     required this.onChanged,
     required this.isReadable,
     required this.isEditable,
-  }) : super(key: key);
+  });
 
   final String label;
   final TextEditingController controller;

@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 
 class CustomCheckBox extends StatefulWidget {
   const CustomCheckBox({
-    Key? key,
+    super.key,
     required this.label,
     required this.initialValue,
     required this.onChanged,
-  }) : super(key: key);
+  });
 
   final String label;
   final bool initialValue;

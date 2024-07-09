@@ -23,7 +23,7 @@ class _InformationScreenState extends State<InformationScreen> {
         ),
         body: ListView(
           padding: const EdgeInsets.all(12.0),
-          children: [
+          children: const [
             BuildInfoTile(
               icon: Icons.developer_mode,
               serverName: 'Dev-FT7',
@@ -60,7 +60,7 @@ class BuildInfoTile extends StatelessWidget {
   final String lastReleasedDate;
   final String currentVersion;
 
-  BuildInfoTile({
+  const BuildInfoTile({super.key, 
     required this.icon,
     required this.serverName,
     required this.lastReleasedDate,

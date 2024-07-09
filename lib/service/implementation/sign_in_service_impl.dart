@@ -33,7 +33,7 @@ class SignInServiceImpl implements SignInService {
       final response = await http.post(url, headers: headers, body: body);
       if (response.statusCode == 200) {
         final accessToken = response.headers['x-auth-token'];
-        logger.i("Access token", accessToken);
+        logger.i("Access token: $accessToken");
         await authService.setAccessToken(accessToken!);
         await getAccountInfo();
       } else {
@@ -46,7 +46,7 @@ class SignInServiceImpl implements SignInService {
           throw Exception("Unexpected error: ${response.statusCode}"); // Handle other status codes
         }
       }
-    } on SocketException catch (e) {
+    } on SocketException {
       throw Exception("Network error. Please check your connection and try again.");
     } catch (e) {
       rethrow; // Re-throw for further handling (consider logging or showing a generic error message)

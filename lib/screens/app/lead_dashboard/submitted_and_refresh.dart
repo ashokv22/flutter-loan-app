@@ -11,9 +11,9 @@ import 'package:timeago/timeago.dart' as timeago;
 
 class SubmittedAndRefresh extends StatefulWidget {
   const SubmittedAndRefresh({
-    Key? key,
+    super.key,
     required this.stage,
-  }) : super(key: key);
+  });
 
   final String stage;
 

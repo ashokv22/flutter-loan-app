@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:heroicons/heroicons.dart';
@@ -73,7 +72,7 @@ class _SignInPageState extends State<SignIn> {
           }
     } on AuthenticationException catch (error) {
       _errorMessage = error.message;
-    } on SocketException catch (e) {
+    } on SocketException {
       _errorMessage = "Network error. Please check your connection and try again.";
     } catch (error) {
       logger.e(error.toString());

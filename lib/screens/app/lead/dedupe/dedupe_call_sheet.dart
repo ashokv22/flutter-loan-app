@@ -155,16 +155,16 @@ class _DedupeCallSheetState extends State<DedupeCallSheet> {
                 children: [
                   Text(
                     'Attempts/Remaining: $apiCallCounter/$remainingAttempts',
-                    style: TextStyle(fontSize: 16),
+                    style: const TextStyle(fontSize: 16),
                   ),
-                  Spacer(),
+                  const Spacer(),
                   Text(
                     '$seconds',
-                    style: TextStyle(fontSize: 24),
+                    style: const TextStyle(fontSize: 24),
                   ),
                 ],
               ),
-              Spacer(),
+              const Spacer(),
               Lottie.asset(
                 'assets/animations/loading_dedupe.json',
                 width: 100,

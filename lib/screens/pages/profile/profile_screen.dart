@@ -151,11 +151,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                   ),
                   const SizedBox(height: 10),
-                  ProfileMenuWidget(title: "Account", icon: LineAwesomeIcons.key, onPress: () {
+                  ProfileMenuWidget(title: "Account", icon: LineAwesomeIcons.key_solid, onPress: () {
                     Navigator.push(context, MaterialPageRoute(builder: (context) => const UpdateProfileScreen()));
                   }),
-                  ProfileMenuWidget(title: "Settings", icon: LineAwesomeIcons.cog, onPress: () {}),
-                  ProfileMenuWidget(title: "Theme", icon: LineAwesomeIcons.adjust, onPress: () {
+                  ProfileMenuWidget(title: "Settings", icon: LineAwesomeIcons.cog_solid, onPress: () {}),
+                  ProfileMenuWidget(title: "Theme", icon: LineAwesomeIcons.adjust_solid, onPress: () {
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {
@@ -163,13 +163,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       }
                     );
                   }),
-                  ProfileMenuWidget(title: "User Management", icon: LineAwesomeIcons.user_check, onPress: () {}),
+                  ProfileMenuWidget(title: "User Management", icon: LineAwesomeIcons.user_check_solid, onPress: () {}),
                   ProfileMenuWidget(title: "Information", icon: Icons.info_outline, onPress: () {
                     Navigator.push(context, MaterialPageRoute(builder: (context) => const InformationScreen()));
                   }),
                   ProfileMenuWidget(
                       title: "Logout",
-                      icon: LineAwesomeIcons.alternate_sign_out,
+                      icon: LineAwesomeIcons.sign_out_alt_solid,
                       textColor: Colors.red,
                       endIcon: false,
                       onPress: () {
