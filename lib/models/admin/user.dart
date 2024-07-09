@@ -4,8 +4,12 @@ part 'user.g.dart';
 
 @JsonSerializable()
 class User {
+  String? id;
+  int? version;
   String login;
+  String passwordHash;
   String firstName;
+  String? middleName;
   String lastName;
   String emailAddress;
   String? imageUrl;
@@ -16,8 +20,12 @@ class User {
   String? branchSetCode;
   String? hrmsId;
   User({
+    this.id,
+    this.version,
     required this.login,
+    required this.passwordHash,
     required this.firstName,
+    this.middleName,
     required this.lastName,
     required this.emailAddress,
     this.imageUrl,

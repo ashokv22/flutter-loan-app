@@ -6,16 +6,10 @@ import 'package:origination/screens/app/bureau/screens/bureau_check_list.dart';
 import 'package:origination/screens/app/login_pending/main_sections/document_upload/document_upload_main.dart';
 import 'package:origination/screens/app/login_pending/main_sections/helper_widgets/confirm_delete_sheet.dart';
 import 'package:origination/screens/app/login_pending/main_sections/helper_widgets/submit_dialog.dart';
-import 'package:origination/screens/app/login_pending/main_sections/document_upload.dart';
 import 'package:origination/screens/app/login_pending/main_sections/post_sanction/post_sanction_main.dart';
-// import 'package:origination/screens/app/login_pending/main_sections/land_and_crop_details.dart';
-// import 'package:origination/screens/app/login_pending/number_advanced.dart';
 import 'package:origination/screens/app/login_pending/related_parties_sections/related_parties.dart';
 import 'package:origination/screens/app/login_pending/main_sections/section_data.dart';
-// import 'package:origination/screens/app/login_pending/typeahead_test.dart';
 import 'package:origination/service/login_flow_service.dart';
-// import 'package:swipeable_button_view/swipeable_button_view.dart';
-// import '../consent/consent_screen.dart';
 import 'package:heroicons/heroicons.dart';
 import 'deviations.dart';
 
@@ -38,7 +32,6 @@ class _MainSectionsDataState extends State<MainSectionsData> {
   final loginPendingService = LoginPendingService();
   late Future<LoanApplicationEntity> leadsSummaryFuture;
   var logger = Logger();
-  bool isSectionsSaved = true;
   bool isFinished = false;
 
   @override
@@ -56,6 +49,34 @@ class _MainSectionsDataState extends State<MainSectionsData> {
       leadsSummaryFuture = loginPendingService.getSectionMaster(widget.id, "All");
     });
   }
+
+  void showSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+            content: Text(message),
+            duration: const Duration(seconds: 2),
+            elevation: 1,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+        ),
+    );
+  }
+
+  bool areDependenciesCompleted(LoanSection section, List<LoanSection> allSections) {
+  if (section.dependencies == null || section.dependencies!.isEmpty) {
+    return true; // No dependencies
+  }
+  for (String dependency in section.dependencies!) {
+    final dependentSection = allSections.firstWhere((s) => s.sectionName == dependency);
+    if (dependentSection.status != "COMPLETED") {
+      return false; // Found a dependency that is not completed
+    }
+  }
+  return true; // All dependencies are completed
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -127,23 +148,16 @@ class _MainSectionsDataState extends State<MainSectionsData> {
                                 itemBuilder: (context, index) {
                                   LoanSection section = entity.loanSections[index];
                                   String title = section.sectionName;
-                                  if (section.status == "PENDING") { 
-                                    if (title == "Applicant" || title == "Deviation" || title == "InsuranceDetails" || title == "DocumentUpload") {
-                                      // isSectionsSaved = true;
-                                    }else {
-                                      isSectionsSaved = false;
-                                    }
-                                  }
                                   return GestureDetector(
                                     onTap: () {
+                                      // if (section.dependencies!.isNotEmpty) {
+                                      //   showSnackBar("Section is locked, please complete: ${section.dependencies!.join(', ')}!");
+                                      // } else {
+                                      // }
                                       if (section.sectionName == "Applicant") {
                                         Navigator.push(context, MaterialPageRoute(builder: (context) => RelatedParties(id: widget.id,)));
                                       }
-                                      // else if (section.sectionName == "DocumentUpload") {
-                                      //   Navigator.push(context, MaterialPageRoute(builder: (context) => const TypeaheadTest()));  
-                                      // } 
                                       else if (section.sectionName == "DocumentUpload") {
-                                        // Navigator.push(context, MaterialPageRoute(builder: (context) => DocumentUpload(id: widget.id)));  
                                         Navigator.push(context, MaterialPageRoute(builder: (context) => DocumentUploadMain(id: widget.id)));  
                                       } 
                                       else if (section.sectionName == "CheckList") {
@@ -218,12 +232,18 @@ class _MainSectionsDataState extends State<MainSectionsData> {
                                                 ),
                                               ],
                                             )
+                                          else if (section.dependencies != null && section.dependencies!.isNotEmpty && !areDependenciesCompleted(section, entity.loanSections))
+                                            Icon(
+                                              CupertinoIcons.lock,
+                                              color: Theme.of(context).iconTheme.color,
+                                              size: 22,
+                                            )
                                           else
                                             Icon(
                                               CupertinoIcons.chevron_right_circle,
                                               color: Theme.of(context).iconTheme.color,
-                                              size: 22,  
-                                            )
+                                              size: 22,
+                                            ),
                                         ],
                                       ),
                                     ),

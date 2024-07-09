@@ -9,7 +9,7 @@ part of 'entity_configuration.dart';
 EntityConfigurationMetaData _$EntityConfigurationMetaDataFromJson(
         Map<String, dynamic> json) =>
     EntityConfigurationMetaData(
-      id: json['id'] as int?,
+      id: (json['id'] as num?)?.toInt(),
       entityType: json['entityType'] as String?,
       entitySubType: json['entitySubType'] as String?,
       displayTitle: json['displayTitle'] as String?,
@@ -89,7 +89,7 @@ FieldMeta _$FieldMetaFromJson(Map<String, dynamic> json) => FieldMeta(
       referenceCodeClassifier: json['referenceCodeClassifier'] as String?,
       apiForOptions: json['apiForOptions'] as String?,
       variable: json['variable'] as String?,
-      noOfDecimalDigits: json['noOfDecimalDigits'] as int?,
+      noOfDecimalDigits: (json['noOfDecimalDigits'] as num?)?.toInt(),
       fieldUiProperties: json['fieldUiProperties'] == null
           ? null
           : FieldUiProperties.fromJson(
@@ -110,7 +110,7 @@ Map<String, dynamic> _$FieldMetaToJson(FieldMeta instance) => <String, dynamic>{
 
 Field _$FieldFromJson(Map<String, dynamic> json) => Field(
       id: json['id'],
-      order: json['order'] as int?,
+      order: (json['order'] as num?)?.toInt(),
       isRequired: json['isRequired'] as bool?,
       isReadOnly: json['isReadOnly'] as bool?,
       isEditable: json['isEditable'] as bool?,
@@ -149,7 +149,7 @@ Section _$SectionFromJson(Map<String, dynamic> json) => Section(
       sectionName: json['sectionName'] as String?,
       displayTitle: json['displayTitle'] as String?,
       cssClassName: json['cssClassName'] as String?,
-      order: json['order'] as int?,
+      order: (json['order'] as num?)?.toInt(),
       metaData: json['metaData'] == null
           ? null
           : MetaData.fromJson(json['metaData'] as Map<String, dynamic>),
@@ -175,8 +175,8 @@ SubSection _$SubSectionFromJson(Map<String, dynamic> json) => SubSection(
       cssClassName: json['cssClassName'] as String?,
       isRepeatable: json['isRepeatable'] as bool?,
       maxNumberOfRepeatableSections:
-          json['maxNumberOfRepeatableSections'] as int?,
-      order: json['order'] as int?,
+          (json['maxNumberOfRepeatableSections'] as num?)?.toInt(),
+      order: (json['order'] as num?)?.toInt(),
       fields: (json['fields'] as List<dynamic>?)
           ?.map((e) => Field.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -195,9 +195,9 @@ Map<String, dynamic> _$SubSectionToJson(SubSection instance) =>
     };
 
 MetaData _$MetaDataFromJson(Map<String, dynamic> json) => MetaData(
-      noOfFields: json['noOfFields'] as int?,
-      mandatory: json['mandatory'] as int?,
-      dataCaptured: json['dataCaptured'] as int?,
+      noOfFields: (json['noOfFields'] as num?)?.toInt(),
+      mandatory: (json['mandatory'] as num?)?.toInt(),
+      dataCaptured: (json['dataCaptured'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$MetaDataToJson(MetaData instance) => <String, dynamic>{

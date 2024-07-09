@@ -15,6 +15,7 @@ import 'package:origination/core/widgets/switcher_input.dart';
 import 'package:origination/core/widgets/type_ahead.dart';
 import 'package:origination/models/entity_configuration.dart';
 import 'package:origination/screens/app/lead/multi_select_rd.dart';
+import 'package:origination/service/auth_service.dart';
 import 'package:origination/service/loan_application_service.dart';
 import 'package:origination/service/login_flow_service.dart';
 
@@ -43,10 +44,18 @@ class _SectionScreenEmptyState extends State<SectionScreenEmpty> {
   Map<String, TextEditingController> textEditingControllerMap = {};
   Section? sectionData;
 
+  Map<String, dynamic> userData = {};
+  final authService = AuthService();
+
   @override
   void initState() {
     super.initState();
+    getAccountInfo();
     getMainSectionsData();
+  }
+
+  void getAccountInfo() async {
+    userData = await authService.getLoggedUser();
   }
 
   void getMainSectionsData() async {
@@ -280,6 +289,8 @@ class _SectionScreenEmptyState extends State<SectionScreenEmpty> {
 
     TextEditingController controller = textEditingControllerMap[fieldName]!;
 
+    prefillMethods(controller, field);
+
     if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'TextBox') {
       if (['Integer', 'BigDecimal'].toList().contains(field.fieldMeta?.dataType)) {
         return NumberInput(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field), isEditable: true, isReadable: field.isReadOnly!, isRequired: field.isRequired!);
@@ -411,5 +422,11 @@ class _SectionScreenEmptyState extends State<SectionScreenEmpty> {
       });
       logger.i("Updating total acres: $totalAcres to ${sectionData!.subSections?[1].fields?[8].value}");
     }
+  }
+
+  void prefillMethods(TextEditingController controller, Field field) async {
+    if (userData.isNotEmpty && field.fieldMeta?.variable == 'state') {
+      controller.text = userData['branchData']['state'];
+    } 
   }
 }

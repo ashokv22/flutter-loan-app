@@ -8,7 +8,7 @@ part of 'pan_response_dto.dart';
 
 PanResponseDTO _$PanResponseDTOFromJson(Map<String, dynamic> json) =>
     PanResponseDTO(
-      id: json['id'] as int?,
+      id: (json['id'] as num?)?.toInt(),
       panNo: json['panNo'] as String,
       panStatus: json['panStatus'] as String,
       name: json['name'] as String,

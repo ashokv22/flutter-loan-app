@@ -24,7 +24,7 @@ class UsersService {
         for (var data in jsonResponse) {
           User dto = User.fromJson(data);
           list.add(dto);
-          logger.i(list.toString());
+          logger.i(dto);
         }
         return list;
       }
@@ -44,4 +44,19 @@ class UsersService {
       throw Exception(e);
     }
   }
+
+  Future<http.Response> updateUser(User user) async {
+    String endpoint = "api/user-management/users";
+    logger.i(user.toJson());
+    try {
+      final payload = jsonEncode(user.toJson());
+      return await http.put(Uri.parse(apiUrl + endpoint), headers: {
+        'Content-type': 'application/json',
+        'X-AUTH-TOKEN': await authService.getAccessToken()
+      }, body: payload);
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
 }

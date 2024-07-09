@@ -9,12 +9,12 @@ part of 'document_checklist_dto.dart';
 DocumentChecklistDTO _$DocumentChecklistDTOFromJson(
         Map<String, dynamic> json) =>
     DocumentChecklistDTO(
-      id: json['id'] as int,
+      id: (json['id'] as num).toInt(),
       documentName: json['documentName'] as String,
       documentDescription: json['documentDescription'] as String,
       category: $enumDecode(_$DocumentCategoryEnumMap, json['category']),
       isMandatory: json['isMandatory'] as bool,
-      productId: json['productId'] as int,
+      productId: (json['productId'] as num).toInt(),
       isKycDocument: json['isKycDocument'] as bool?,
       vendorDocumentName: json['vendorDocumentName'] as String?,
       kycCategory: json['kycCategory'] as String?,

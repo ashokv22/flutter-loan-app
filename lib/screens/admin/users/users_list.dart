@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:origination/models/admin/user.dart';
+import 'package:origination/screens/admin/users/edit_user.dart';
 import 'package:origination/screens/admin/users/new_user.dart';
 import 'package:origination/screens/admin/users/users_service.dart';
 
@@ -138,7 +139,7 @@ class _UsersListState extends State<UsersList> {
           DataCell(IconButton(
             icon: const Icon(Icons.edit, color: Color.fromARGB(255, 3, 71, 244),),
             onPressed: () {
-              _buildEditDialog();
+              Navigator.push(context, MaterialPageRoute(builder: (context) => EditUser(user: user)));
             },
           )),
           DataCell(IconButton(
@@ -149,19 +150,6 @@ class _UsersListState extends State<UsersList> {
           )),
         ]);
       }).toList(),
-    );
-  }
-
-  Widget _buildEditDialog() {
-    return AlertDialog(
-      title: SizedBox(
-        height: 300,
-        child: TextButton(
-          child: const Text("Change name"),
-          onPressed: () {
-          },
-        ),
-      ),
     );
   }
 

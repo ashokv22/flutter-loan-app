@@ -9,13 +9,13 @@ part of 'reference_code_dto.dart';
 ReferenceCodeDTO _$ReferenceCodeDTOFromJson(Map<String, dynamic> json) =>
     ReferenceCodeDTO(
       id: json['id'] as String,
-      version: json['version'] as int,
+      version: (json['version'] as num).toInt(),
       classifier: json['classifier'] as String,
       name: json['name'] as String,
       code: json['code'] as String,
       parentClassifier: json['parentClassifier'] as String?,
       parentReferenceCode: json['parentReferenceCode'] as String?,
-      status: json['status'] as int,
+      status: (json['status'] as num).toInt(),
       field1: json['field1'] as String?,
       field2: json['field2'] as String?,
       field3: json['field3'] as String?,

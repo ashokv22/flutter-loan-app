@@ -39,12 +39,18 @@ class LoanSection {
   String sectionName;
   String displayTitle;
   String status;
+  String? type;
+  String? uiKey;
+  List<String>? dependencies;
 
   LoanSection({
     this.id,
     required this.sectionName,
     required this.displayTitle,
-    required this.status
+    required this.status,
+    this.type,
+    this.uiKey,
+    this.dependencies
   });
 
   factory LoanSection.fromJson(Map<String, dynamic> json) => _$LoanSectionFromJson(json);

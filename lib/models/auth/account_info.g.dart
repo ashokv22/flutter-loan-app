@@ -8,7 +8,7 @@ part of 'account_info.dart';
 
 AccountInfoDTO _$AccountInfoDTOFromJson(Map<String, dynamic> json) =>
     AccountInfoDTO(
-      id: json['id'] as int?,
+      id: (json['id'] as num?)?.toInt(),
       username: json['username'] as String,
       name: json['name'] as String,
       email: json['email'] as String,

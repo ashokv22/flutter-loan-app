@@ -34,6 +34,7 @@ class _CreateUserState extends State<CreateUser> {
 
     User userDTO = User(
       login: _loginController.text,
+      passwordHash: _passwordController.text,
       firstName: _firstNameController.text,
       lastName: _lastNameController.text,
       emailAddress: _emailAddressController.text,

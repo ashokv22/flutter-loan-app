@@ -3,7 +3,7 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:origination/main.dart';
 import 'package:origination/models/applicant_dto.dart';
 import 'package:origination/models/bureau_check/bc_check_list_dto.dart';
-import 'package:origination/screens/app/bureau/screens/accept_with_score.dart';
+// import 'package:origination/screens/app/bureau/screens/accept_with_score.dart';
 import 'package:origination/screens/app/bureau/screens/pdf_view.dart';
 import 'package:origination/screens/widgets/reject_reason.dart';
 import 'package:origination/service/bureau_check_service.dart';
@@ -311,18 +311,18 @@ class _BureauCheckListState extends State<BureauCheckList> {
                                                   actions: [
                                                     TextButton(
                                                       onPressed: () {
-                                                        // approveCibil(checkList.id, type);
-                                                        Navigator.of(context).pop();
-                                                        showModalBottomSheet(
-                                                          isScrollControlled: true,
-                                                          context: context,
-                                                          builder: (BuildContext context) {
-                                                            return AnimatedPadding(
-                                                                duration: Duration(milliseconds: 150),
-                                                                padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-                                                                child: ApproveWithScore(id: checkList.id, applicantType: type));
-                                                          },
-                                                        );
+                                                        approveCibil(checkList.id, type);
+                                                        // Navigator.of(context).pop();
+                                                        // showModalBottomSheet(
+                                                        //   isScrollControlled: true,
+                                                        //   context: context,
+                                                        //   builder: (BuildContext context) {
+                                                        //     return AnimatedPadding(
+                                                        //         duration: Duration(milliseconds: 150),
+                                                        //         padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+                                                        //         child: ApproveWithScore(id: checkList.id, applicantType: type));
+                                                        //   },
+                                                        // );
                                                       },
                                                       child: const Text('Yes')),
                                                     TextButton(
@@ -380,7 +380,9 @@ class _BureauCheckListState extends State<BureauCheckList> {
                                               borderRadius: BorderRadius.circular(30),
                                             ),
                                           ),
-                                          onPressed: () {}, 
+                                          onPressed: () {
+                                            Navigator.push(context, MaterialPageRoute(builder: (context) => PdfView(id: checkList.id)));
+                                          }, 
                                           child: const Text("View Report", style: TextStyle(color: Colors.blue),)
                                         ),
                                       ),
