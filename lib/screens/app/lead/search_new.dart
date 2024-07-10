@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:origination/models/applicant_dto.dart';
+import 'package:origination/screens/app/lead/edit_lead_application.dart';
 import 'package:origination/service/loan_application_service.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
@@ -19,10 +20,16 @@ class _SearchPageState extends State<SearchPage> {
   List<ApplicantDTO> searchResults = [];
 
   void _fetchSearchResults(String query) async {
-    List<ApplicantDTO> results = await fetchOptions(query);
-    setState(() {
-      searchResults = results;
-    });
+    if (query.length > 1) {
+      List<ApplicantDTO> results = await fetchOptions(query);
+      setState(() {
+        searchResults = results;
+      });
+    } else {
+      setState(() {
+        searchResults = [];
+      });
+    }
   }
 
   int getRandomNumber() {
@@ -52,7 +59,7 @@ class _SearchPageState extends State<SearchPage> {
               _fetchSearchResults(value); // Fetch results on text change
             },
             onSubmitted: (value) {
-              _fetchSearchResults(value); // Fetch results on submit
+              _fetchSearchResults(value); // Fetch results on text change
             },
             autocorrect: true,
             ),
@@ -89,87 +96,92 @@ class _SearchPageState extends State<SearchPage> {
               itemBuilder: (context, index) {
                 ApplicantDTO applicant = searchResults[index];
                 int randomNumber = getRandomNumber();
-                return Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 1.0, vertical: 0.0),
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          SizedBox(
-                            width: 60,
-                            height: 60,
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(50),
-                              child: Image.asset('assets/images/female-${randomNumber.toString().padLeft(2, '0')}.jpg', fit: BoxFit.cover,)),
-                          ),
-                          const SizedBox(width: 10),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                applicant.firstName!,
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500,
-                                  color: isDarkTheme ? Colors.blueAccent[400] : const Color.fromARGB(255, 3, 71, 244),
-                                  // color: Color.fromARGB(255, 3, 71, 244),
-                                ),
-                              ),
-                              Text(applicant.mobile!,
-                                style: TextStyle(
-                                  color: Theme.of(context).textTheme.displayMedium!.color,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w400,
-                                ),
-                              ),
-                              SizedBox(
-                                width: 150,
-                                child: Text(
-                                  // applicant.dsaName,
-                                  "ID: ${applicant.id}, AppID:${applicant.applicantId}",
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => EditLead(id: applicant.id!, applicantId: int.parse(applicant.applicantId!))));
+                  },
+                  child: Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 1.0, vertical: 0.0),
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            SizedBox(
+                              width: 60,
+                              height: 60,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(50),
+                                child: Image.asset('assets/images/female-${randomNumber.toString().padLeft(2, '0')}.jpg', fit: BoxFit.cover,)),
+                            ),
+                            const SizedBox(width: 10),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  applicant.firstName!,
                                   style: TextStyle(
-                                    fontSize: 12,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                    color: isDarkTheme ? Colors.blueAccent[400] : const Color.fromARGB(255, 3, 71, 244),
+                                    // color: Color.fromARGB(255, 3, 71, 244),
+                                  ),
+                                ),
+                                Text(applicant.mobile!,
+                                  style: TextStyle(
                                     color: Theme.of(context).textTheme.displayMedium!.color,
+                                    fontSize: 12,
                                     fontWeight: FontWeight.w400,
                                   ),
-                                  maxLines: 1,
-                                  softWrap: false,
-                                  overflow: TextOverflow.ellipsis,
                                 ),
+                                SizedBox(
+                                  width: 150,
+                                  child: Text(
+                                    // applicant.dsaName,
+                                    "ID: ${applicant.id}, AppID:${applicant.applicantId}",
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: Theme.of(context).textTheme.displayMedium!.color,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                    maxLines: 1,
+                                    softWrap: false,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              timeago.format(applicant.createdDate!, allowFromNow: true),
+                              style: TextStyle(
+                                color: Theme.of(context).textTheme.displayMedium!.color,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500
                               ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            timeago.format(applicant.createdDate!, allowFromNow: true),
-                            style: TextStyle(
-                              color: Theme.of(context).textTheme.displayMedium!.color,
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500
                             ),
-                          ),
-                          // const SizedBox(height: 10),
-                          Text(
-                            applicant.model!,
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Theme.of(context).textTheme.displayMedium!.color,
-                              fontWeight: FontWeight.w300,
+                            // const SizedBox(height: 10),
+                            Text(
+                              applicant.model!,
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Theme.of(context).textTheme.displayMedium!.color,
+                                fontWeight: FontWeight.w300,
+                              ),
+                              maxLines: 1,
+                              softWrap: false,
+                              overflow: TextOverflow.ellipsis,
                             ),
-                            maxLines: 1,
-                            softWrap: false,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ],
-                      ),
-                    ],
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 );
               },

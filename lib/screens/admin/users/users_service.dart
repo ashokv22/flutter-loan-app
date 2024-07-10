@@ -38,8 +38,13 @@ class UsersService {
 
   Future<http.Response> createUser(User userDTO) async {
     String endpoint = "api/user-management/users";
+    final payload = jsonEncode(userDTO.toJson());
     try {
-      return await authInterceptor.post(Uri.parse(endpoint), body: jsonEncode(userDTO));
+      // return await http.post(Uri.parse(endpoint), body: jsonEncode(userDTO));
+      return await http.post(Uri.parse(apiUrl + endpoint), headers: {
+        'Content-type': 'application/json',
+        'X-AUTH-TOKEN': await authService.getAccessToken()
+      }, body: payload);
     } catch (e) {
       throw Exception(e);
     }
@@ -54,6 +59,15 @@ class UsersService {
         'Content-type': 'application/json',
         'X-AUTH-TOKEN': await authService.getAccessToken()
       }, body: payload);
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  Future<http.Response> deleteUser(String id) async {
+    String endpoint = "api/user-management/users/$id";
+    try {
+      return await authInterceptor.delete(Uri.parse(endpoint));
     } catch (e) {
       throw Exception(e);
     }

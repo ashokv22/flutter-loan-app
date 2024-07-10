@@ -96,7 +96,7 @@ class _ReferenceCodeSearchState extends State<ReferenceCodeSearch> {
                 ),
               ),
             ),
-            SliverToBoxAdapter(
+            if (_searchResult.isNotEmpty) SliverToBoxAdapter(
               child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Padding(

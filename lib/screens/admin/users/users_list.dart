@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:origination/models/admin/user.dart';
 import 'package:origination/screens/admin/users/edit_user.dart';
 import 'package:origination/screens/admin/users/new_user.dart';
@@ -13,6 +14,8 @@ class UsersList extends StatefulWidget {
 }
 
 class _UsersListState extends State<UsersList> {
+  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
+      GlobalKey<RefreshIndicatorState>();
   UsersService userService = UsersService();
   late Future<List<User>> usersFuture;
 
@@ -23,10 +26,6 @@ class _UsersListState extends State<UsersList> {
   @override
   void initState() {
     super.initState();
-    _initializeServices();
-  }
-
-  Future<void> _initializeServices() async {
     usersFuture = userService.getUsers();
   }
 
@@ -34,87 +33,132 @@ class _UsersListState extends State<UsersList> {
   Widget build(BuildContext context) {
     final isDarkTheme = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(onPressed: () {Navigator.pop(context);}, icon: const Icon(CupertinoIcons.arrow_left)),
-        title: const Text("Users", style: TextStyle(fontSize: 16)),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const CreateUser()),
-          );
-        },
-        mini: false,
-        shape: const CircleBorder(),
-        backgroundColor: const Color.fromARGB(255, 3, 71, 244),
-        child: const Icon(Icons.person_add_alt_rounded, color: Colors.white,),
-      ),
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: isDarkTheme
-            ? null // No gradient for dark theme, use a single color
-            : const LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  Colors.white,
-                  Color.fromRGBO(193, 248, 245, 1),
+        appBar: _buildAppBar(),
+        floatingActionButton: _buildFloatingActionButton(),
+        body: RefreshIndicator(
+          key: _refreshIndicatorKey,
+          onRefresh: () async {
+            setState(() {
+              usersFuture = userService.getUsers();
+            });
+          },
+          child: Container(
+            decoration: BoxDecoration(
+              gradient: isDarkTheme
+                  ? null // No gradient for dark theme, use a single color
+                  : const LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [
+                        Colors.white,
+                        Color.fromRGBO(193, 248, 245, 1),
+                      ],
+                    ),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                children: [
+                  FutureBuilder(
+                    future: usersFuture,
+                    builder: (BuildContext context, AsyncSnapshot snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return _buildLoadingIndicator();
+                      } else if (snapshot.hasError) {
+                        return _buildErrorText(snapshot.error.toString());
+                      } else if (snapshot.hasData) {
+                        List<User> users = snapshot.data!;
+                        return users.isEmpty
+                            ? _buildNoDataText()
+                            : _buildUserTable(users);
+                      }
+                      return Container();
+                    },
+                  ),
                 ],
               ),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: [
-              FutureBuilder(
-                future: usersFuture,
-                builder: (BuildContext context, AsyncSnapshot snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const SizedBox(
-                      width: double.infinity,
-                      height: double.infinity,
-                      child: Center(
-                        child: CircularProgressIndicator()
-                      ),
-                    );
-                  } else if (snapshot.hasError) {
-                    return Center(
-                      child: Text('Error: ${snapshot.error}'),
-                    );
-                  } else if (snapshot.hasData) {
-                    List<User> users = snapshot.data!;
-                    if (users.isEmpty) {
-                      return const SizedBox(
-                        width: double.infinity,
-                        height: double.infinity,
-                        child: Center(
-                          child: Text('No data found',
-                          style: TextStyle(
-                            fontSize: 20,
-                          ),)
-                        )
-                      );
-                    } else {
-                      return SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Card(
-                          elevation: 4,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: _buildTable(users),
-                        ),
-                      );
-                    }
-                  }
-                  return Container();
-                },
-              ),
-            ],
+            ),
+          ),
+        ));
+  }
+
+  AppBar _buildAppBar() {
+    return AppBar(
+      leading: IconButton(
+        onPressed: () {
+          Navigator.pop(context);
+        },
+        icon: const Icon(CupertinoIcons.arrow_left),
+      ),
+      title: const Text("Users", style: TextStyle(fontSize: 16)),
+      actions: [
+        IconButton(
+          onPressed: () {
+            _refreshIndicatorKey.currentState?.show();
+          },
+          icon: const Icon(LineAwesomeIcons.sync_alt_solid),
+        )
+      ],
+    );
+  }
+
+  FloatingActionButton _buildFloatingActionButton() {
+    return FloatingActionButton(
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const CreateUser()),
+        );
+      },
+      mini: true,
+      shape: const CircleBorder(),
+      backgroundColor: const Color.fromARGB(255, 3, 71, 244),
+      child: const Icon(
+        Icons.person_add_alt_rounded,
+        color: Colors.white,
+      ),
+    );
+  }
+
+  Widget _buildLoadingIndicator() {
+    return const SizedBox(
+      width: double.infinity,
+      height: double.infinity,
+      child: Center(child: CircularProgressIndicator()),
+    );
+  }
+
+  Widget _buildErrorText(String error) {
+    return Center(
+      child: Text('Error: $error'),
+    );
+  }
+
+  Widget _buildNoDataText() {
+    return const SizedBox(
+      width: double.infinity,
+      height: double.infinity,
+      child: Center(
+        child: Text(
+          'No data found',
+          style: TextStyle(
+            fontSize: 20,
           ),
         ),
-      )
+      ),
+    );
+  }
+
+  Widget _buildUserTable(List<User> users) {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Card(
+        elevation: 4,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: _buildTable(users),
+      ),
     );
   }
 
@@ -137,15 +181,32 @@ class _UsersListState extends State<UsersList> {
           DataCell(Text(user.lastName)),
           DataCell(_switcher(user)),
           DataCell(IconButton(
-            icon: const Icon(Icons.edit, color: Color.fromARGB(255, 3, 71, 244),),
+            icon: const Icon(
+              Icons.edit,
+              color: Color.fromARGB(255, 3, 71, 244),
+            ),
             onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => EditUser(user: user)));
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => EditUser(user: user)));
             },
           )),
           DataCell(IconButton(
-            icon: const Icon(Icons.delete_forever, color: Colors.red,),
+            icon: const Icon(
+              Icons.delete_forever,
+              color: Colors.red,
+            ),
             onPressed: () {
-              _showDeleteConfirmation(context, user);
+              showModalBottomSheet(
+                  context: context,
+                  builder: (context) => ConstrainedBox(
+                        constraints: const BoxConstraints(minHeight: 150),
+                        child: SizedBox(
+                          width: MediaQuery.of(context).size.width,
+                          child: DeleteConfirmationSheet(user: user),
+                        ),
+                      ));
             },
           )),
         ]);
@@ -153,7 +214,7 @@ class _UsersListState extends State<UsersList> {
     );
   }
 
-   Widget _switcher(User user) {
+  Widget _switcher(User user) {
     return SizedBox(
       width: 45,
       height: 30,
@@ -170,71 +231,113 @@ class _UsersListState extends State<UsersList> {
       ),
     );
   }
+}
 
-  void _showDeleteConfirmation(BuildContext context, User user) {
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
-        return Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const SizedBox(height: 20,),
-              Image.asset('assets/crisis.png', fit: BoxFit.contain,height: 100,),
-              const SizedBox(height: 20,),
-              const Text('Are you sure you want to delete this user?', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),),
-              const SizedBox(height: 30,),
-              if (dataLoading) ...[const Center(child: CircularProgressIndicator(),)]
-              else ...[Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: OutlinedButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      style: OutlinedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 12.0),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30.0),
-                        ),
-                      ),
-                      child: const Text('Cancel', style: TextStyle(color: Colors.black),),
-                    ),
-                  ),
-                  const SizedBox(width: 10,),
-                  Expanded(
-                    child: MaterialButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      color: Colors.red,
-                      padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 12.0),
+class DeleteConfirmationSheet extends StatefulWidget {
+  final User user;
+
+  const DeleteConfirmationSheet({
+    required this.user, 
+    Key? key
+  }) : super(key: key);
+
+  @override
+  _DeleteConfirmationSheetState createState() => _DeleteConfirmationSheetState();
+}
+
+class _DeleteConfirmationSheetState extends State<DeleteConfirmationSheet> {
+  
+  final userService = UsersService();
+
+  bool dataLoading = false;
+  String? errorMessage;
+
+  void _deleteUser() async {
+    setState(() {
+      dataLoading = true;
+      errorMessage = null;
+    });
+    try {
+      final response = await userService.deleteUser(widget.user.id!);
+      if (response.statusCode == 204) {
+        Navigator.pop(context);
+      } else {
+        errorMessage = 'Failed to delete user. Please try again.';
+      }
+    } catch (e) {
+      setState(() {
+        errorMessage = 'An error occurred. Please try again later.';
+      });
+    } finally {
+      setState(() {
+        dataLoading = false;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const SizedBox(height: 20),
+          Image.asset(
+            'assets/crisis.png', // Add a valid image asset here
+            fit: BoxFit.contain,
+            height: 80,
+          ),
+          const SizedBox(height: 20),
+          errorMessage == null ? const Text(
+            'Are you sure you want to delete this user?',
+            style: TextStyle(fontSize: 16),
+          ) :
+          Text(errorMessage!, style: const TextStyle(fontSize: 16, color: Colors.red),),
+          const SizedBox(height: 30),
+          if (dataLoading)
+            const Center(child: CircularProgressIndicator())
+          else
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: OutlinedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    style: OutlinedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 12.0, horizontal: 12.0),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30.0),
                       ),
-                      child: const Text('Delete', style: TextStyle(color: Colors.white)),
+                    ),
+                    child: const Text(
+                      'Cancel',
+                      style: TextStyle(color: Colors.black),
                     ),
                   ),
-                ],
-              )]
-            ],
-          ),
-        );
-      },
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: MaterialButton(
+                    onPressed: _deleteUser,
+                    color: Colors.red,
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 12.0, horizontal: 12.0),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30.0),
+                    ),
+                    child: const Text('Delete',
+                        style: TextStyle(color: Colors.white)),
+                  ),
+                ),
+              ],
+            )
+        ],
+      ),
     );
-  }
-
-  void _deleteUser(BuildContext context, User user) async {
-    setState(() {
-      dataLoading = true;
-    });
-    await Future.delayed(const Duration(seconds: 2));
-    setState(() {
-      dataLoading = true;
-    });
-    Navigator.pop(context); // Close the bottom sheet
   }
 }

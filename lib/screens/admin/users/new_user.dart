@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:origination/core/widgets/email_input.dart';
+import 'package:origination/core/widgets/text_input.dart';
 import 'package:origination/models/admin/user.dart';
 import 'package:origination/screens/admin/users/users_service.dart';
 
@@ -17,6 +19,7 @@ class _CreateUserState extends State<CreateUser> {
   // key
   final TextEditingController _loginController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController = TextEditingController();
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _emailAddressController = TextEditingController();
@@ -52,14 +55,32 @@ class _CreateUserState extends State<CreateUser> {
         setState(() {
           _errorMessage = response.body;
         });
+        showErrorSheet(_errorMessage);
       }
     } catch (e) {
       _errorMessage = e.toString();
+      showErrorSheet(_errorMessage);
     } finally {
       setState(() {
         _isLoading = false;
       });
     }
+  }
+
+  void showErrorSheet(String data) {
+    //bottomsheet
+    showModalBottomSheet( context: context,
+      builder: (context) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 30, horizontal:20),
+          child: Wrap(
+            children: [
+              const Text("Error"),
+              Text(data)      
+            ],
+          ),
+        );
+      });
   }
 
   @override
@@ -93,150 +114,91 @@ class _CreateUserState extends State<CreateUser> {
                     key: _formKey,
                     child: Column(
                       children: [
-                        TextFormField(
-                          controller: _loginController,
-                          decoration: InputDecoration(
-                            labelText: 'Login',
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                          ),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Login is required.';
-                            }
-                            return null;
-                          },
-                        ),
                         const SizedBox(height: 10.0),
-                        TextFormField(
-                          controller: _passwordController,
-                          decoration: InputDecoration(
-                            labelText: 'Password',
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                          ),
-                          obscureText: false,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Password is required.';
-                            }
-                            return null;
-                          },
-                        ),
+                        TextInput(label: "Login", controller: _loginController, onChanged: (newValue) {}, isEditable: true, isReadable: false, isRequired: true,),
                         const SizedBox(height: 10.0),
-                        TextFormField(
-                          controller: _firstNameController,
-                          keyboardType: TextInputType.text,
-                          decoration: InputDecoration(
-                            labelText: 'First Name',
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                          ),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'First Name is required.';
-                            }
-                            return null;
-                          },
-                        ),
-                        const SizedBox(height: 10.0),
-                        TextFormField(
-                          controller: _lastNameController,
-                          keyboardType: TextInputType.text,
-                          decoration: InputDecoration(
-                            labelText: 'Last Name',
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                          ),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Last Name is required.';
-                            }
-                            return null;
-                          },
-                        ),
-                        const SizedBox(height: 10.0),
-                        TextFormField(
-                          controller: _emailAddressController,
-                          keyboardType: TextInputType.emailAddress,
-                          decoration: InputDecoration(
-                            labelText: 'Email',
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                          ),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Email Address is required.';
-                            }
-                            return null;
-                          },
-                        ),
-                        const SizedBox(height: 10.0),
-                        TextFormField(
-                          controller: _imageController,
-                          keyboardType: TextInputType.url,
-                          decoration: InputDecoration(
-                            labelText: 'Image URL',
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 10.0),
-                        TextFormField(
-                          controller: _hrmsController,
-                          keyboardType: TextInputType.number,
-                          decoration: InputDecoration(
-                            labelText: 'HRMS ID',
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 70.0),
                         SizedBox(
-                          width: double.infinity,
-                          height: 50,
-                          child: MaterialButton(
-                            onPressed: () {
-                              if (_formKey.currentState!.validate()) {
-                                createUser();
-                              }
-                            },
-                            color: const Color.fromARGB(255, 3, 71, 244),
-                            textColor: Colors.white,
-                            padding: const EdgeInsets.symmetric(vertical: 16.0),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30.0),
+                          child: TextFormField(
+                            controller: _passwordController,
+                            decoration: const InputDecoration(
+                              labelText: 'Password',
+                              border: OutlineInputBorder(),
+                              contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
                             ),
-                            child: _isLoading ? const SizedBox(
-                              width: 20.0,
-                              height: 20.0,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2.0,
-                                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                              ),
-                            )
-                                : const Text('Create User'),
+                            obscureText: true,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Password is required.';
+                              }
+                              return null;
+                            },
                           ),
                         ),
                         const SizedBox(height: 10.0),
-                        if (_isLoading) const CircularProgressIndicator(),
-                        if (_errorMessage.isNotEmpty) Text(_errorMessage),
+                        SizedBox(
+                          child: TextFormField(
+                            controller: _confirmPasswordController,
+                            decoration: const InputDecoration(
+                              labelText: 'Confirm Password',
+                              border: OutlineInputBorder(),
+                              contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+                            ),
+                            obscureText: true,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Password is required.';
+                              }
+                              return null;
+                            },
+                          ),
+                        ),
+                        const SizedBox(height: 10.0),
+                        TextInput(label: "First Name", controller: _firstNameController, onChanged: (newValue) {}, isEditable: true, isReadable: false, isRequired: true,),
+                        const SizedBox(height: 10.0),
+                        TextInput(label: "Last Name", controller: _lastNameController, onChanged: (newValue) {}, isEditable: true, isReadable: false, isRequired: true,),
+                        const SizedBox(height: 10.0),
+                        EmailInput(label: "Email", controller: _emailAddressController, onChanged: (newValue) {}, isEditable: true, isReadable: false, isRequired: true,),
+                        const SizedBox(height: 10.0),
+                        TextInput(label: "ImageURL", controller: _imageController, onChanged: (newValue) {}, isEditable: true, isReadable: false, isRequired: false,),
+                        const SizedBox(height: 10.0),
+                        TextInput(label: "HRMS", controller: _hrmsController, onChanged: (newValue) {}, isEditable: true, isReadable: false, isRequired: false,),
+                        const SizedBox(height: 70.0),
                       ],
                     ),
                   ),
+                ),
+              ),
+              SizedBox(
+                width: double.infinity,
+                height: 50,
+                child: MaterialButton(
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      createUser();
+                    }
+                  },
+                  color: const Color.fromARGB(255, 3, 71, 244),
+                  textColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 16.0),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30.0),
+                  ),
+                  child: _isLoading ? const SizedBox(
+                    width: 20.0,
+                    height: 20.0,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2.0,
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                    ),
+                  )
+                      : const Text('Create User'),
                 ),
               ),
             ],
           ),
         )
       ),
+      resizeToAvoidBottomInset: true,
     );
   }
 }

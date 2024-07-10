@@ -163,7 +163,7 @@ class _ReferenceCodeEditState extends State<ReferenceCodeEdit> {
                       RoundedTextField(controller: field4, labelText: 'Field 4'),
                       const SizedBox(height: 10),
                       RoundedTextField(controller: field5, labelText: 'Field 5'),
-                      const SizedBox(height: 50,),
+                      const SizedBox(height: 10,),
                       Align(
                         alignment: Alignment.bottomCenter,
                         child: SizedBox(
