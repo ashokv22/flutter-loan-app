@@ -24,6 +24,7 @@ Individual _$IndividualFromJson(Map<String, dynamic> json) => Individual(
       maritalStatus: json['maritalStatus'] as String?,
       mobileNumber: json['mobileNumber'] as String,
       alternateMobileNumber: json['alternateMobileNumber'] as String?,
+      aadhaarReferenceNumber: json['aadhaarReferenceNumber'] as String?,
       addressLine1: json['addressLine1'] as String,
       addressLine2: json['addressLine2'] as String?,
       pinCode: json['pinCode'] as String,
@@ -38,6 +39,7 @@ Individual _$IndividualFromJson(Map<String, dynamic> json) => Individual(
       commentsByRm: json['commentsByRm'] as String?,
       status: $enumDecodeNullable(
           _$ApplicantDeclarationStatusEnumMap, json['status']),
+      cifId: json['cifId'] as String?,
       applicantId: (json['applicantId'] as num?)?.toInt(),
       approvedBy: json['approvedBy'] as String?,
       appovedDate: json['appovedDate'] == null
@@ -70,6 +72,7 @@ Map<String, dynamic> _$IndividualToJson(Individual instance) =>
       'maritalStatus': instance.maritalStatus,
       'mobileNumber': instance.mobileNumber,
       'alternateMobileNumber': instance.alternateMobileNumber,
+      'aadhaarReferenceNumber': instance.aadhaarReferenceNumber,
       'addressLine1': instance.addressLine1,
       'addressLine2': instance.addressLine2,
       'pinCode': instance.pinCode,
@@ -83,6 +86,7 @@ Map<String, dynamic> _$IndividualToJson(Individual instance) =>
       'voterIdNumber': instance.voterIdNumber,
       'commentsByRm': instance.commentsByRm,
       'status': _$ApplicantDeclarationStatusEnumMap[instance.status],
+      'cifId': instance.cifId,
       'applicantId': instance.applicantId,
       'approvedBy': instance.approvedBy,
       'appovedDate': instance.appovedDate?.toIso8601String(),

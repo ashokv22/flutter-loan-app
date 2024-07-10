@@ -63,6 +63,8 @@ class _CoApplicantGuarantorState extends State<CoApplicantGuarantor> {
   final TextEditingController country = TextEditingController();
   final TextEditingController panController= TextEditingController();
   final TextEditingController voterIdController= TextEditingController();
+  final TextEditingController aadharRefController = TextEditingController();
+  final TextEditingController cifIdController = TextEditingController();
   late DateTime _selectedDate;
   late IndividualType type = IndividualType.CO_APPLICANT;
 
@@ -166,9 +168,11 @@ class _CoApplicantGuarantorState extends State<CoApplicantGuarantor> {
       applicantId: widget.id,
       type: type,
       commentsByRm: "nothing",
-      status: ApplicantDeclarationStatus.PENDING
+      status: ApplicantDeclarationStatus.PENDING,
+      aadhaarReferenceNumber: aadharRefController.text,
+      cifId: cifIdController.text
     );
-    logger.wtf(individual.toJson());
+    logger.f(individual.toJson());
     try {
       Navigator.push(context, MaterialPageRoute(builder: (context) => DeclarationNew(individual: individual,)));
     } catch (e) {
@@ -293,6 +297,10 @@ class _CoApplicantGuarantorState extends State<CoApplicantGuarantor> {
                       const SizedBox(height: 10),
                       TextInput(label: "Voter Id", controller: voterIdController, onChanged: (newValue) {}, isEditable: true, isReadable: false, isRequired: true,),
                       const SizedBox(height: 20),
+                      TextInput(label: "Aadhaar Ref Number", controller: aadharRefController, onChanged: (newValue) {}, isEditable: true, isReadable: false, isRequired: false,),
+                      const SizedBox(height: 10.0),
+                      TextInput(label: "Cif ID", controller: cifIdController, onChanged: (newValue) {}, isEditable: true, isReadable: false, isRequired: false,),
+                      const SizedBox(height: 10.0),
                       Padding(
                         padding: const EdgeInsets.only(bottom: 5.0),
                         child: Align(

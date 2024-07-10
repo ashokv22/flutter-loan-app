@@ -22,6 +22,7 @@ class Individual {
   String? maritalStatus;
   String mobileNumber;
   String? alternateMobileNumber;
+  String? aadhaarReferenceNumber;
   String addressLine1;
   String? addressLine2;
   String pinCode;
@@ -35,6 +36,7 @@ class Individual {
   String? voterIdNumber;
   String? commentsByRm;
   ApplicantDeclarationStatus? status;
+  String? cifId;
   int? applicantId;
   String? approvedBy;
   DateTime? appovedDate;
@@ -43,55 +45,51 @@ class Individual {
   DateTime? rejectedDate;
   String? rejectedRemarks;
 
-  Individual({
-    this.id,
-    this.type,
-    this.product,
-    this.enquiryPurpose,
-    this.internalRefNumber,
-    this.loanAmount,
-    required this.firstName,
-    this.middleName,
-    required this.lastName,
-    this.fathersFirstName,
-    this.fathersMiddleName,
-    this.fathersLastName,
-    required this.dateOfBirth,
-    required this.gender,
-    this.maritalStatus,
-    required this.mobileNumber,
-    this.alternateMobileNumber,
-    required this.addressLine1,
-    this.addressLine2,
-    required this.pinCode,
-    required this.landMark,
-    required this.taluka,
-    required this.district,
-    required this.city,
-    required this.state,
-    required this.country,
-    this.pan,
-    this.voterIdNumber,
-    this.commentsByRm,
-    this.status,
-    this.applicantId,
-    this.approvedBy,
-    this.appovedDate,
-    this.approvedRemarks,
-    this.rejectedBy,
-    this.rejectedDate,
-    this.rejectedRemarks
-  });
+  Individual(
+      {this.id,
+      this.type,
+      this.product,
+      this.enquiryPurpose,
+      this.internalRefNumber,
+      this.loanAmount,
+      required this.firstName,
+      this.middleName,
+      required this.lastName,
+      this.fathersFirstName,
+      this.fathersMiddleName,
+      this.fathersLastName,
+      required this.dateOfBirth,
+      required this.gender,
+      this.maritalStatus,
+      required this.mobileNumber,
+      this.alternateMobileNumber,
+      this.aadhaarReferenceNumber,
+      required this.addressLine1,
+      this.addressLine2,
+      required this.pinCode,
+      required this.landMark,
+      required this.taluka,
+      required this.district,
+      required this.city,
+      required this.state,
+      required this.country,
+      this.pan,
+      this.voterIdNumber,
+      this.commentsByRm,
+      this.status,
+      this.cifId,
+      this.applicantId,
+      this.approvedBy,
+      this.appovedDate,
+      this.approvedRemarks,
+      this.rejectedBy,
+      this.rejectedDate,
+      this.rejectedRemarks});
 
-  
-  factory Individual.fromJson(Map<String, dynamic> json) => _$IndividualFromJson(json);
+  factory Individual.fromJson(Map<String, dynamic> json) =>
+      _$IndividualFromJson(json);
 
   Map<String, dynamic> toJson() => _$IndividualToJson(this);
-
 }
 
-enum IndividualType {
-  APPLICANT,
-  CO_APPLICANT,
-  GUARANTOR
-}
+enum IndividualType { APPLICANT, CO_APPLICANT, GUARANTOR }

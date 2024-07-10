@@ -416,7 +416,6 @@ class LoanApplicationService {
       final response = await authInterceptor.get(Uri.parse(endpoint));
       if (response.statusCode == 200) {
         final jsonResponse = json.decode(response.body);
-        logger.i(jsonResponse);
         List<ApplicantDTO> list = [];
         for (var data in jsonResponse) {
           ApplicantDTO app = ApplicantDTO.fromJson(data);

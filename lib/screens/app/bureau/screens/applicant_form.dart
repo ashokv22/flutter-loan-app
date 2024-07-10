@@ -63,6 +63,8 @@ class _ApplicantFormState extends State<ApplicantForm> {
   final TextEditingController country = TextEditingController();
   final TextEditingController panController= TextEditingController();
   final TextEditingController voterIdController= TextEditingController();
+  final TextEditingController aadharRefController = TextEditingController();
+  final TextEditingController cifIdController = TextEditingController();
   late DateTime _selectedDate;
 
   @override
@@ -163,7 +165,9 @@ class _ApplicantFormState extends State<ApplicantForm> {
       applicantId: widget.id,
       commentsByRm: "nothing",
       type: IndividualType.APPLICANT,
-      status: ApplicantDeclarationStatus.PENDING
+      status: ApplicantDeclarationStatus.PENDING,
+      aadhaarReferenceNumber: aadharRefController.text,
+      cifId: cifIdController.text
     );
     try {
       Navigator.push(context, MaterialPageRoute(builder: (context) => DeclarationNew(individual: individual,)));
@@ -289,6 +293,10 @@ class _ApplicantFormState extends State<ApplicantForm> {
                       TextInput(label: "PAN", controller: panController, onChanged: (newValue) {}, isEditable: true, isReadable: false, isRequired: true,),
                       const SizedBox(height: 10),
                       TextInput(label: "Voter Id", controller: voterIdController, onChanged: (newValue) {}, isEditable: true, isReadable: false, isRequired: true,),
+                      const SizedBox(height: 10.0),
+                      TextInput(label: "Aadhaar Ref Number", controller: aadharRefController, onChanged: (newValue) {}, isEditable: true, isReadable: false, isRequired: false,),
+                      const SizedBox(height: 10.0),
+                      TextInput(label: "Cif ID", controller: cifIdController, onChanged: (newValue) {}, isEditable: true, isReadable: false, isRequired: false,),
                       const SizedBox(height: 10.0),
                       Padding(
                         padding: const EdgeInsets.only(bottom: 1.0),
