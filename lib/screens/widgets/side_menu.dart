@@ -57,7 +57,8 @@ class SideMenu extends StatelessWidget {
                 ),
                 accountEmail: Text(email, 
                   style: TextStyle(
-                    fontSize: 18.0, 
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.w300,
                     color: Theme.of(context).textTheme.displayMedium!.color
                     ),
                   ),

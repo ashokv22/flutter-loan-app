@@ -17,9 +17,9 @@ class AuthInterceptor extends http.BaseClient {
     modifiedRequest.headers.addAll(request.headers);
 
     String token = await _authService.getAccessToken();
-    if (!modifiedRequest.url.toString().contains("reference-codes")) {
+    // if (!modifiedRequest.url.toString().contains("reference-codes")) {
       logger.i("URL and AccessToken: ${modifiedRequest.url}, $token");
-    }
+    // }
     modifiedRequest.headers['X-Auth-Token'] = token;
 
     // Check if request method is POST and data is present

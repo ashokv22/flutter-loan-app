@@ -6,16 +6,16 @@ import 'package:origination/environments/environment.dart';
 import 'package:origination/models/admin/user.dart';
 import 'package:origination/screens/sign_in/auth_interceptor.dart';
 import 'package:origination/service/auth_service.dart';
+
 final authService = AuthService();
 
 class UsersService {
-
   final authInterceptor = AuthInterceptor(http.Client(), authService);
   Logger logger = Logger();
   final apiUrl = Environment.baseUrl;
 
-  Future<List<User>> getUsers() async {
-    String endpoint = "api/user-management/users";
+  Future<Map<String, dynamic>> getUsers() async {
+    String endpoint = "api/user-management/users?page=0&size=100";
     try {
       final response = await authInterceptor.get(Uri.parse(endpoint));
       if (response.statusCode == 200) {
@@ -24,11 +24,12 @@ class UsersService {
         for (var data in jsonResponse) {
           User dto = User.fromJson(data);
           list.add(dto);
-          logger.i(dto);
         }
-        return list;
-      }
-      else {
+        int totalCount = int.parse(response.headers['x-total-count'] ?? '0');
+        logger.d({'users': list, 'totalCount': totalCount});
+        return {'users': list, 'totalCount': totalCount};
+        // return list;
+      } else {
         throw Exception(response);
       }
     } catch (e) {
@@ -41,10 +42,12 @@ class UsersService {
     final payload = jsonEncode(userDTO.toJson());
     try {
       // return await http.post(Uri.parse(endpoint), body: jsonEncode(userDTO));
-      return await http.post(Uri.parse(apiUrl + endpoint), headers: {
-        'Content-type': 'application/json',
-        'X-AUTH-TOKEN': await authService.getAccessToken()
-      }, body: payload);
+      return await http.post(Uri.parse(apiUrl + endpoint),
+          headers: {
+            'Content-type': 'application/json',
+            'X-AUTH-TOKEN': await authService.getAccessToken()
+          },
+          body: payload);
     } catch (e) {
       throw Exception(e);
     }
@@ -55,10 +58,12 @@ class UsersService {
     logger.i(user.toJson());
     try {
       final payload = jsonEncode(user.toJson());
-      return await http.put(Uri.parse(apiUrl + endpoint), headers: {
-        'Content-type': 'application/json',
-        'X-AUTH-TOKEN': await authService.getAccessToken()
-      }, body: payload);
+      return await http.put(Uri.parse(apiUrl + endpoint),
+          headers: {
+            'Content-type': 'application/json',
+            'X-AUTH-TOKEN': await authService.getAccessToken()
+          },
+          body: payload);
     } catch (e) {
       throw Exception(e);
     }
@@ -72,5 +77,4 @@ class UsersService {
       throw Exception(e);
     }
   }
-
 }

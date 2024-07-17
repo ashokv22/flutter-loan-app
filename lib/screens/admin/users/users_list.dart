@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:origination/models/admin/user.dart';
+import 'package:origination/screens/admin/users/delete_user_confirmation.dart';
 import 'package:origination/screens/admin/users/edit_user.dart';
 import 'package:origination/screens/admin/users/new_user.dart';
 import 'package:origination/screens/admin/users/users_service.dart';
@@ -17,16 +18,30 @@ class _UsersListState extends State<UsersList> {
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       GlobalKey<RefreshIndicatorState>();
   UsersService userService = UsersService();
-  late Future<List<User>> usersFuture;
+  late Future<Map<String, dynamic>> usersFuture;
 
   List<User> userList = [];
   bool dataLoading = false;
   bool deleteFlag = false;
 
+  int _currentPage = 0;
+  int pageSize = 10;
+  int totalCount = 0;
+
   @override
   void initState() {
     super.initState();
+    fetchUsers();
+  }
+
+  void fetchUsers() {
     usersFuture = userService.getUsers();
+    usersFuture.then((data) {
+      setState(() {
+        userList = data['users'];
+        totalCount = data['totalCount'];
+      });
+    });
   }
 
   @override
@@ -39,7 +54,8 @@ class _UsersListState extends State<UsersList> {
           key: _refreshIndicatorKey,
           onRefresh: () async {
             setState(() {
-              usersFuture = userService.getUsers();
+              _currentPage = 0;
+              fetchUsers();
             });
           },
           child: Container(
@@ -67,10 +83,9 @@ class _UsersListState extends State<UsersList> {
                       } else if (snapshot.hasError) {
                         return _buildErrorText(snapshot.error.toString());
                       } else if (snapshot.hasData) {
-                        List<User> users = snapshot.data!;
-                        return users.isEmpty
+                        return userList.isEmpty
                             ? _buildNoDataText()
-                            : _buildUserTable(users);
+                            : _buildUserTable(userList);
                       }
                       return Container();
                     },
@@ -150,20 +165,25 @@ class _UsersListState extends State<UsersList> {
   }
 
   Widget _buildUserTable(List<User> users) {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Card(
-        elevation: 4,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
+    return Expanded(
+      child: SingleChildScrollView(
+        // scrollDirection: Axis.horizontal,
+        child: Column(
+          children: [
+            Text("Total Count: $totalCount"),
+            _buildTable(users),
+          ],
         ),
-        child: _buildTable(users),
       ),
     );
   }
 
-  DataTable _buildTable(List<User> users) {
-    return DataTable(
+  PaginatedDataTable _buildTable(List<User> users) {
+    return PaginatedDataTable(
+      source: UserDataTableSource(userList, context),
+      rowsPerPage: pageSize,
+      onPageChanged: (int page) => setState(() => _currentPage = page),
+      showFirstLastButtons: true,
       columnSpacing: 12.0,
       columns: const [
         DataColumn(label: Text('Username')),
@@ -173,46 +193,67 @@ class _UsersListState extends State<UsersList> {
         DataColumn(label: Text('Edit')),
         DataColumn(label: Text('Delete')),
       ],
-      rows: users.asMap().entries.map((entry) {
-        final User user = entry.value;
-        return DataRow(cells: [
-          DataCell(Text(user.login)),
-          DataCell(Text(user.firstName)),
-          DataCell(Text(user.lastName)),
-          DataCell(_switcher(user)),
-          DataCell(IconButton(
-            icon: const Icon(
-              Icons.edit,
-              color: Color.fromARGB(255, 3, 71, 244),
-            ),
-            onPressed: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => EditUser(user: user)));
-            },
-          )),
-          DataCell(IconButton(
-            icon: const Icon(
-              Icons.delete_forever,
-              color: Colors.red,
-            ),
-            onPressed: () {
-              showModalBottomSheet(
-                  context: context,
-                  builder: (context) => ConstrainedBox(
-                        constraints: const BoxConstraints(minHeight: 150),
-                        child: SizedBox(
-                          width: MediaQuery.of(context).size.width,
-                          child: DeleteConfirmationSheet(user: user),
-                        ),
-                      ));
-            },
-          )),
-        ]);
-      }).toList(),
+
     );
   }
+}
+
+class UserDataTableSource extends DataTableSource {
+  final List<User> userList;
+  final BuildContext context;
+
+  UserDataTableSource(this.userList, this.context);
+
+  @override
+  DataRow? getRow(int index) {
+    final User user = userList[index];
+    return DataRow.byIndex(
+      index: index,
+      cells: [
+      DataCell(Text(user.login)),
+      DataCell(Text(user.firstName)),
+      DataCell(Text(user.lastName)),
+      DataCell(_switcher(user)),
+      DataCell(IconButton(
+        icon: const Icon(
+          Icons.edit,
+          color: Color.fromARGB(255, 3, 71, 244),
+        ),
+        onPressed: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => EditUser(user: user)));
+        },
+      )),
+      DataCell(IconButton(
+        icon: const Icon(
+          Icons.delete_forever,
+          color: Colors.red,
+        ),
+        onPressed: () {
+          showModalBottomSheet(
+              context: context,
+              builder: (context) => ConstrainedBox(
+                    constraints: const BoxConstraints(minHeight: 150),
+                    child: SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      child: DeleteConfirmationSheet(user: user),
+                    ),
+                  ));
+        },
+      )),
+    ]);
+  }
+
+  @override
+  int get rowCount => userList.length;
+
+  @override
+  bool get isRowCountApproximate => false;
+
+  @override
+  int get selectedRowCount => 0;
 
   Widget _switcher(User user) {
     return SizedBox(
@@ -223,120 +264,9 @@ class _UsersListState extends State<UsersList> {
         child: CupertinoSwitch(
           value: user.activated,
           onChanged: (value) {
-            setState(() {
-              user.activated = value;
-            });
+            user.activated = value;
           },
         ),
-      ),
-    );
-  }
-}
-
-class DeleteConfirmationSheet extends StatefulWidget {
-  final User user;
-
-  const DeleteConfirmationSheet({
-    required this.user, 
-    Key? key
-  }) : super(key: key);
-
-  @override
-  _DeleteConfirmationSheetState createState() => _DeleteConfirmationSheetState();
-}
-
-class _DeleteConfirmationSheetState extends State<DeleteConfirmationSheet> {
-  
-  final userService = UsersService();
-
-  bool dataLoading = false;
-  String? errorMessage;
-
-  void _deleteUser() async {
-    setState(() {
-      dataLoading = true;
-      errorMessage = null;
-    });
-    try {
-      final response = await userService.deleteUser(widget.user.id!);
-      if (response.statusCode == 204) {
-        Navigator.pop(context);
-      } else {
-        errorMessage = 'Failed to delete user. Please try again.';
-      }
-    } catch (e) {
-      setState(() {
-        errorMessage = 'An error occurred. Please try again later.';
-      });
-    } finally {
-      setState(() {
-        dataLoading = false;
-      });
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const SizedBox(height: 20),
-          Image.asset(
-            'assets/crisis.png', // Add a valid image asset here
-            fit: BoxFit.contain,
-            height: 80,
-          ),
-          const SizedBox(height: 20),
-          errorMessage == null ? const Text(
-            'Are you sure you want to delete this user?',
-            style: TextStyle(fontSize: 16),
-          ) :
-          Text(errorMessage!, style: const TextStyle(fontSize: 16, color: Colors.red),),
-          const SizedBox(height: 30),
-          if (dataLoading)
-            const Center(child: CircularProgressIndicator())
-          else
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: OutlinedButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    style: OutlinedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 12.0, horizontal: 12.0),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30.0),
-                      ),
-                    ),
-                    child: const Text(
-                      'Cancel',
-                      style: TextStyle(color: Colors.black),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: MaterialButton(
-                    onPressed: _deleteUser,
-                    color: Colors.red,
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 12.0, horizontal: 12.0),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30.0),
-                    ),
-                    child: const Text('Delete',
-                        style: TextStyle(color: Colors.white)),
-                  ),
-                ),
-              ],
-            )
-        ],
       ),
     );
   }
