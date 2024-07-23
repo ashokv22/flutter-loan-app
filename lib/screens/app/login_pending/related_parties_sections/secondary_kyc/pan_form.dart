@@ -60,7 +60,8 @@ class _PanCardFormState extends State<PanCardForm> {
       isLoading = true;
     });
     SecondaryKYCDTO dto = SecondaryKYCDTO(
-      relatedPartyId: widget.relatedPartyId, 
+      relatedPartyId: widget.relatedPartyId,
+      kycType: "PAN",
       panNumber: panController.text, 
       name: nameController.text, 
       fatherName: fatherNameController.text, 

@@ -35,6 +35,7 @@ class _PanCardWidgetState extends State<PanCardWidget> {
       id: null,
       isVerified: true,
       name: widget.panData.name,
+      kycType: "PAN",
       fatherName: widget.panData.fatherName,
       dateOfBirth: null,
       panNumber: widget.panData.panNo,
