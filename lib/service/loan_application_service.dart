@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:logger/logger.dart';
 import 'package:origination/environments/environment.dart';
+import 'package:origination/models/applicant/applicant_search_specification.dart';
 import 'package:origination/models/applicant_dto.dart';
 import 'package:origination/models/entity_configuration.dart';
 import 'package:origination/models/namevalue_dto.dart';
@@ -422,6 +423,37 @@ class LoanApplicationService {
           list.add(app);
         }
         return list;
+      } else {
+        throw Exception(response);
+      }
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  Future<List<ApplicantDTO>> searchSpecificationApplicant(ApplicantSearchSpecification search, String sortDirection) async {
+    String endpoint = "api/application/applicant/search";
+
+    // Build query parameters from non-null properties
+    Map<String, String> queryParams = {};
+    if (search.firstName != null) queryParams['firstName'] = search.firstName!;
+    if (search.branch != null) queryParams['branch'] = search.branch!;
+    if (search.mobile != null) queryParams['mobileNumber'] = search.mobile!;
+    if (search.ownedBy != null) queryParams['ownedBy'] = search.ownedBy!;
+    if (search.gender != null) queryParams['gender'] = search.gender!;
+    if (sortDirection.isNotEmpty) queryParams['sort'] = 'createdDate,$sortDirection';
+
+    // Convert the query parameters to a query string
+    String queryString = Uri(queryParameters: queryParams).query;
+
+    // Combine the endpoint with the query string
+    String url = '$endpoint?$queryString';
+
+    try {
+      final response = await authInterceptor.get(Uri.parse(url));
+      if (response.statusCode == 200) {
+        List<dynamic> data = json.decode(response.body);
+        return data.map((branch) => ApplicantDTO.fromJson(branch)).toList();
       } else {
         throw Exception(response);
       }

@@ -77,4 +77,18 @@ class UsersService {
       throw Exception(e);
     }
   }
+  Future<List<User>> findAll() async {
+    String endpoint = "api/user-management/users";
+    try {
+      final response = await authInterceptor.get(Uri.parse(endpoint));
+      if (response.statusCode == 200) {
+        List<dynamic> data = json.decode(response.body);
+        return data.map((branch) => User.fromJson(branch)).toList();
+      } else {
+        throw Exception('Failed to load users: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
 }

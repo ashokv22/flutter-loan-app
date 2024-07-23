@@ -6,6 +6,7 @@ import 'package:origination/models/utils/server_type.dart';
 import 'package:origination/screens/admin/configs/config_controllers.dart';
 import 'package:origination/screens/admin/reference_codes/reference_codes_search.dart';
 import 'package:origination/screens/admin/users/users_list.dart';
+import 'package:origination/screens/app/lead/search_and_filter/applicant_search_and_filter.dart';
 import 'package:origination/screens/app/lead/dedupe/dedupe_form.dart';
 import 'package:origination/screens/sign_in/sign_in.dart';
 import 'package:origination/service/auth_service.dart';
@@ -103,7 +104,10 @@ class SideMenu extends StatelessWidget {
                 title: const Text('Search Lead'),
                 selected: selectedItemIndex == 2,
                 onTap: () {
-                  onItemClicked(2);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const ApplicantSearchAndFilter()),
+                  );
                 },
               ),
               ListTile(
