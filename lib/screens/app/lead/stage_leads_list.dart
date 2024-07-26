@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
+import 'package:origination/core/utils/colorful_app_bar.dart';
 import 'package:origination/models/stage.dart';
 import 'package:origination/models/summaries/leads_list_dto.dart';
 import 'package:origination/screens/app/lead/edit_lead_application.dart';
@@ -75,6 +76,35 @@ class _StageLeadListState extends State<StageLeadList> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Lead List", style: TextStyle(fontSize: 18, textBaseline: TextBaseline.alphabetic)),
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+              gradient: ColorAppBar.getGradient(stage)
+              // gradient: stage.toLowerCase() == "lead" ? const LinearGradient(
+              //   begin: Alignment.topCenter,
+              //   end: Alignment.bottomCenter,
+              //   colors: [Color(0xFF00861D), Colors.white],
+              // ) : stage == "Pending for CIBIL Approval" ? const LinearGradient(
+              //     begin: Alignment.topCenter,
+              //     end: Alignment.bottomCenter,
+              //     colors: [Colors.redAccent, Colors.white]
+              // ) : stage.toLowerCase() == "SUBMITTED" ? const LinearGradient(
+              //     begin: Alignment.topCenter,
+              //     end: Alignment.bottomCenter,
+              //     colors: [Colors.deepPurple, Colors.deepPurpleAccent]
+              // ) : stage.toLowerCase() == "APPROVED" ? const LinearGradient(
+              //     begin: Alignment.topCenter,
+              //     end: Alignment.bottomCenter,
+              //     colors: [Color.fromARGB(255, 173, 1, 185), Color.fromARGB(255, 238, 0, 255)]
+              // ) : stage.toLowerCase() == "WAITING_FOR_APPROVAL" ? const LinearGradient(
+              //     begin: Alignment.topCenter,
+              //     end: Alignment.bottomCenter,
+              //     colors: [Color.fromARGB(255, 254, 18, 30), Color.fromARGB(255, 250, 146, 0)]
+              // ) :
+              // const LinearGradient(
+              //     colors: [Colors.blue, Colors.blueAccent]
+              // )
+          ),
+        ),
         actions: [
           IconButton(
             onPressed: () {
@@ -85,19 +115,7 @@ class _StageLeadListState extends State<StageLeadList> {
       ),
       body: Container(
         decoration: BoxDecoration(
-        //   gradient: isDarkTheme
-        // ? null // No gradient for dark theme, use a single color
-        // : const LinearGradient(
-        //     begin: Alignment.topLeft,
-        //     end: Alignment.bottomRight,
-        //     colors: [
-        //       Colors.white,
-        //       Color.fromRGBO(193, 248, 245, 1),
-        //       Color.fromRGBO(184, 182, 253, 1),
-        //       Color.fromRGBO(62, 58, 250, 1),
-        //     ],
-        //   ),
-          color: isDarkTheme ? Colors.black38 : null
+          color: isDarkTheme ? Colors.black38 : Colors.white
         ),
         child: Column(
           children: [
@@ -168,18 +186,24 @@ class _StageLeadListState extends State<StageLeadList> {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 customSnackBar(isDarkTheme, "Lead is Rejected ${applicant.id}"),
                               );
-                            } else if (applicant.status == "SUBMITTED") {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                customSnackBar(isDarkTheme, "Lead is Submitted ${applicant.id}"),
-                              );
-                            } else if (applicant.status == "REWORK") {
+                            } 
+                            // else if (applicant.status == "SUBMITTED") {
+                            //   ScaffoldMessenger.of(context).showSnackBar(
+                            //     customSnackBar(isDarkTheme, "Lead is Submitted ${applicant.id}"),
+                            //   );
+                            // } 
+                            else if (applicant.status == "REWORK") {
                               Navigator.push(context, MaterialPageRoute(builder: (context) => Rework(id: applicant.id)));
                             }
-                            else if (['LEAD', 'WAITING_FOR_APPROVAL', 'APPROVED'].contains(applicant.status)) {
+                            // else if (['LEAD', 'WAITING_FOR_APPROVAL', 'APPROVED'].contains(applicant.status)) {
+                            //   Navigator.push(context, MaterialPageRoute(builder: (context) => EditLead(id: applicant.id, applicantId: int.parse(applicant.applicantId))));
+                            // } else {
+                            //   Navigator.push(context, MaterialPageRoute(builder: (context) => MainSectionsData(id: applicant.id, completedSections: 10)));
+                            // }
+                            else {
                               Navigator.push(context, MaterialPageRoute(builder: (context) => EditLead(id: applicant.id, applicantId: int.parse(applicant.applicantId))));
-                            } else {
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => MainSectionsData(id: applicant.id, completedSections: 10)));
                             } 
+
                           },
                           child: Container(
                             // margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),

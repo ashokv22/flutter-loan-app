@@ -106,11 +106,26 @@ class LoginPendingService {
       final response = await authInterceptor.delete(url);
       logger.i('Response: $response');
       if (response.statusCode != 200) {
-        logger.e('Failed to delete section: ${response.statusCode}');
-        throw Exception('Failed to delete section: ${response.statusCode}');
+        logger.e('Failed to delete section: ${response.statusCode}, ${response.body}');
+        throw Exception('Failed to delete section: ${response.statusCode}, ${response.body}');
       }
     } catch (error) {
       // An error occurred while deleting section, show error in bottom sheet
+      logger.e('Error deleting section: $error');
+      rethrow;
+    }
+  }
+
+  Future<void> deleteAllSections(int loanApplicationId) async {
+    final url = Uri.parse('api/application/loanApplication/allSections/$loanApplicationId');
+    try {
+      final response = await authInterceptor.delete(url);
+      logger.i('Response: $response');
+      if (response.statusCode != 200) {
+        logger.e('Failed to delete section: ${response.statusCode}, ${response.body}');
+        throw Exception('Failed to delete section: ${response.statusCode}, ${response.body}');
+      }
+    } catch (error) {
       logger.e('Error deleting section: $error');
       rethrow;
     }

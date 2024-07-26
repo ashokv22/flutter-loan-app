@@ -2,5 +2,8 @@
     "editor.formatOnSave": false,
     "[dart]": {
         "editor.formatOnSave": false
-    }    
+    },
+    "editor.autoClosingBrackets": "always",
+    "editor.formatOnPaste": true,
+    "editor.formatOnSaveMode": "modificationsIfAvailable"
 }

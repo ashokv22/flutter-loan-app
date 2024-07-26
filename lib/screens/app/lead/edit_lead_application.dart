@@ -90,6 +90,15 @@ class _EditLeadState extends State<EditLead> {
       appBar: AppBar(
         leading: IconButton(onPressed: () {Navigator.pop(context);}, icon: const Icon(CupertinoIcons.arrow_left)),
         title: const Text("Edit Lead", style: TextStyle(fontSize: 18)),
+          flexibleSpace: Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [Colors.orangeAccent, Colors.white],
+              ),
+            ),
+          ),
       ),
       body: Container(
         decoration: BoxDecoration(

@@ -4,6 +4,7 @@ import 'package:logger/logger.dart';
 import 'package:origination/models/login_flow/sections/loan_application_entity.dart';
 import 'package:origination/screens/app/bureau/screens/bureau_check_list.dart';
 import 'package:origination/screens/app/login_pending/main_sections/document_upload/document_upload_main.dart';
+import 'package:origination/screens/app/login_pending/main_sections/helper_widgets/confirm_delete_all_sections.dart';
 import 'package:origination/screens/app/login_pending/main_sections/helper_widgets/confirm_delete_sheet.dart';
 import 'package:origination/screens/app/login_pending/main_sections/helper_widgets/submit_dialog.dart';
 import 'package:origination/screens/app/login_pending/main_sections/post_sanction/post_sanction_main.dart';
@@ -33,6 +34,7 @@ class _MainSectionsDataState extends State<MainSectionsData> {
   late Future<LoanApplicationEntity> leadsSummaryFuture;
   var logger = Logger();
   bool isFinished = false;
+  bool isKyCompleted = false;
 
   @override
   void initState() {
@@ -85,6 +87,31 @@ class _MainSectionsDataState extends State<MainSectionsData> {
       appBar: AppBar(
         leading: IconButton(onPressed: () {Navigator.pop(context);}, icon: const Icon(CupertinoIcons.arrow_left)),
         title: const Text("Details", style: TextStyle(fontSize: 16)),
+        actions: [
+          IconButton(
+            // onPressed: deleteMainSectionSheet(widget.id),
+            onPressed: () {
+              showModalBottomSheet(
+                context: context,
+                builder: (context) => SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  child: ConfirmDeleteAllSections(
+                    onDeleted: () {
+                      refreshScreen();
+                    },
+                    loanApplicationId: widget.id,
+                    isKycCompleted: isKyCompleted
+                  ),
+                ),
+              );
+            },
+            icon: const HeroIcon(
+              HeroIcons.trash,
+              color: Colors.red,
+              size: 22
+            )
+          )
+        ],
       ),
       body: RefreshIndicator(
         onRefresh: refreshScreen,
@@ -148,6 +175,7 @@ class _MainSectionsDataState extends State<MainSectionsData> {
                                 itemBuilder: (context, index) {
                                   LoanSection section = entity.loanSections[index];
                                   String title = section.sectionName;
+                                  isKyCompleted = entity.loanSections.length > 1 ? true : false;
                                   return GestureDetector(
                                     onTap: () {
                                       // if (section.dependencies!.isNotEmpty) {
