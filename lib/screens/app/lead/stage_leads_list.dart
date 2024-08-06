@@ -78,31 +78,7 @@ class _StageLeadListState extends State<StageLeadList> {
         title: const Text("Lead List", style: TextStyle(fontSize: 18, textBaseline: TextBaseline.alphabetic)),
         flexibleSpace: Container(
           decoration: BoxDecoration(
-              gradient: ColorAppBar.getGradient(stage)
-              // gradient: stage.toLowerCase() == "lead" ? const LinearGradient(
-              //   begin: Alignment.topCenter,
-              //   end: Alignment.bottomCenter,
-              //   colors: [Color(0xFF00861D), Colors.white],
-              // ) : stage == "Pending for CIBIL Approval" ? const LinearGradient(
-              //     begin: Alignment.topCenter,
-              //     end: Alignment.bottomCenter,
-              //     colors: [Colors.redAccent, Colors.white]
-              // ) : stage.toLowerCase() == "SUBMITTED" ? const LinearGradient(
-              //     begin: Alignment.topCenter,
-              //     end: Alignment.bottomCenter,
-              //     colors: [Colors.deepPurple, Colors.deepPurpleAccent]
-              // ) : stage.toLowerCase() == "APPROVED" ? const LinearGradient(
-              //     begin: Alignment.topCenter,
-              //     end: Alignment.bottomCenter,
-              //     colors: [Color.fromARGB(255, 173, 1, 185), Color.fromARGB(255, 238, 0, 255)]
-              // ) : stage.toLowerCase() == "WAITING_FOR_APPROVAL" ? const LinearGradient(
-              //     begin: Alignment.topCenter,
-              //     end: Alignment.bottomCenter,
-              //     colors: [Color.fromARGB(255, 254, 18, 30), Color.fromARGB(255, 250, 146, 0)]
-              // ) :
-              // const LinearGradient(
-              //     colors: [Colors.blue, Colors.blueAccent]
-              // )
+            gradient: ColorAppBar.getGradient(stage, isDarkTheme)
           ),
         ),
         actions: [

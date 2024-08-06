@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:origination/models/applicant/entity_state_manager.dart';
 import 'package:origination/models/summaries/leads_list_dto.dart';
+import 'package:origination/screens/app/login_pending/main_sections/main_sections_data.dart';
 import 'package:origination/service/loan_application_service.dart';
 import 'package:origination/service/login_flow_service.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -171,124 +172,134 @@ class _SubmittedAndRefreshState extends State<SubmittedAndRefresh> {
                                     )
                                   ],
                           ),
-                          child: Column(
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Row(
-                                    children: [
-                                      SizedBox(
-                                        width: 55,
-                                        height: 55,
-                                        child: ClipRRect(
-                                            borderRadius: BorderRadius.circular(50),
-                                            child: Image.asset(
-                                              'assets/images/female-${randomNumber.toString().padLeft(2, '0')}.jpg',
-                                              fit: BoxFit.cover,
-                                            )),
-                                      ),
-                                      const SizedBox(width: 10),
-                                      Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          SizedBox(
-                                            width: 150,
-                                            child: Text(
-                                              applicant.name,
-                                              style: TextStyle(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.w500,
-                                                color: isDarkTheme
-                                                    ? Colors.blueAccent[400]
-                                                    : const Color.fromARGB(255, 3, 71, 244),
-                                                overflow: TextOverflow.ellipsis
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => MainSectionsData(id: applicant.id, completedSections: 10)));
+                            },
+                            child: Column(
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        SizedBox(
+                                          width: 55,
+                                          height: 55,
+                                          child: ClipRRect(
+                                              borderRadius: BorderRadius.circular(50),
+                                              child: Image.asset(
+                                                'assets/images/female-${randomNumber.toString().padLeft(2, '0')}.jpg',
+                                                fit: BoxFit.cover,
+                                              )),
+                                        ),
+                                        const SizedBox(width: 10),
+                                        Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            SizedBox(
+                                              width: 150,
+                                              child: InkWell(
+                                                onTap: () {
+                                                  Navigator.push(context, MaterialPageRoute(builder: (context) => MainSectionsData(id: applicant.id, completedSections: 10)));
+                                                },
+                                                child: Text(
+                                                  applicant.name,
+                                                  style: TextStyle(
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.w500,
+                                                    color: isDarkTheme
+                                                        ? Colors.blueAccent[400]
+                                                        : const Color.fromARGB(255, 3, 71, 244),
+                                                    overflow: TextOverflow.ellipsis
+                                                  ),
+                                                ),
                                               ),
                                             ),
-                                          ),
-                                          Text(
-                                            applicant.mobile,
-                                            style: TextStyle(
-                                              color: Theme.of(context).textTheme.displayMedium!.color,
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.w400,
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            width: 150,
-                                            child: Text(
-                                              "ID: ${applicant.id}, AppID:${applicant.applicantId}",
+                                            Text(
+                                              applicant.mobile,
                                               style: TextStyle(
-                                                fontSize: 12,
                                                 color: Theme.of(context).textTheme.displayMedium!.color,
+                                                fontSize: 12,
                                                 fontWeight: FontWeight.w400,
                                               ),
-                                              maxLines: 1,
-                                              softWrap: false,
-                                              overflow: TextOverflow.ellipsis,
                                             ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        timeago.format(applicant.createdDate, allowFromNow: true),
-                                        style: TextStyle(
-                                            color: Theme.of(context).textTheme.displayMedium!.color,
-                                            fontSize: 10,
-                                            fontWeight: FontWeight.w500,
-                                            overflow: TextOverflow.ellipsis),
-                                      ),
-                                      SizedBox(
-                                        width: 100,
-                                        child: Text(
-                                          applicant.model,
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            color: Theme.of(context).textTheme.displayMedium!.color,
-                                            fontWeight: FontWeight.w300,
-                                          ),
-                                          overflow: TextOverflow.ellipsis,
+                                            SizedBox(
+                                              width: 150,
+                                              child: Text(
+                                                "ID: ${applicant.id}, AppID:${applicant.applicantId}",
+                                                style: TextStyle(
+                                                  fontSize: 12,
+                                                  color: Theme.of(context).textTheme.displayMedium!.color,
+                                                  fontWeight: FontWeight.w400,
+                                                ),
+                                                maxLines: 1,
+                                                softWrap: false,
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                            ),
+                                          ],
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 10,),
-                              SizedBox(
-                                width: double.infinity,
-                                height: 40,
-                                child: MaterialButton(
-                                  autofocus: false,
-                                  onPressed: () {
-                                    refreshStatus(index, applicant.id);
-                                  },
-                                  color: const Color.fromARGB(255, 3, 71, 244),
-                                  textColor: Colors.white,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(30.0),
-                                  ),
-                                  child: isButtonLoading[index] ? const SizedBox(
-                                      width: 20.0,
-                                      height: 20.0,
-                                      child: CircularProgressIndicator(
-                                        strokeWidth: 2.0,
-                                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                                      ),
-                                    )
-                                : const Text(
-                                    'Refresh Status',
-                                    style: TextStyle(color: Colors.white),
+                                      ],
+                                    ),
+                                    Column(
+                                      crossAxisAlignment: CrossAxisAlignment.end,
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          timeago.format(applicant.createdDate, allowFromNow: true),
+                                          style: TextStyle(
+                                              color: Theme.of(context).textTheme.displayMedium!.color,
+                                              fontSize: 10,
+                                              fontWeight: FontWeight.w500,
+                                              overflow: TextOverflow.ellipsis),
+                                        ),
+                                        SizedBox(
+                                          width: 100,
+                                          child: Text(
+                                            applicant.model,
+                                            style: TextStyle(
+                                              fontSize: 12,
+                                              color: Theme.of(context).textTheme.displayMedium!.color,
+                                              fontWeight: FontWeight.w300,
+                                            ),
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 10,),
+                                SizedBox(
+                                  width: double.infinity,
+                                  height: 40,
+                                  child: MaterialButton(
+                                    autofocus: false,
+                                    onPressed: () {
+                                      refreshStatus(index, applicant.id);
+                                    },
+                                    color: const Color.fromARGB(255, 3, 71, 244),
+                                    textColor: Colors.white,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(30.0),
+                                    ),
+                                    child: isButtonLoading[index] ? const SizedBox(
+                                        width: 20.0,
+                                        height: 20.0,
+                                        child: CircularProgressIndicator(
+                                          strokeWidth: 2.0,
+                                          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                        ),
+                                      )
+                                  : const Text(
+                                      'Refresh Status',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ));
                     },
                   ),

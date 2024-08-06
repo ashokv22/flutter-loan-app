@@ -5,14 +5,14 @@ class Environment {
 
   //Default Dev server
   static String baseUrl = 'http://13.127.65.162/server/';
-  static ServerType currentServerType = ServerType.Local;
+  static ServerType currentServerType = ServerType.Ft7Dev;
 
   static void setServerType(ServerType type) async {
     
     switch (type) {
       case ServerType.Local:
-        // baseUrl = 'http://172.20.10.3:8080/';     // Local
-        baseUrl = 'http://10.0.2.2:8080/';       // Laptop hotspot
+        baseUrl = 'http://172.20.10.2:8080/';     // Local
+        // baseUrl = 'http://10.0.2.2:8080/';       // Laptop hotspot
         // baseUrl = 'http://192.168.2.120:8080/';     // Local Anusha
         break;
       case ServerType.LocalStatic:

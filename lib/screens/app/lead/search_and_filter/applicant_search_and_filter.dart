@@ -143,7 +143,7 @@ class _ApplicantSearchAndFilterState extends State<ApplicantSearchAndFilter> {
                         Color.fromRGBO(128, 126, 250, 1.0),
                         Colors.white,
                       ]),
-            color: isDarkTheme ? Colors.black38 : null),
+            color: isDarkTheme ? Colors.black38 : Colors.white60),
         child: Column(
           children: [
             const SizedBox(height: 10),
@@ -154,8 +154,7 @@ class _ApplicantSearchAndFilterState extends State<ApplicantSearchAndFilter> {
                   onPressed: () {
                     Navigator.pop(context);
                   },
-                  icon: const Icon(CupertinoIcons.arrow_left,
-                      color: Colors.black),
+                  icon: Icon(CupertinoIcons.arrow_left, color: isDarkTheme ? Colors.white70 : Colors.black),
                 ),
                 Expanded(
                   child: Padding(
@@ -165,7 +164,7 @@ class _ApplicantSearchAndFilterState extends State<ApplicantSearchAndFilter> {
                       child: TextField(
                         controller: _searchController,
                         decoration: InputDecoration(
-                          fillColor: Colors.white,
+                          fillColor: isDarkTheme ? Colors.black : Colors.white70,
                           filled: true,
                           hintText: 'Search...',
                           hintStyle:
@@ -211,23 +210,22 @@ class _ApplicantSearchAndFilterState extends State<ApplicantSearchAndFilter> {
                     const SizedBox(width: 10),
                     InkWell(
                       onTap: () => _showSortBySheet(context),
-                      child: const Chip(
+                      child: Chip(
                         label: Row(children: [
                           Text('Sort By',
                             style: TextStyle(
                                 fontWeight: FontWeight.w400,
                                 fontSize: 14,
-                                color: Colors.black
+                                color: isDarkTheme ? Colors.white70 : Colors.black
                             )
                           ),
-                          Icon(Icons.keyboard_arrow_down_rounded, size: 20, color: Colors.black)
+                          Icon(Icons.keyboard_arrow_down_rounded, size: 20, color: isDarkTheme ? Colors.white70 : Colors.black)
                         ]),
-                        backgroundColor: Colors.white,
-                        padding:
-                            EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+                        backgroundColor: isDarkTheme ? Colors.black : Colors.white,
+                        padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(20)),
-                          side: BorderSide(color: Colors.black12),
+                          borderRadius: const BorderRadius.all(Radius.circular(20)),
+                          side: BorderSide(color: isDarkTheme ? Colors.white70 : Colors.black12),
                         ),
                       ),
                     ),
@@ -237,36 +235,39 @@ class _ApplicantSearchAndFilterState extends State<ApplicantSearchAndFilter> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => FilterSheet(
-                                    branchController: _branchController,
-                                    mobileNumberController:
-                                        _mobileNumberController,
-                                    ownedByController: _ownedByController,
-                                    genderController: _genderController,
-                                    clearAllFilters: _clearAllFilters,
-                                  )),
+                            builder: (context) => FilterSheet(
+                              branchController: _branchController,
+                              mobileNumberController: _mobileNumberController,
+                              ownedByController: _ownedByController,
+                              genderController: _genderController,
+                              clearAllFilters: _clearAllFilters,
+                              isDarkTheme: isDarkTheme
+                            )
+                          ),
                         );
                       },
-                      child: const Chip(
+                      child: Chip(
                         label: Row(
                           children: [
-                            HeroIcon(HeroIcons.adjustmentsHorizontal,
-                                size: 18, color: Colors.black),
+                            HeroIcon(
+                              HeroIcons.adjustmentsHorizontal,
+                              size: 18, color: isDarkTheme ? Colors.white70 : Colors.black
+                            ),
                             Text(
                               'Filter',
                               style: TextStyle(
                                   fontWeight: FontWeight.w400,
                                   fontSize: 14,
-                                  color: Colors.black),
+                                  color: isDarkTheme ? Colors.white70 : Colors.black
+                              ),
                             )
                           ],
                         ),
-                        backgroundColor: Colors.white,
-                        padding:
-                            EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+                        backgroundColor: isDarkTheme ? Colors.black : Colors.white,
+                        padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
                         shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(20)),
-                            side: BorderSide(color: Colors.black12)),
+                            borderRadius: const BorderRadius.all(Radius.circular(20)),
+                            side: BorderSide(color: isDarkTheme ? Colors.white70 : Colors.black12)),
                       ),
                     )
                   ],

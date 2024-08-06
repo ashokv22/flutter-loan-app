@@ -1,43 +1,25 @@
 import 'package:flutter/material.dart';
 
 class ColorAppBar {
-  static const Map<String, LinearGradient> gradientMap = {
-    "Lead": LinearGradient(
-      begin: Alignment.topCenter,
-      end: Alignment.bottomCenter,
-      colors: [Color(0xFF00861D), Colors.white],
-    ),
-    "Pending for CIBIL Approval": LinearGradient(
-      begin: Alignment.topCenter,
-      end: Alignment.bottomCenter,
-      colors: [Colors.deepOrange, Colors.white],
-    ),
-    "Submitted - Credit Decision Pending": LinearGradient(
-      begin: Alignment.topCenter,
-      end: Alignment.bottomCenter,
-      colors: [Colors.deepPurple, Colors.deepPurpleAccent],
-    ),
-    "Pre Lead": LinearGradient(
-      begin: Alignment.topCenter,
-      end: Alignment.bottomCenter,
-      colors: [Color.fromARGB(255, 173, 1, 185), Colors.white],
-    ),
-    "Rejected": LinearGradient(
-      begin: Alignment.topCenter,
-      end: Alignment.bottomCenter,
-      colors: [Color.fromARGB(255, 254, 18, 30), Colors.white],
-    ),
-    "Credit - Rework": LinearGradient(
-      begin: Alignment.topCenter,
-      end: Alignment.bottomCenter,
-      colors: [Color.fromARGB(255, 255, 250, 12), Colors.white],
-    ),
-    "default": LinearGradient(
-      colors: [Colors.white, Colors.white],
-    ),
+
+  static const Map<String, Color> gradientStartColors = {
+    "lead": Color(0xFF00861D),
+    "pending for cibil approval": Colors.deepOrange,
+    "submitted - credit decision pending": Colors.deepPurple,
+    "pre lead": Color.fromARGB(255, 173, 1, 185),
+    "rejected": Color.fromARGB(255, 254, 18, 30),
+    "credit - rework": Color.fromARGB(255, 255, 250, 12),
+    "default": Colors.white,
   };
 
-  static LinearGradient getGradient(String stage) {
-    return gradientMap[stage] ?? gradientMap["default"]!;
+  static LinearGradient getGradient(String stage, bool isDarkTheme) {
+    Color startColor = gradientStartColors[stage.toLowerCase()] ?? gradientStartColors["default"]!;
+    Color endColor = isDarkTheme ? Colors.black : Colors.white;
+
+    return LinearGradient(
+      begin: Alignment.topCenter,
+      end: Alignment.bottomCenter,
+      colors: [startColor, endColor],
+    );
   }
 }

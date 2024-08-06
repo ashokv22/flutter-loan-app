@@ -192,13 +192,17 @@ class _RelatedPartiesState extends State<RelatedParties> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        section.displayTitle,
-                        style: TextStyle(
-                          color: Theme.of(context).textTheme.displayMedium!.color,
-                          fontSize: 16,
-                          fontFamily: 'Inter',
-                          fontWeight: FontWeight.w500,
+                      SizedBox(
+                        width: 250,
+                        child: Text(
+                          section.displayTitle,
+                          style: TextStyle(
+                            color: Theme.of(context).textTheme.displayMedium!.color,
+                            fontSize: 16,
+                            fontFamily: 'Inter',
+                            fontWeight: FontWeight.w500,
+                          ),
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
                       if (section.status == "COMPLETED")
