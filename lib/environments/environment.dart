@@ -30,6 +30,9 @@ class Environment {
       case ServerType.KlPreprod:
         baseUrl = 'http://43.204.197.141/kl-uat/';
         break;
+      case ServerType.KlPreprodPT:
+        baseUrl = 'http://13.200.225.216/kl-uat/';
+        break;
       case ServerType.KlUat:
         baseUrl = 'http://13.234.158.142/kl-uat/'; // KL UAT LOS
         break;

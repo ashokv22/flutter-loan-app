@@ -6,6 +6,7 @@ import 'package:origination/core/utils/colorful_app_bar.dart';
 import 'package:origination/models/stage.dart';
 import 'package:origination/models/summaries/leads_list_dto.dart';
 import 'package:origination/screens/app/lead/edit_lead_application.dart';
+import 'package:origination/screens/app/lead/edit_main_bottomsheet.dart';
 import 'package:origination/screens/app/lead/search_new.dart';
 import 'package:origination/screens/app/lead_dashboard/rework.dart';
 import 'package:origination/screens/app/login_pending/main_sections/main_sections_data.dart';
@@ -75,7 +76,7 @@ class _StageLeadListState extends State<StageLeadList> {
     logger.d(stage);
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Lead List", style: TextStyle(fontSize: 18, textBaseline: TextBaseline.alphabetic)),
+        title: Text(widget.stage, style: const TextStyle(fontSize: 18, textBaseline: TextBaseline.alphabetic)),
         flexibleSpace: Container(
           decoration: BoxDecoration(
             gradient: ColorAppBar.getGradient(stage, isDarkTheme)
@@ -162,24 +163,20 @@ class _StageLeadListState extends State<StageLeadList> {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 customSnackBar(isDarkTheme, "Lead is Rejected ${applicant.id}"),
                               );
-                            } 
-                            // else if (applicant.status == "SUBMITTED") {
-                            //   ScaffoldMessenger.of(context).showSnackBar(
-                            //     customSnackBar(isDarkTheme, "Lead is Submitted ${applicant.id}"),
-                            //   );
-                            // } 
-                            else if (applicant.status == "REWORK") {
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => Rework(id: applicant.id)));
                             }
-                            // else if (['LEAD', 'WAITING_FOR_APPROVAL', 'APPROVED'].contains(applicant.status)) {
-                            //   Navigator.push(context, MaterialPageRoute(builder: (context) => EditLead(id: applicant.id, applicantId: int.parse(applicant.applicantId))));
-                            // } else {
-                            //   Navigator.push(context, MaterialPageRoute(builder: (context) => MainSectionsData(id: applicant.id, completedSections: 10)));
-                            // }
-                            else {
+                            else if (
+                                widget.stage.toLowerCase() == "all" ||
+                                widget.stage.toLowerCase() == "lead" ||
+                                widget.stage.toLowerCase() == "pending for cibil approval"
+                            ) {
                               Navigator.push(context, MaterialPageRoute(builder: (context) => EditLead(id: applicant.id, applicantId: int.parse(applicant.applicantId))));
-                            } 
-
+                            }
+                            else {
+                              showModalBottomSheet(
+                                context: context,
+                                builder: (context) => EditMainBottomSheet(applicant: applicant),
+                              );
+                            }
                           },
                           child: Container(
                             // margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),

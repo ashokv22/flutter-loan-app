@@ -6,5 +6,6 @@ enum ServerType {
   Development,
   Staging,
   KlPreprod,
+  KlPreprodPT,
   KlUat
 }
