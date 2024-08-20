@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
+import 'package:origination/models/login_flow/sections/document_upload/document_specification.dart';
 import 'package:origination/models/login_flow/sections/loan_application_entity.dart';
 import 'package:origination/screens/app/login_pending/main_sections/document_upload.dart';
 import 'package:origination/service/login_flow_service.dart';
@@ -9,9 +10,11 @@ class DocumentUploadMain extends StatefulWidget {
   const DocumentUploadMain({
     super.key,
     required this.id,
+    required this.selectedType,
   });
 
   final int id;
+  final String selectedType;
 
   @override
   State<DocumentUploadMain> createState() => _DocumentUploadMainState();
@@ -111,10 +114,11 @@ class _DocumentUploadMainState extends State<DocumentUploadMain> {
                                     LoanSection section =
                                         entity.loanSections[index];
                                     String title = section.sectionName;
+                                    EntityTypes entityType = getEntityType(widget.selectedType);
 
                                     return GestureDetector(
                                       onTap: () {
-                                        Navigator.push(context, MaterialPageRoute(builder: (context) => DocumentUpload(id: widget.id, category: title)));  
+                                        Navigator.push(context, MaterialPageRoute(builder: (context) => DocumentUpload(id: widget.id, category: (DocumentCategory.values[index]), entityType: entityType)));
                                       },
                                       child: Container(
                                         margin: const EdgeInsets.symmetric(
@@ -190,5 +194,18 @@ class _DocumentUploadMainState extends State<DocumentUploadMain> {
         ),
       ),
     );
+  }
+
+  EntityTypes getEntityType(String selectedType) {
+    logger.i("SelectedType: $selectedType");
+    if (selectedType == "APPLICANT") {
+      return EntityTypes.APPLICANT;
+    } else if (selectedType == "CO_APPLICANT") {
+      return EntityTypes.CO_APPLICANT;
+    } else if (selectedType == "GUARANTOR") {
+      return EntityTypes.GUARANTOR;
+    } else {
+      return EntityTypes.LOAN;
+    }
   }
 }

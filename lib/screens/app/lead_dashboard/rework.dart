@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:heroicons/heroicons.dart';
 import 'package:logger/logger.dart';
+import 'package:origination/models/login_flow/sections/document_upload/document_specification.dart';
 import 'package:origination/models/login_flow/sections/loan_application_entity.dart';
 import 'package:origination/screens/app/bureau/screens/bureau_check_list.dart';
 import 'package:origination/screens/app/login_pending/main_sections/deviations.dart';
@@ -130,7 +131,7 @@ class _ReworkState extends State<Rework> {
                                         Navigator.push(context, MaterialPageRoute(builder: (context) => RelatedParties(id: widget.id,)));
                                       }
                                       else if (section.sectionName == "DocumentUpload") {
-                                        Navigator.push(context, MaterialPageRoute(builder: (context) => DocumentUploadMain(id: widget.id)));  
+                                        Navigator.push(context, MaterialPageRoute(builder: (context) => DocumentUploadMain(id: widget.id, selectedType: EntityTypes.LOAN.name,)));
                                       } 
                                       else if (section.sectionName == "CheckList") {
                                         Navigator.push(context, MaterialPageRoute(builder: (context) => BureauCheckList(id: widget.id,)));  

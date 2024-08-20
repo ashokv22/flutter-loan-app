@@ -7,6 +7,7 @@ class DocumentSpecificationDTO {
   DocumentCategory category;
   int productId;
   bool? isMandatory;
+  EntityTypes? entityTypes;
   DocumentSpecificationDTO({
     required this.category,
     required this.productId,
@@ -21,5 +22,14 @@ class DocumentSpecificationDTO {
 
 enum DocumentCategory {
   PRE_SANCTION, 
-  POST_SANCTION
+  POST_SANCTION,
+  POST_DISBURSEMENT,
+  APPLICANT
+}
+
+enum EntityTypes {
+  APPLICANT,
+  CO_APPLICANT,
+  GUARANTOR,
+  LOAN
 }

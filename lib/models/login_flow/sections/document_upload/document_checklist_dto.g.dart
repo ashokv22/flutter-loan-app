@@ -41,4 +41,6 @@ Map<String, dynamic> _$DocumentChecklistDTOToJson(
 const _$DocumentCategoryEnumMap = {
   DocumentCategory.PRE_SANCTION: 'PRE_SANCTION',
   DocumentCategory.POST_SANCTION: 'POST_SANCTION',
+  DocumentCategory.POST_DISBURSEMENT: 'POST_DISBURSEMENT',
+  DocumentCategory.APPLICANT: 'APPLICANT',
 };

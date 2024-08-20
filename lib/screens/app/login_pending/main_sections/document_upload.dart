@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:origination/models/login_flow/sections/document_upload/document_checklist_dto.dart';
+import 'package:origination/models/login_flow/sections/document_upload/document_specification.dart';
 import 'package:origination/screens/app/login_pending/main_sections/helper_widgets/image_full_view.dart';
 import 'package:origination/service/login_flow_service.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -15,10 +16,12 @@ class DocumentUpload extends StatefulWidget {
     super.key,
     required this.id,
     required this.category,
+    required this.entityType,
   });
 
   final int id;
-  final String category;
+  final DocumentCategory category;
+  final EntityTypes entityType;
 
   @override
   State<DocumentUpload> createState() => _DocumentUploadState();
@@ -41,7 +44,7 @@ class _DocumentUploadState extends State<DocumentUpload> {
 
   Future<List<DocumentChecklistDTO>> fetchApplicationDocuments() async {
     try {
-      return await loginFlowService.getApplicationDocuments(widget.id, widget.category);
+      return await loginFlowService.getApplicationDocuments(widget.id, widget.category, widget.entityType);
     } catch (e) {
       throw Exception('Failed to fetch application documents: $e');
     }
@@ -61,7 +64,7 @@ class _DocumentUploadState extends State<DocumentUpload> {
                 Navigator.pop(context);
               },
               icon: const Icon(CupertinoIcons.arrow_left)),
-          title: Text(widget.category, style: const TextStyle(fontSize: 18))),
+          title: Text(widget.category.name, style: const TextStyle(fontSize: 18))),
       body: Container(
         decoration: BoxDecoration(
           gradient: isDarkTheme
@@ -147,13 +150,14 @@ class _DocumentListItemState extends State<DocumentListItem> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Flexible(
+              Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(widget.document.documentName,
-                        style: const TextStyle(
-                            fontSize: 14, fontWeight: FontWeight.w600)),
+                    Text("${widget.document.documentName}${widget.document.isMandatory? "*" : ""}",
+                        style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+                    Text(widget.document.isMandatory? "*" : "", style: const TextStyle(color: Colors.red),),
+                    Text(widget.document.documentDescription, style: const TextStyle(fontSize: 12)),
                   ],
                 ),
               ),

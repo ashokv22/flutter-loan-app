@@ -7,9 +7,12 @@ import 'package:logger/logger.dart';
 // import 'package:origination/core/widgets/dropdown.dart';
 import 'package:origination/core/widgets/custom/related_parties_dropdown.dart';
 import 'package:origination/models/bureau_check/bc_check_list_dto.dart';
+import 'package:origination/models/login_flow/sections/document_upload/document_specification.dart';
 import 'package:origination/models/login_flow/sections/loan_application_entity.dart';
 import 'package:origination/models/login_flow/sections/related_party/primary_kyc_dto.dart';
 import 'package:origination/models/login_flow/sections/related_party/secondary_kyc_dto.dart';
+import 'package:origination/screens/app/login_pending/main_sections/document_upload.dart';
+import 'package:origination/screens/app/login_pending/main_sections/document_upload/document_upload_main.dart';
 import 'package:origination/screens/app/login_pending/main_sections/helper_widgets/confirm_delete_sheet.dart';
 import 'package:origination/screens/app/login_pending/related_parties_sections/primary_kyc/primary_kyc_home.dart';
 import 'package:origination/screens/app/login_pending/related_parties_sections/secondary_kyc/secondary_kyc_home.dart';
@@ -169,6 +172,9 @@ class _RelatedPartiesState extends State<RelatedParties> {
                       } else {
                         Navigator.push(context, MaterialPageRoute(builder: (context) => SecondaryKycHome(relatedPartyId: relatedPartyId, type: selectedType)));
                       }
+                    }
+                    else if (section.sectionName == "RelatedPartyDocumentUpload") {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => DocumentUpload(id: relatedPartyId, category: DocumentCategory.APPLICANT, entityType: EntityTypes.APPLICANT,)));
                     }
                     else {
                       Navigator.push(context, MaterialPageRoute(builder: (context) => SectionScreenRP(id: relatedPartyId, entitySubType: selectedType, title: section.sectionName,)));

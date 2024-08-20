@@ -15,6 +15,8 @@ import 'package:origination/models/login_flow/sections/validate_dto.dart';
 import 'package:origination/screens/sign_in/auth_interceptor.dart';
 import 'package:origination/service/auth_service.dart';
 
+import '../models/login_flow/sections/document_upload/document_specification.dart';
+
 final authService = AuthService();
 
 class LoginPendingService {
@@ -161,8 +163,8 @@ class LoginPendingService {
     return response;
   }
 
-  Future<List<DocumentChecklistDTO>> getApplicationDocuments(int applicationId, String category) async {
-    String endpoint = "api/application/documents/$applicationId/checklist?category=$category";
+  Future<List<DocumentChecklistDTO>> getApplicationDocuments(int applicationId, DocumentCategory category, EntityTypes entityType) async {
+    String endpoint = "api/application/documents/$applicationId/checklist?productId=1&category=${category.name}&entityTypes=${entityType.name}";
     try {
       final response = await authInterceptor.get(Uri.parse(endpoint));
       if (response.statusCode == 200) {
