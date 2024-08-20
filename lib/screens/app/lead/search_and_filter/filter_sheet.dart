@@ -1,3 +1,4 @@
+import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:origination/screens/admin/users/users_service.dart';
 import 'package:origination/screens/app/lead/search_and_filter/filters/branch_filter.dart';
@@ -14,6 +15,7 @@ class FilterSheet extends StatefulWidget {
     required this.ownedByController,
     required this.genderController,
     required this.clearAllFilters,
+    required this.isDarkTheme,
   });
 
   final TextEditingController branchController;
@@ -21,6 +23,7 @@ class FilterSheet extends StatefulWidget {
   final TextEditingController ownedByController;
   final TextEditingController genderController;
   final VoidCallback clearAllFilters;
+  final bool isDarkTheme;
 
   @override
   _FilterSheetState createState() => _FilterSheetState();
@@ -63,19 +66,19 @@ class _FilterSheetState extends State<FilterSheet> {
           children: <Widget>[
             Container(
               width: 100,
-              color: Colors.grey[100],
+              color: widget.isDarkTheme ? Colors.grey[900] : Colors.grey[100],
               child: ListView.builder(
                 itemCount: filters.length,
                 itemBuilder: (context, index) {
                   return Container(
                     color: _selectedIndex == index
-                        ? Colors.white
+                        ? widget.isDarkTheme ? Colors.black : Colors.white70
                         : Colors.transparent,
                     child: ListTile(
                       title: Text(
                         filters[index],
                         style: TextStyle(
-                          color: Colors.black,
+                          color: widget.isDarkTheme ? Colors.white70 : Colors.black,
                           fontWeight: _selectedIndex == index
                               ? FontWeight.bold
                               : FontWeight.normal,

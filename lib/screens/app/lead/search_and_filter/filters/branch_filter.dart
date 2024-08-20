@@ -3,6 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:origination/models/admin/branch/branch_dto.dart';
 import 'package:origination/service/admin/branch/branch_service.dart';
+import 'package:badges/badges.dart' as badges;
+// badges.Badge(
+// position: badges.BadgePosition.topEnd(top: -12, end: -2),
+// badgeContent: Text(''),
+// child: Icon(Icons.notifications),
+// )
 
 class BranchFilter extends StatefulWidget {
   const BranchFilter({
