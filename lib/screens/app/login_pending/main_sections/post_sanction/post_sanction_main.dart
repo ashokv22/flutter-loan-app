@@ -21,7 +21,7 @@ class PostSanctionMainList extends StatefulWidget {
 }
 
 class _PostSanctionMainListState extends State<PostSanctionMainList> {
-  late LoanAdditionalDataDTO loanAdditionalData;
+  LoanAdditionalDataDTO? loanAdditionalData;
   final loginPendingService = LoginPendingService();
   final logger = Logger();
 
@@ -39,7 +39,7 @@ class _PostSanctionMainListState extends State<PostSanctionMainList> {
     if (response.statusCode == 200) {
       final jsonResponse = json.decode(response.body);
       loanAdditionalData = LoanAdditionalDataDTO.fromJson(jsonResponse);
-      logger.i(loanAdditionalData.toJson());
+      logger.i(loanAdditionalData!.toJson());
     } else {}
   }
 
@@ -79,8 +79,7 @@ class _PostSanctionMainListState extends State<PostSanctionMainList> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => BeneficiaryDetails(
-                            applicantId: widget.applicantId, loanAdditionalData: loanAdditionalData)));
+                        builder: (context) => BeneficiaryDetails(applicantId: widget.applicantId, loanAdditionalData: loanAdditionalData)));
               },
               child: Container(
                 margin:

@@ -99,3 +99,7 @@ class LoanAdditionalDataDTO {
   Map<String, dynamic> toJson() => _$LoanAdditionalDataDTOToJson(this);
 
 }
+
+enum ADRAdditionalType {
+  PRE_SANCTION, POST_DISBURSEMENT, POST_SANCTION_SECURITY_CHECK, POST_E_SIGN
+}

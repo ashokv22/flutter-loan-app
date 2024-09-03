@@ -4,8 +4,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:origination/core/widgets/reference_code.dart';
-import 'package:origination/core/widgets/text_input.dart';
 import 'package:origination/models/login_flow/sections/post_sanction/loan_additional_data.dart';
+import 'package:origination/screens/app/login_pending/main_sections/post_sanction/customer_form.dart';
+import 'package:origination/screens/app/login_pending/main_sections/post_sanction/dealer_form.dart';
 import 'package:origination/service/login_flow_service.dart';
 
 // ignore: must_be_immutable
@@ -28,7 +29,6 @@ class _BeneficiaryDetailsState extends State<BeneficiaryDetails> {
   final _dealerFormKey = GlobalKey<FormState>();
 
   final logger = Logger();
-
   final loginPendingService = LoginPendingService();
 
   // Controllers
@@ -57,19 +57,26 @@ class _BeneficiaryDetailsState extends State<BeneficiaryDetails> {
   void initState() {
     super.initState();
     logger.i(widget.loanAdditionalData?.toJson());
-    if (widget.loanAdditionalData?.id != null) {
+    if (widget.loanAdditionalData != null) {
       if (widget.loanAdditionalData!.preSanction!) {
         if (widget.loanAdditionalData!.beneficiaryType == 'Customer') {
           setState(() {
-            _selectedRole.text = widget.loanAdditionalData!.beneficiaryType!;
             _customerNameController.text = widget.loanAdditionalData!.bankAccountType!;
             _accountNumberController.text = widget.loanAdditionalData!.beneficiaryAccountNumber!;
             _reEnterAccountNumberController.text = widget.loanAdditionalData!.beneficiaryAccountNumber!;
             _ifscCodeController.text = widget.loanAdditionalData!.beneficiaryIfscCode!;
             _bankNameController.text = widget.loanAdditionalData!.beneficiaryName!;
           });
-
+        } else if (widget.loanAdditionalData!.beneficiaryType == 'Dealer') {
+          setState(() {
+            _dealerNameController.text = widget.loanAdditionalData!.beneficiaryName!;
+            _dealerAccountNumberController.text = widget.loanAdditionalData!.beneficiaryAccountNumber!;
+            _dealerIfscCodeController.text = widget.loanAdditionalData!.beneficiaryIfscCode!;
+          });
         }
+        setState(() {
+          _selectedRole.text = widget.loanAdditionalData!.beneficiaryType!;
+        });
       }
     }
   }
@@ -103,6 +110,7 @@ class _BeneficiaryDetailsState extends State<BeneficiaryDetails> {
         if (response.statusCode == 200) {
           final data = Map<String, String>.from(json.decode(response.body));
           setState(() {
+            _selectedRole.text = data['beneficiaryType'] ?? '';
             _dealerNameController.text = data['dealerName'] ?? '';
             _dealerCodeController.text = data['dealerCode'] ?? '';
             _stateController.text = data['state'] ?? '';
@@ -140,7 +148,21 @@ class _BeneficiaryDetailsState extends State<BeneficiaryDetails> {
     setState(() {
       _isLoading = true;
     });
-    await Future.delayed(const Duration(seconds: 2));
+    // await Future.delayed(const Duration(seconds: 2));
+    if (_selectedRole.text == 'Customer') {
+      widget.loanAdditionalData!.beneficiaryType = 'Customer';
+      widget.loanAdditionalData!.beneficiaryAccountNumber = _accountNumberController.text;
+      widget.loanAdditionalData!.beneficiaryIfscCode = _ifscCodeController.text;
+      widget.loanAdditionalData!.beneficiaryName = _customerNameController.text;
+    } else {
+      widget.loanAdditionalData!.beneficiaryType = 'Beneficiary';
+      widget.loanAdditionalData!.beneficiaryAccountNumber = _dealerAccountNumberController.text;
+      widget.loanAdditionalData!.beneficiaryIfscCode = _dealerIfscCodeController.text;
+      widget.loanAdditionalData!.beneficiaryName = _dealerNameController.text;
+      widget.loanAdditionalData!.bankAccountType = _accountTypeController.text;
+    }
+    widget.loanAdditionalData!.applicationId = widget.applicantId;
+    
     setState(() {
       _isLoading = false;
     });
@@ -152,9 +174,7 @@ class _BeneficiaryDetailsState extends State<BeneficiaryDetails> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
+            onPressed: () {Navigator.pop(context);},
             icon: const Icon(CupertinoIcons.arrow_left)),
         title: const Text("Post Sanction", style: TextStyle(fontSize: 16)),
       ),
@@ -174,9 +194,7 @@ class _BeneficiaryDetailsState extends State<BeneficiaryDetails> {
             color: isDarkTheme ? Colors.black38 : null),
         child: Column(
           children: [
-            const SizedBox(
-              height: 10,
-            ),
+            const SizedBox(height: 10),
             Expanded(
               child: SingleChildScrollView(
                 child: Padding(
@@ -187,63 +205,19 @@ class _BeneficiaryDetailsState extends State<BeneficiaryDetails> {
                         label: "Beneficiary",
                         referenceCode: "post_sanction_beneficiary_type",
                         controller: _selectedRole,
-                        onChanged: (newValue) =>
-                            onFieldChange(newValue!, _selectedRole),
+                        onChanged: (newValue) => onFieldChange(newValue!, _selectedRole),
                         isEditable: true,
                         isReadable: false,
                         isRequired: true,
                       ),
                       const SizedBox(height: 20),
                       _buildDynamicWidget(),
-                      const SizedBox(height: 20),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 1.0),
-                        child: Align(
-                          alignment: Alignment.bottomCenter,
-                          child: SizedBox(
-                            width: double.infinity,
-                            height: 50,
-                            child: MaterialButton(
-                              onPressed: () {
-                                if (_selectedRole.text == "Dealer") {
-                                  if (_dealerFormKey.currentState!.validate()) {
-                                    onSave();
-                                  }
-                                } else if (_selectedRole.text == "Customer") {
-                                  if (_customerFormKey.currentState!
-                                      .validate()) {
-                                    onSave();
-                                  }
-                                }
-                              },
-                              color: const Color.fromARGB(255, 6, 139, 26),
-                              textColor: Colors.white,
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 16.0),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30.0),
-                              ),
-                              child: _isLoading
-                                  ? const SizedBox(
-                                      width: 15.0,
-                                      height: 15.0,
-                                      child: CircularProgressIndicator(
-                                        strokeWidth: 2.0,
-                                        valueColor:
-                                            AlwaysStoppedAnimation<Color>(
-                                                Colors.white),
-                                      ),
-                                    )
-                                  : const Text('Save'),
-                            ),
-                          ),
-                        ),
-                      )
                     ],
                   ),
                 ),
               ),
-            )
+            ),
+            _buildSubmitButton(),
           ],
         ),
       ),
@@ -253,179 +227,74 @@ class _BeneficiaryDetailsState extends State<BeneficiaryDetails> {
   Widget _buildDynamicWidget() {
     switch (_selectedRole.text) {
       case 'Customer':
-        return _buildCustomerForm();
+        return CustomerForm(
+          formKey: _customerFormKey,
+          accountTypeController: _accountTypeController,
+          accountNumberController: _accountNumberController,
+          reEnterAccountNumberController: _reEnterAccountNumberController,
+          ifscCodeController: _ifscCodeController,
+          bankNameController: _bankNameController,
+          onChange: onChange,
+        );
       case 'Dealer':
-        return _buildDealerForm();
+        return DealerForm(
+          formKey: _dealerFormKey,
+          selectedRole: _selectedRole,
+          dealerNameController: _dealerNameController,
+          dealerCodeController: _dealerCodeController,
+          stateController: _stateController,
+          dealerAccountNumberController: _dealerAccountNumberController,
+          dealerIfscCodeController: _dealerIfscCodeController,
+          customerNameController: _customerNameController,
+          dealerBankNameController: _dealerBankNameController,
+          onChange: onChange,
+        );
       default:
         return Container();
     }
   }
 
-  Widget _buildCustomerForm() {
-    return Form(
-      key: _customerFormKey,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Referencecode(
-            label: "Account Type",
-            referenceCode: "post_sanction_account_type",
-            controller: _accountTypeController,
-            onChanged: (newValue) =>
-                onChange(newValue!, _accountTypeController),
-            isEditable: true,
-            isReadable: false,
-            isRequired: true,
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-          TextInput(
-            label: "Account Number",
-            controller: _accountNumberController,
-            onChanged: (newValue) =>
-                onChange(newValue, _accountNumberController),
-            isEditable: true,
-            isReadable: false,
-            isRequired: true,
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-          TextInput(
-            label: "Re-Account Number",
-            controller: _reEnterAccountNumberController,
-            onChanged: (newValue) =>
-                onChange(newValue, _reEnterAccountNumberController),
-            isEditable: true,
-            isReadable: false,
-            isRequired: true,
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-          TextInput(
-            label: "IFSC Code",
-            controller: _ifscCodeController,
-            onChanged: (newValue) => onChange(newValue, _ifscCodeController),
-            isEditable: true,
-            isReadable: false,
-            isRequired: true,
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-          TextInput(
-            label: "Bank Name",
-            controller: _bankNameController,
-            onChanged: (newValue) => onChange(newValue, _bankNameController),
-            isEditable: true,
-            isReadable: false,
-            isRequired: true,
-          ),
-        ],
+  Widget _buildSubmitButton() {
+  return Padding (
+    padding: const EdgeInsets.all(8.0),
+    child: SizedBox(
+      width: double.infinity,
+      height: 50,
+      child: MaterialButton(
+        onPressed: () {
+          if (_selectedRole.text == "Dealer") {
+            if (_dealerFormKey.currentState!.validate()) {
+              onSave();
+            }
+          } else if (_selectedRole.text == "Customer") {
+            if (_customerFormKey.currentState!
+                .validate()) {
+              onSave();
+            }
+          }
+        },
+        color: const Color.fromARGB(255, 6, 139, 26),
+        textColor: Colors.white,
+        padding:
+            const EdgeInsets.symmetric(vertical: 16.0),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(30.0),
+        ),
+        child: _isLoading
+          ? const SizedBox(
+              width: 15.0,
+              height: 15.0,
+              child: CircularProgressIndicator(
+                strokeWidth: 2.0,
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+              ),
+            )
+          : const Text('Save'),
+        ),
       ),
     );
   }
 
-  Widget _buildDealerForm() {
-    return Form(
-      key: _dealerFormKey,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Referencecode(
-            label: "Account Type",
-            referenceCode: "post_sanction_account_type",
-            controller: _selectedRole,
-            onChanged: (newValue) => onChange(newValue!, _selectedRole),
-            isEditable: true,
-            isReadable: false,
-            isRequired: true,
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-          TextInput(
-            label: "Dealer Name",
-            controller: _dealerNameController,
-            onChanged: (newValue) =>
-                onChange(newValue, _accountNumberController),
-            isEditable: true,
-            isReadable: false,
-            isRequired: true,
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-          TextInput(
-            label: "Dealer Code",
-            controller: _dealerCodeController,
-            onChanged: (newValue) =>
-                onChange(newValue, _reEnterAccountNumberController),
-            isEditable: true,
-            isReadable: false,
-            isRequired: true,
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-          TextInput(
-            label: "State",
-            controller: _stateController,
-            onChanged: (newValue) => onChange(newValue, _ifscCodeController),
-            isEditable: true,
-            isReadable: false,
-            isRequired: true,
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-          TextInput(
-            label: "Account Number",
-            controller: _dealerAccountNumberController,
-            onChanged: (newValue) => onChange(newValue, _bankNameController),
-            isEditable: true,
-            isReadable: false,
-            isRequired: true,
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-          TextInput(
-            label: "IFSC Code",
-            controller: _dealerIfscCodeController,
-            onChanged: (newValue) => onChange(newValue, _bankNameController),
-            isEditable: true,
-            isReadable: false,
-            isRequired: true,
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-          TextInput(
-            label: "Customer Name",
-            controller: _customerNameController,
-            onChanged: (newValue) => onChange(newValue, _bankNameController),
-            isEditable: true,
-            isReadable: false,
-            isRequired: true,
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-          TextInput(
-            label: "Bank Name",
-            controller: _dealerBankNameController,
-            onChanged: (newValue) => onChange(newValue, _bankNameController),
-            isEditable: true,
-            isReadable: false,
-            isRequired: true,
-          ),
-        ],
-      ),
-    );
-  }
 
   void onChange(String value, TextEditingController controller) {
     controller.text = value;
