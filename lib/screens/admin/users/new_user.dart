@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:heroicons/heroicons.dart';
 import 'package:origination/core/widgets/email_input.dart';
 import 'package:origination/core/widgets/text_input.dart';
 import 'package:origination/models/admin/user.dart';
@@ -16,15 +17,26 @@ class _CreateUserState extends State<CreateUser> {
 
   final _formKey = GlobalKey<FormState>(); // Form
   final userService = UsersService();
+  bool showPassword = false;
+  bool showConfirmPassword = false;
   // key
-  final TextEditingController _loginController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
-  final TextEditingController _firstNameController = TextEditingController();
-  final TextEditingController _lastNameController = TextEditingController();
-  final TextEditingController _emailAddressController = TextEditingController();
-  final TextEditingController _imageController = TextEditingController();
-  final TextEditingController _hrmsController = TextEditingController();
+  final _loginController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
+  final _firstNameController = TextEditingController();
+  final _middleNameController = TextEditingController();
+  final _lastNameController = TextEditingController();
+  final _emailAddressController = TextEditingController();
+  final _imageController = TextEditingController();
+  final _hrmsController = TextEditingController();
+  final role = TextEditingController();
+  final branchCode = TextEditingController();
+  final branchSetCode = TextEditingController();
+  final salutation = TextEditingController();
+  final smName = TextEditingController();
+  final smHrmsId = TextEditingController();
+  final stateHeadName = TextEditingController();
+  final stateHeadHrmsId = TextEditingController();
 
   bool _isLoading = false;
   String _errorMessage = '';
@@ -44,7 +56,15 @@ class _CreateUserState extends State<CreateUser> {
       activated: true,
       langKey: 'en',
       role: 'admin',
-      hrmsId: _hrmsController.text
+      hrmsId: _hrmsController.text,
+      salutation: salutation.text,
+      smName: smName.text,
+      smHrmsId: smHrmsId.text,
+      stateHeadName: stateHeadName.text,
+      stateHeadHrmsId: stateHeadHrmsId.text,
+      branchCode: branchCode.text,
+      branchSetCode: branchSetCode.text,
+      authorities: ['ROLE_ADMIN'],
     );
 
     try {
@@ -81,6 +101,18 @@ class _CreateUserState extends State<CreateUser> {
           ),
         );
       });
+  }
+
+  void toggleShowPassword() {
+    setState(() {
+      showPassword = !showPassword; // Toggle the showPassword flag
+    });
+  }
+
+  void toggleShowConfirmPassword() {
+    setState(() {
+      showConfirmPassword = !showConfirmPassword; // Toggle the showPassword flag
+    });
   }
 
   @override
@@ -120,12 +152,16 @@ class _CreateUserState extends State<CreateUser> {
                         SizedBox(
                           child: TextFormField(
                             controller: _passwordController,
-                            decoration: const InputDecoration(
+                            decoration: InputDecoration(
                               labelText: 'Password',
                               border: OutlineInputBorder(),
                               contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+                              suffixIcon: IconButton(
+                                icon: HeroIcon(showPassword ? HeroIcons.eye : HeroIcons.eyeSlash),
+                                onPressed: toggleShowPassword
+                              )
                             ),
-                            obscureText: true,
+                            obscureText: !showPassword,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return 'Password is required.';
@@ -138,12 +174,16 @@ class _CreateUserState extends State<CreateUser> {
                         SizedBox(
                           child: TextFormField(
                             controller: _confirmPasswordController,
-                            decoration: const InputDecoration(
+                            decoration: InputDecoration(
                               labelText: 'Confirm Password',
-                              border: OutlineInputBorder(),
-                              contentPadding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+                              border: const OutlineInputBorder(),
+                              contentPadding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+                              suffixIcon: IconButton(
+                                  icon: HeroIcon(showConfirmPassword ? HeroIcons.eye : HeroIcons.eyeSlash),
+                                  onPressed: toggleShowConfirmPassword
+                              )
                             ),
-                            obscureText: true,
+                            obscureText: !showConfirmPassword,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return 'Password is required.';
@@ -155,6 +195,8 @@ class _CreateUserState extends State<CreateUser> {
                         const SizedBox(height: 10.0),
                         TextInput(label: "First Name", controller: _firstNameController, onChanged: (newValue) {}, isEditable: true, isReadable: false, isRequired: true,),
                         const SizedBox(height: 10.0),
+                        TextInput(label: "Middle Name", controller: _middleNameController, onChanged: (newValue) {}, isEditable: true, isReadable: false, isRequired: true,),
+                        const SizedBox(height: 10.0),
                         TextInput(label: "Last Name", controller: _lastNameController, onChanged: (newValue) {}, isEditable: true, isReadable: false, isRequired: true,),
                         const SizedBox(height: 10.0),
                         EmailInput(label: "Email", controller: _emailAddressController, onChanged: (newValue) {}, isEditable: true, isReadable: false, isRequired: true,),
@@ -162,7 +204,23 @@ class _CreateUserState extends State<CreateUser> {
                         TextInput(label: "ImageURL", controller: _imageController, onChanged: (newValue) {}, isEditable: true, isReadable: false, isRequired: false,),
                         const SizedBox(height: 10.0),
                         TextInput(label: "HRMS", controller: _hrmsController, onChanged: (newValue) {}, isEditable: true, isReadable: false, isRequired: false,),
-                        const SizedBox(height: 70.0),
+                        const SizedBox(height: 10.0),
+                        TextInput(label: "Role", controller: role, onChanged: (newValue) {}, isEditable: true, isReadable: false, isRequired: true,),
+                        const SizedBox(height: 10.0),
+                        TextInput(label: "Branch code", controller: branchCode, onChanged: (newValue) {}, isEditable: true, isReadable: false, isRequired: true,),
+                        const SizedBox(height: 10.0),
+                        TextInput(label: "Branch set code", controller: branchSetCode, onChanged: (newValue) {}, isEditable: true, isReadable: false, isRequired: true,),
+                        const SizedBox(height: 10.0),
+                        TextInput(label: "Salutation", controller: salutation, onChanged: (newValue) {}, isEditable: true, isReadable: false, isRequired: true,),
+                        const SizedBox(height: 10.0),
+                        TextInput(label: "SM Name", controller: smName, onChanged: (newValue) {}, isEditable: true, isReadable: false, isRequired: true,),
+                        const SizedBox(height: 10.0),
+                        TextInput(label: "SM HRMS", controller: smHrmsId, onChanged: (newValue) {}, isEditable: true, isReadable: false, isRequired: false,),
+                        const SizedBox(height: 10.0),
+                        TextInput(label: "State Head Name", controller: stateHeadName, onChanged: (newValue) {}, isEditable: true, isReadable: false, isRequired: true,),
+                        const SizedBox(height: 10.0),
+                        TextInput(label: "State Head HRMS", controller: stateHeadHrmsId, onChanged: (newValue) {}, isEditable: true, isReadable: false, isRequired: false,),
+                        const SizedBox(height: 10.0),
                       ],
                     ),
                   ),

@@ -21,7 +21,23 @@ User _$UserFromJson(Map<String, dynamic> json) => User(
       role: json['role'] as String?,
       branchCode: json['branchCode'] as String?,
       branchSetCode: json['branchSetCode'] as String?,
+      activationKey: json['activationKey'] as String?,
+      resetKey: json['resetKey'] as String?,
       hrmsId: json['hrmsId'] as String?,
+      salutation: json['salutation'] as String?,
+      hrmsUpdatedOn: json['hrmsUpdatedOn'] == null
+          ? null
+          : DateTime.parse(json['hrmsUpdatedOn'] as String),
+      smName: json['smName'] as String?,
+      smHrmsId: json['smHrmsId'] as String?,
+      stateHeadName: json['stateHeadName'] as String?,
+      stateHeadHrmsId: json['stateHeadHrmsId'] as String?,
+      authorities: (json['authorities'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList(),
+      branchDTO: json['branchDTO'] == null
+          ? null
+          : BranchDTO.fromJson(json['branchDTO'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
@@ -39,5 +55,15 @@ Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
       'role': instance.role,
       'branchCode': instance.branchCode,
       'branchSetCode': instance.branchSetCode,
+      'activationKey': instance.activationKey,
+      'resetKey': instance.resetKey,
       'hrmsId': instance.hrmsId,
+      'salutation': instance.salutation,
+      'hrmsUpdatedOn': instance.hrmsUpdatedOn?.toIso8601String(),
+      'smName': instance.smName,
+      'smHrmsId': instance.smHrmsId,
+      'stateHeadName': instance.stateHeadName,
+      'stateHeadHrmsId': instance.stateHeadHrmsId,
+      'authorities': instance.authorities,
+      'branchDTO': instance.branchDTO,
     };
