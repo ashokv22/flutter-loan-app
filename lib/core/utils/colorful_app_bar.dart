@@ -14,7 +14,7 @@ class ColorAppBar {
 
   static LinearGradient getGradient(String stage, bool isDarkTheme) {
     Color startColor = gradientStartColors[stage.toLowerCase()] ?? gradientStartColors["default"]!;
-    Color endColor = isDarkTheme ? Colors.black : Colors.white;
+    Color endColor = isDarkTheme ? Colors.black12 : Colors.white;
 
     return LinearGradient(
       begin: Alignment.topCenter,

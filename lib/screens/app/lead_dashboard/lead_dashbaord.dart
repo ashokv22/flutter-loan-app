@@ -247,7 +247,7 @@ class _LeadDashboardState extends State<LeadDashboard> {
                               onTap: () {
                                 if (summary.stage.toLowerCase() == "login pending") {
                                   Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPendingHome(total: summary.count)));
-                                } else if (summary.stage == ApplicationStage.SUBMITTED.name || summary.stage.toLowerCase().startsWith("submitted")) {
+                                } else if (summary.stage == ApplicationStage.SUBMITTED.name || summary.stage.toLowerCase().startsWith("submitted") || summary.stage.toLowerCase() == "credit - rework") {
                                   Navigator.push(context, MaterialPageRoute(builder: (context) => SubmittedAndRefresh(stage: summary.stage)));
                                 } else {
                                   Navigator.push(context, MaterialPageRoute(builder: (context) => StageLeadList(stage: summary.stage)));

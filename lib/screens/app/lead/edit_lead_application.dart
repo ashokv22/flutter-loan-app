@@ -91,27 +91,30 @@ class _EditLeadState extends State<EditLead> {
         leading: IconButton(onPressed: () {Navigator.pop(context);}, icon: const Icon(CupertinoIcons.arrow_left)),
         title: const Text("Edit Lead", style: TextStyle(fontSize: 18)),
           flexibleSpace: Container(
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
-                colors: [Colors.orangeAccent, Colors.white],
+                colors: [Colors.orangeAccent, isDarkTheme ? Colors.black12 : Colors.white],
               ),
             ),
           ),
       ),
       body: Container(
-        decoration: BoxDecoration(
-          gradient: isDarkTheme
-              ? null // No gradient for dark theme, use a single color
+        decoration: isDarkTheme ? 
+          const BoxDecoration(color: Colors.black12)
+          : BoxDecoration(
+            gradient: isDarkTheme
+              ? null
               : const LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
                 Colors.white,
                 Color.fromRGBO(193, 248, 245, 1),
-              ]),
-        ),
+              ],
+            ),
+          ),
         child: Column(
           children: [
             Expanded(

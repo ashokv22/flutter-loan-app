@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:logger/logger.dart';
 import 'package:origination/models/admin/user.dart';
 import 'package:origination/screens/admin/reference_codes/reference_code_edit.dart';

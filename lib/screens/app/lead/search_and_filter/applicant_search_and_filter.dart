@@ -6,6 +6,7 @@ import 'package:heroicons/heroicons.dart';
 import 'package:logger/logger.dart';
 import 'package:origination/models/applicant/applicant_search_specification.dart';
 import 'package:origination/models/applicant_dto.dart';
+import 'package:origination/screens/app/lead/edit_lead_application.dart';
 import 'package:origination/service/loan_application_service.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
@@ -294,7 +295,9 @@ class _ApplicantSearchAndFilterState extends State<ApplicantSearchAndFilter> {
                     ApplicantDTO applicant = _applicants[index];
                     int randomNumber = getRandomNumber();
                     return GestureDetector(
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => EditLead(id: applicant.id!, applicantId: int.parse(applicant.applicantId!))));
+                      },
                       child: Container(
                         padding: const EdgeInsets.all(8.0),
                         child: Row(

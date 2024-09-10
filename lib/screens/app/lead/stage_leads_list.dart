@@ -92,7 +92,7 @@ class _StageLeadListState extends State<StageLeadList> {
       ),
       body: Container(
         decoration: BoxDecoration(
-          color: isDarkTheme ? Colors.black38 : Colors.white
+          color: isDarkTheme ? Colors.black12 : Colors.white
         ),
         child: Column(
           children: [

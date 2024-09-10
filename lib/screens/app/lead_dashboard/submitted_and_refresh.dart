@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:origination/models/applicant/entity_state_manager.dart';
 import 'package:origination/models/summaries/leads_list_dto.dart';
+import 'package:origination/screens/app/lead_dashboard/move_stage.dart';
 import 'package:origination/screens/app/login_pending/main_sections/main_sections_data.dart';
 import 'package:origination/service/loan_application_service.dart';
 import 'package:origination/service/login_flow_service.dart';
@@ -103,7 +104,7 @@ class _SubmittedAndRefreshState extends State<SubmittedAndRefresh> {
               children: [
                 Text(esm.toJson().toString()),
                 if (esm.status == "PENDING") ...[
-                  const Text("Submitted waitign for Approval"),
+                  const Text("Submitted waiting for Approval"),
                 ] else if (esm.status == "SUBMITTED") ...[
                   const Text('Still in submitted')
                 ]
@@ -271,32 +272,56 @@ class _SubmittedAndRefreshState extends State<SubmittedAndRefresh> {
                                   ],
                                 ),
                                 const SizedBox(height: 10,),
-                                SizedBox(
-                                  width: double.infinity,
-                                  height: 40,
-                                  child: MaterialButton(
-                                    autofocus: false,
-                                    onPressed: () {
-                                      refreshStatus(index, applicant.id);
-                                    },
-                                    color: const Color.fromARGB(255, 3, 71, 244),
-                                    textColor: Colors.white,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(30.0),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    MaterialButton(
+                                      autofocus: false,
+                                      onPressed: () {
+                                        refreshStatus(index, applicant.id);
+                                      },
+                                      color: const Color.fromARGB(255, 3, 71, 244),
+                                      textColor: Colors.white,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(30.0),
+                                      ),
+                                      child: isButtonLoading[index] ? const SizedBox(
+                                          width: 20.0,
+                                          height: 20.0,
+                                          child: CircularProgressIndicator(
+                                            strokeWidth: 2.0,
+                                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                          ),
+                                        )
+                                    : const Text(
+                                        'Refresh Status',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
                                     ),
-                                    child: isButtonLoading[index] ? const SizedBox(
-                                        width: 20.0,
-                                        height: 20.0,
-                                        child: CircularProgressIndicator(
-                                          strokeWidth: 2.0,
-                                          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                                        ),
-                                      )
-                                  : const Text(
-                                      'Refresh Status',
-                                      style: TextStyle(color: Colors.white),
+                                    const SizedBox(width: 10),
+                                    MaterialButton(
+                                      autofocus: false,
+                                      onPressed: () {
+                                        // refreshStatus(index, applicant.id);
+                                        showModalBottomSheet(
+                                            context: context,
+                                            builder: (context) => ConstrainedBox(
+                                              constraints: const BoxConstraints(minHeight: 150),
+                                              child: SizedBox(
+                                                  width: MediaQuery.of(context).size.width,
+                                                  child: MoveStage(applicantId: applicant.id),
+                                              ),
+                                            )
+                                        );
+                                      },
+                                      color: const Color.fromARGB(255, 6, 139, 26),
+                                      textColor: Colors.white,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(30.0),
+                                      ),
+                                      child: const Text('Move Stage', style: TextStyle(color: Colors.white)),
                                     ),
-                                  ),
+                                  ],
                                 ),
                               ],
                             ),
