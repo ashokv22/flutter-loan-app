@@ -18,6 +18,13 @@ DocumentChecklistDTO _$DocumentChecklistDTOFromJson(
       isKycDocument: json['isKycDocument'] as bool?,
       vendorDocumentName: json['vendorDocumentName'] as String?,
       kycCategory: json['kycCategory'] as String?,
+      entityTypes:
+          $enumDecodeNullable(_$EntityTypesEnumMap, json['entityTypes']),
+      uploadType: $enumDecodeNullable(_$UploadTypeEnumMap, json['uploadType']),
+      supportedExtensions: (json['supportedExtensions'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList(),
+      isUpload: json['isUpload'] as bool?,
       uploadedDocuments: (json['uploadedDocuments'] as List<dynamic>?)
           ?.map((e) => ApplicationDocuments.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -35,6 +42,10 @@ Map<String, dynamic> _$DocumentChecklistDTOToJson(
       'isKycDocument': instance.isKycDocument,
       'vendorDocumentName': instance.vendorDocumentName,
       'kycCategory': instance.kycCategory,
+      'entityTypes': _$EntityTypesEnumMap[instance.entityTypes],
+      'uploadType': _$UploadTypeEnumMap[instance.uploadType],
+      'supportedExtensions': instance.supportedExtensions,
+      'isUpload': instance.isUpload,
       'uploadedDocuments': instance.uploadedDocuments,
     };
 
@@ -43,4 +54,18 @@ const _$DocumentCategoryEnumMap = {
   DocumentCategory.POST_SANCTION: 'POST_SANCTION',
   DocumentCategory.POST_DISBURSEMENT: 'POST_DISBURSEMENT',
   DocumentCategory.APPLICANT: 'APPLICANT',
+};
+
+const _$EntityTypesEnumMap = {
+  EntityTypes.APPLICANT: 'APPLICANT',
+  EntityTypes.CO_APPLICANT: 'CO_APPLICANT',
+  EntityTypes.GUARANTOR: 'GUARANTOR',
+  EntityTypes.LOAN: 'LOAN',
+};
+
+const _$UploadTypeEnumMap = {
+  UploadType.CAPTURE: 'CAPTURE',
+  UploadType.UPLOAD: 'UPLOAD',
+  UploadType.BOTH: 'BOTH',
+  UploadType.VIEW: 'VIEW',
 };

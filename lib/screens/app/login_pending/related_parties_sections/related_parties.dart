@@ -174,7 +174,7 @@ class _RelatedPartiesState extends State<RelatedParties> {
                       }
                     }
                     else if (section.sectionName == "RelatedPartyDocumentUpload") {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => DocumentUpload(id: relatedPartyId, category: DocumentCategory.APPLICANT, entityType: EntityTypes.APPLICANT,)));
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => DocumentUpload(id: relatedPartyId, category: DocumentCategory.APPLICANT, entityType: EntityTypes.APPLICANT, applicantId: widget.id)));
                     }
                     else {
                       Navigator.push(context, MaterialPageRoute(builder: (context) => SectionScreenRP(id: relatedPartyId, entitySubType: selectedType, title: section.sectionName,)));

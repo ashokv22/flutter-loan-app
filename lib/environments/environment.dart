@@ -11,12 +11,12 @@ class Environment {
     
     switch (type) {
       case ServerType.Local:
-        baseUrl = 'http://172.20.10.2:8080/';     // Local
+        baseUrl = 'http://192.168.137.1:8080/';     // Local
         // baseUrl = 'http://10.0.2.2:8080/';       // Laptop hotspot
         // baseUrl = 'http://192.168.2.120:8080/';     // Local Anusha
         break;
       case ServerType.LocalStatic:
-        baseUrl = 'http://192.168.2.216:8080/';   // Local static
+        baseUrl = 'http://192.168.2.135:8080/';   // Local static
         break;
       case ServerType.Ft7Dev:
         baseUrl = 'http://13.127.65.162/ft7-sandbox/'; // Ft7Dev

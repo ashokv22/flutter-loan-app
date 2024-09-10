@@ -9,13 +9,13 @@ part of 'application_documents.dart';
 ApplicationDocuments _$ApplicationDocumentsFromJson(
         Map<String, dynamic> json) =>
     ApplicationDocuments(
-      id: (json['id'] as num).toInt(),
-      documentChecklistId: (json['documentChecklistId'] as num).toInt(),
-      documentName: json['documentName'] as String,
-      documentDescription: json['documentDescription'] as String,
-      fileId: (json['fileId'] as num).toInt(),
-      applicationId: (json['applicationId'] as num).toInt(),
-      productId: (json['productId'] as num).toInt(),
+      id: (json['id'] as num?)?.toInt(),
+      documentChecklistId: (json['documentChecklistId'] as num?)?.toInt(),
+      documentName: json['documentName'] as String?,
+      documentDescription: json['documentDescription'] as String?,
+      fileId: (json['fileId'] as num?)?.toInt(),
+      applicationId: (json['applicationId'] as num?)?.toInt(),
+      productId: (json['productId'] as num?)?.toInt(),
       status: json['status'] as String?,
       isKycDocument: json['isKycDocument'] as bool?,
       vendorDocumentName: json['vendorDocumentName'] as String?,

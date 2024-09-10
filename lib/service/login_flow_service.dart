@@ -11,6 +11,7 @@ import 'package:origination/models/login_flow/sections/document_upload/document_
 import 'package:origination/models/login_flow/sections/loan_application_entity.dart';
 import 'package:origination/models/login_flow/sections/loan_submit_dto.dart';
 import 'package:origination/models/login_flow/sections/nominee_details.dart';
+import 'package:origination/models/login_flow/sections/post_sanction/loan_additional_data.dart';
 import 'package:origination/models/login_flow/sections/validate_dto.dart';
 import 'package:origination/screens/sign_in/auth_interceptor.dart';
 import 'package:origination/service/auth_service.dart';
@@ -163,8 +164,8 @@ class LoginPendingService {
     return response;
   }
 
-  Future<List<DocumentChecklistDTO>> getApplicationDocuments(int applicationId, DocumentCategory category, EntityTypes entityType) async {
-    String endpoint = "api/application/documents/$applicationId/checklist?productId=1&category=${category.name}&entityTypes=${entityType.name}";
+  Future<List<DocumentChecklistDTO>> getApplicationDocuments(int individualCibilId, DocumentCategory category, EntityTypes entityType, int applicantId) async {
+    String endpoint = "api/application/documents/$applicantId/checklist?productId=1&category=${category.name}&entityTypes=${entityType.name}&individualCibilId=$individualCibilId";
     try {
       final response = await authInterceptor.get(Uri.parse(endpoint));
       if (response.statusCode == 200) {
@@ -173,8 +174,9 @@ class LoginPendingService {
         for (var data in jsonResponse) {
           DocumentChecklistDTO app = DocumentChecklistDTO.fromJson(data);
           list.add(app);
-          logger.i('Total records found: ${list.length}');
+          logger.i('Document: ${app.toJson()}');
         }
+        logger.i('Total records found: ${list.length}');
         return list;
       }
       else {
@@ -254,6 +256,18 @@ class LoginPendingService {
     String endpoint = "api/application/loanAdditionalData/search-applicant/$applicantId";
     try {
       final response = await authInterceptor.get(Uri.parse(endpoint));
+      return response;
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  //ADR
+
+  Future<http.Response> saveLoanAdditionalDataForADR(int applicantId, String additionalType, LoanAdditionalDataDTO data) async {
+    String endpoint = "api/application/loanApplication/loanAdditionalData/$applicantId?additionalType=$additionalType";
+    try {
+      final response = await authInterceptor.post(Uri.parse(endpoint));
       return response;
     } catch (e) {
       throw Exception(e);

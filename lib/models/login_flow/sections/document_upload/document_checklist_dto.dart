@@ -15,6 +15,10 @@ class DocumentChecklistDTO {
   bool? isKycDocument;
   String? vendorDocumentName;
   String? kycCategory;
+  EntityTypes? entityTypes;
+  UploadType? uploadType;
+  List<String>? supportedExtensions;
+  bool? isUpload;
   List<ApplicationDocuments>? uploadedDocuments;
 
   DocumentChecklistDTO({
@@ -27,10 +31,18 @@ class DocumentChecklistDTO {
     this.isKycDocument,
     this.vendorDocumentName,
     this.kycCategory,
+    this.entityTypes,
+    this.uploadType,
+    this.supportedExtensions,
+    this.isUpload,
     this.uploadedDocuments,
   });
 
   factory DocumentChecklistDTO.fromJson(Map<String, dynamic> json) => _$DocumentChecklistDTOFromJson(json);
   Map<String, dynamic> toJson() => _$DocumentChecklistDTOToJson(this);
 
+}
+
+enum UploadType {
+    CAPTURE, UPLOAD, BOTH, VIEW;
 }

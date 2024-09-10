@@ -118,7 +118,7 @@ class _DocumentUploadMainState extends State<DocumentUploadMain> {
 
                                     return GestureDetector(
                                       onTap: () {
-                                        Navigator.push(context, MaterialPageRoute(builder: (context) => DocumentUpload(id: widget.id, category: (DocumentCategory.values[index]), entityType: entityType)));
+                                        Navigator.push(context, MaterialPageRoute(builder: (context) => DocumentUpload(id: widget.id, category: (DocumentCategory.values[index]), entityType: entityType, applicantId: 0,)));
                                       },
                                       child: Container(
                                         margin: const EdgeInsets.symmetric(

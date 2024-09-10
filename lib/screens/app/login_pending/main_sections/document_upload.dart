@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:origination/models/login_flow/sections/document_upload/document_checklist_dto.dart';
 import 'package:origination/models/login_flow/sections/document_upload/document_specification.dart';
+import 'package:origination/screens/app/login_pending/main_sections/document_upload/pdf_view_from_bytes.dart';
 import 'package:origination/screens/app/login_pending/main_sections/helper_widgets/image_full_view.dart';
 import 'package:origination/service/login_flow_service.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -17,11 +18,13 @@ class DocumentUpload extends StatefulWidget {
     required this.id,
     required this.category,
     required this.entityType,
+    required this.applicantId,
   });
 
   final int id;
   final DocumentCategory category;
   final EntityTypes entityType;
+  final int applicantId;
 
   @override
   State<DocumentUpload> createState() => _DocumentUploadState();
@@ -44,7 +47,8 @@ class _DocumentUploadState extends State<DocumentUpload> {
 
   Future<List<DocumentChecklistDTO>> fetchApplicationDocuments() async {
     try {
-      return await loginFlowService.getApplicationDocuments(widget.id, widget.category, widget.entityType);
+      return await loginFlowService.getApplicationDocuments(
+          widget.id, widget.category, widget.entityType, widget.applicantId);
     } catch (e) {
       throw Exception('Failed to fetch application documents: $e');
     }
@@ -64,7 +68,8 @@ class _DocumentUploadState extends State<DocumentUpload> {
                 Navigator.pop(context);
               },
               icon: const Icon(CupertinoIcons.arrow_left)),
-          title: Text(widget.category.name, style: const TextStyle(fontSize: 18))),
+          title:
+              Text(widget.category.name, style: const TextStyle(fontSize: 18))),
       body: Container(
         decoration: BoxDecoration(
           gradient: isDarkTheme
@@ -192,36 +197,42 @@ class _DocumentListItemState extends State<DocumentListItem> {
             children: [
               if (widget.document.uploadedDocuments != null)
                 ...widget.document.uploadedDocuments!
-                    .map((application) => FutureBuilder<Uint8List?>(
-                          future: fetchImage(application.fileId),
+                    .map((application) => FutureBuilder<Map<String, dynamic>>(
+                          future: fetchImage(application.fileId!),
                           builder: (context, imageSnapshot) {
-                            if (imageSnapshot.connectionState ==
-                                ConnectionState.waiting) {
+                            if (imageSnapshot.connectionState == ConnectionState.waiting) {
                               return const CircularProgressIndicator();
-                            } else if (imageSnapshot.hasError) {
-                              return Text('Error: ${imageSnapshot.error}');
-                            } else {
-                              return GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => ImageFullView(
-                                              image: imageSnapshot.data!)));
-                                },
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(6.0),
-                                  child: imageSnapshot.data != null
-                                      ? Image.memory(
-                                          imageSnapshot.data!,
-                                          height: 60,
-                                        )
-                                      : const Text("File not found"),
-                                ),
-                              );
+                            } 
+                            else if (imageSnapshot.hasError) {
+                              return Text('Error: ${imageSnapshot.error}',style: const TextStyle(color: Colors.red));
+                            } 
+                            else if (imageSnapshot.hasData) {
+                              final contentType = imageSnapshot.data!['contentType'];
+                              final bytes = imageSnapshot.data!['bytes'];
+
+                              if (contentType.contains("image")) {
+                                  // return Image.memory(bytes);
+                                  GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(context, MaterialPageRoute(builder: (context) => ImageFullView(image: bytes)));
+                                    },
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(6.0),
+                                      child: Image.memory(bytes, height: 60)
+                                    ),
+                                  );
+                              } else if (contentType.contains("application/pdf")) {
+                                return Center(
+                                  child: PdfViewFromBytes(pdfBytes: imageSnapshot.data!['bytes']),
+                                );
+                              } else {
+                                return Center(child: Text("Unsupported file type: $contentType"));
+                              }
                             }
+                            return const Center(child: Text("File not found", style: TextStyle(color: Colors.red)));
                           },
-                        ))
+                    )
+                )
               else
                 ..._selectedImages.map((image) {
                   return Container(
@@ -242,11 +253,28 @@ class _DocumentListItemState extends State<DocumentListItem> {
     );
   }
 
-  Future<Uint8List?> fetchImage(int fileId) async {
+  Future<Map<String, dynamic>> fetchImage(int fileId) async {
     final response = await LoginPendingService().streamFile(fileId);
     if (response.statusCode == 200) {
-      final imageData = response.bodyBytes;
-      return imageData;
+      String contentType = response.headers['content-type'] ?? 'unknown';
+      Uint8List bytes = response.bodyBytes;
+      
+      if (contentType.contains('multipart/form-data')) {
+        // Extract filename from Content-Disposition header
+        final contentDisposition = response.headers['content-disposition'] ?? '';
+        final filename = RegExp(r'filename\*?=([^;\s]+)').firstMatch(contentDisposition)?.group(1);
+        if (filename != null && filename.endsWith('.jpg')) {
+          return {'contentType': 'image/jpeg', 'bytes': bytes};
+        } else if (filename != null && filename.endsWith('.pdf')) {
+          return {'contentType': 'application/pdf', 'bytes': bytes};
+        } else {
+          throw Exception('Unsupported file type in multipart/form-data');
+        }
+      }
+      return {
+        'contentType': contentType,
+        'bytes': bytes,
+      };
     } else {
       throw Exception('Failed to load image: ${response.reasonPhrase}');
     }
@@ -259,7 +287,7 @@ class _DocumentListItemState extends State<DocumentListItem> {
     setState(() {
       _selectedImages = pickedImages;
     });
-    }
+  }
 
   Future<bool> requestPermission() async {
     final status = await Permission.camera.request();

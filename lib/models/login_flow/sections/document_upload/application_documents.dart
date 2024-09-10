@@ -4,13 +4,13 @@ part 'application_documents.g.dart';
 
 @JsonSerializable()
 class ApplicationDocuments {
-  final int id;
-  final int documentChecklistId;
-  final String documentName;
-  final String documentDescription;
-  final int fileId;
-  final int applicationId;
-  final int productId;
+  final int? id;
+  final int? documentChecklistId;
+  final String? documentName;
+  final String? documentDescription;
+  final int? fileId;
+  final int? applicationId;
+  final int? productId;
   final String? status;
   final bool? isKycDocument;
   final String? vendorDocumentName;

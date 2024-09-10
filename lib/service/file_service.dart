@@ -8,7 +8,7 @@ import 'package:origination/service/auth_service.dart';
 
 final authService = AuthService();
 
-class FileSevice {
+class FileService {
 
   final authInterceptor = AuthInterceptor(http.Client(), authService);
   Logger logger = Logger();

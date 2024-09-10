@@ -72,8 +72,9 @@ class _SignInPageState extends State<SignIn> {
           }
     } on AuthenticationException catch (error) {
       _errorMessage = error.message;
-    } on SocketException {
-      _errorMessage = "Network error. Please check your connection and try again.";
+    } on SocketException catch (error) {
+      logger.e(error.toString());
+      _errorMessage = "Network error. Please check your connection and try again. $error.";
     } catch (error) {
       logger.e(error.toString());
       showDialog(
