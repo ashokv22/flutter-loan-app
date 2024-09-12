@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:logger/logger.dart';
 import 'package:origination/core/widgets/address_fields.dart';
 import 'package:origination/core/widgets/number_input.dart';
@@ -43,9 +44,9 @@ class _NewLeadState extends State<NewLead> {
     });
   }
 
-    void getAccountInfo() async {
-      userData = await authService.getLoggedUser();
-    }
+  void getAccountInfo() async {
+    userData = await authService.getLoggedUser();
+  }
 
   void onSave(EntityConfigurationMetaData entity) async {
     setState(() {
@@ -53,9 +54,12 @@ class _NewLeadState extends State<NewLead> {
     });
 
     try {
-      await applicationService.saveLoanApplication(entity);
-      final currentContext = context;
-      Navigator.pushReplacementNamed(currentContext, '/');
+      final response = await applicationService.saveLoanApplication(entity);
+      if (response.statusCode != 201) {
+        _showErrorBottomSheet(context, response);
+      } else {
+        _navigateToHomePage(context);
+      }
     }
     catch (e) {
       logger.e('An error occurred while submitting Loan Application: $e');
@@ -71,6 +75,48 @@ class _NewLeadState extends State<NewLead> {
       isLoading = false;
     });
 
+  }
+
+  void _showErrorBottomSheet(BuildContext context, Response response) {
+    if (!context.mounted) return;
+
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return Container(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                'Error: ${response.body} ${response.statusCode}',
+                style: const TextStyle(
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 8.0),
+              const Text(
+                'Failed to save loan application.',
+                style: TextStyle(fontSize: 14.0),
+              ),
+              const SizedBox(height: 16.0),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: const Text('Close'),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void _navigateToHomePage(BuildContext context) {
+    if (!context.mounted) return;
+    Navigator.pushReplacementNamed(context, '/');
   }
 
   @override
@@ -241,10 +287,8 @@ class _NewLeadState extends State<NewLead> {
             label: fieldName, 
             controller: controller,  
             onChanged: (newValue) => updateFieldValue(newValue, field), 
-            referenceCode: field.fieldMeta!.referenceCodeClassifier!, 
-            isReadable: false, 
-            isEditable: true, 
-            isRequired: true,
+            referenceCode: field.fieldMeta!.referenceCodeClassifier!,
+            isEditable: field.isEditable!, isReadable: field.isReadOnly!, isRequired: field.isRequired!
           );
       } else {
         return Referencecode(label: fieldName, referenceCode: field.fieldMeta!.referenceCodeClassifier!, controller: controller, onChanged: (newValue) => updateFieldValue(newValue!, field), isEditable: field.isEditable!, isReadable: field.isReadOnly!, isRequired: field.isRequired!);

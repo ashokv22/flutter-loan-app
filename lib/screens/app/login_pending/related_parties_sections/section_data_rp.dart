@@ -220,9 +220,9 @@ class _SectionScreenRPState extends State<SectionScreenRP> {
 
     if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'TextBox') {
       if (['Integer', 'BigDecimal'].toList().contains(field.fieldMeta?.dataType)) {
-        return NumberInput(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field), isEditable: field.isEditable!, isReadable: field.isReadOnly!, isRequired: field.isRequired!);
+        return NumberInput(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field), isEditable: true, isReadable: field.isReadOnly!, isRequired: field.isRequired!);
       } else {
-        return TextInput(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field), isEditable: field.isEditable!, isReadable: field.isReadOnly!, isRequired: field.isRequired!,);
+        return TextInput(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field), isEditable: true, isReadable: field.isReadOnly!, isRequired: field.isRequired!,);
       }
     } 
     else if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'TextArea') {
@@ -244,9 +244,7 @@ class _SectionScreenRPState extends State<SectionScreenRP> {
             controller: controller,  
             onChanged: (newValue) => updateFieldValue(newValue, field), 
             referenceCode: field.fieldMeta!.referenceCodeClassifier!, 
-            isReadable: false, 
-            isEditable: true, 
-            isRequired: true,
+            isEditable: field.isEditable!, isReadable: field.isReadOnly!, isRequired: field.isRequired!
           );
       } else {
         return Referencecode(label: fieldName, referenceCode: field.fieldMeta!.referenceCodeClassifier!, controller: controller, onChanged: (newValue) => updateFieldValue(newValue!, field), isEditable: field.isEditable!, isReadable: field.isReadOnly!, isRequired: field.isRequired!);

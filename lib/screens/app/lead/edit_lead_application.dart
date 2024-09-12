@@ -239,9 +239,12 @@ class _EditLeadState extends State<EditLead> {
       return TextInput(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field), isEditable: field.isEditable!, isReadable: field.isReadOnly!, isRequired: field.isRequired!,);
     } 
     else if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'ReferenceCode' || field.fieldMeta?.fieldUiProperties?.uiComponentName!.toLowerCase() == 'dropdown') {
+      if (field.fieldMeta!.fieldName == "model" || field.fieldMeta!.fieldName == "modelVariant") {
+        return TypeAhead(label: fieldName, referenceCode: field.fieldMeta!.referenceCodeClassifier!, controller: controller, onChanged: (newValue) => updateFieldValue(newValue!, field), isEditable: field.isEditable!, isReadable: field.isReadOnly!, isRequired: field.isRequired!);
+      }
       if (field.fieldMeta!.fieldUiProperties!.isMultiselect == true) {
         return MultiSelectRd(
-            label: fieldName, 
+            label: fieldName,
             controller: controller,  
             onChanged: (newValue) => updateFieldValue(newValue, field), 
             referenceCode: field.fieldMeta!.referenceCodeClassifier!, 
@@ -258,10 +261,9 @@ class _EditLeadState extends State<EditLead> {
     // } 
     else if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'DatePicker') {
       return DatePickerInput(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field), isEditable: field.isEditable!, isReadable: field.isReadOnly!, isRequired: field.isRequired!);
-    } 
-    else if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'TypeAhead') {
+    } else if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'TypeAhead') {
       return TypeAhead(label: fieldName, referenceCode: field.fieldMeta!.referenceCodeClassifier!, controller: controller, onChanged: (newValue) => updateFieldValue(newValue!, field), isEditable: field.isEditable!, isReadable: field.isReadOnly!, isRequired: field.isRequired!);
-    } 
+    }
     else if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'Phone') {
       return MobileInput(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field), isEditable: field.isEditable!, isReadable: field.isReadOnly!, isRequired: field.isRequired!);
     }
