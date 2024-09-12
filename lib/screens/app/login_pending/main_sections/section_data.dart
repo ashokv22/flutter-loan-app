@@ -293,7 +293,7 @@ class _SectionScreenEmptyState extends State<SectionScreenEmpty> {
 
     if (field.fieldMeta?.fieldUiProperties?.uiComponentName == 'TextBox') {
       if (['Integer', 'BigDecimal'].toList().contains(field.fieldMeta?.dataType)) {
-        return NumberInput(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field), isEditable: true, isReadable: field.isReadOnly!, isRequired: field.isRequired!);
+        return NumberInput(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field), isEditable: field.isEditable!, isReadable: field.isReadOnly!, isRequired: field.isRequired!);
       } else {
         return TextInput(label: fieldName, controller: controller, onChanged: (newValue) => updateFieldValue(newValue, field), isEditable: field.isEditable!, isReadable: field.isReadOnly!, isRequired: field.isRequired!);
       }

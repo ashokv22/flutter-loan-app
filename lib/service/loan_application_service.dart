@@ -19,7 +19,7 @@ class LoanApplicationService {
   Logger logger = Logger();
   final apiUrl = Environment.baseUrl;
 
-  Future<void> saveLoanApplication(EntityConfigurationMetaData metaData) async {
+  Future<http.Response> saveLoanApplication(EntityConfigurationMetaData metaData) async {
     final payload = jsonEncode(metaData.toJson());
     String token = await authService.getAccessToken();
     logger.d(token);
@@ -29,12 +29,7 @@ class LoanApplicationService {
     final fetchResponse = await http.post(Uri.parse(apiUrl + endpoint),
         headers: {'Content-type': 'application/json', 'X-AUTH-TOKEN': token},
         body: payload);
-    if (fetchResponse.statusCode == 201) {
-      logger.i('Application submitted successfully');
-    } else {
-      logger.e(
-          'Failed to submit Loan Application. Error code: ${fetchResponse.statusCode}');
-    }
+    return fetchResponse;
   }
 
   Future<void> updateLead(EntityConfigurationMetaData metaData) async {

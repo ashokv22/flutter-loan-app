@@ -59,7 +59,14 @@ class _TypeAheadState extends State<TypeAhead> {
       children: [
         TypeAheadField<NameValueDTO>(
           controller: widget.controller,
-          suggestionsCallback: (pattern) => fetchOptions(pattern),
+          suggestionsCallback: (pattern) async {
+            try {
+              return await fetchOptions(pattern);
+            } catch (e) {
+              logger.e("Error fetching suggestions: $e");
+              return []; // Return an empty list on error
+            }
+          },
           builder: (context, controller, focusNode) {
             return TextField(
               enabled: widget.isEditable,
@@ -84,6 +91,9 @@ class _TypeAheadState extends State<TypeAhead> {
               )
             );
           },
+          loadingBuilder: (context) => const Text('Loading...'),
+          errorBuilder: (context, error) => const Text('Error!'),
+          emptyBuilder: (context) => const Text('No items found!'),
           itemBuilder: (context, NameValueDTO option) => ListTile(
             title: Text(option.name ?? ""),
           ),
