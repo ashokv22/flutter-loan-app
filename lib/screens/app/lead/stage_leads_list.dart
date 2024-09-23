@@ -331,12 +331,16 @@ class _StageLeadListState extends State<StageLeadList> {
                                       ),
                                       child: Padding(
                                         padding: const EdgeInsets.fromLTRB(8, 5, 8, 5),
-                                        child: Text(
-                                          applicant.status,
-                                          style: const TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 8,
-                                            fontWeight: FontWeight.w600
+                                        child: SizedBox(
+                                          width: 100,
+                                          child: Text(
+                                            applicant.status,
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 8,
+                                              fontWeight: FontWeight.w600
+                                            ),
+                                            overflow: TextOverflow.ellipsis,
                                           ),
                                         ),
                                       ),
