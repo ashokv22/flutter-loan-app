@@ -22,6 +22,7 @@ EntityStateManager _$EntityStateManagerFromJson(Map<String, dynamic> json) =>
       reasonForRejection: json['reasonForRejection'] as String?,
       documentRejectionReason: json['documentRejectionReason'] as String?,
       reviewerRemarks: json['reviewerRemarks'] as String?,
+      esignData: json['esignData'] as String?,
     );
 
 Map<String, dynamic> _$EntityStateManagerToJson(EntityStateManager instance) =>
@@ -40,4 +41,5 @@ Map<String, dynamic> _$EntityStateManagerToJson(EntityStateManager instance) =>
       'reasonForRejection': instance.reasonForRejection,
       'documentRejectionReason': instance.documentRejectionReason,
       'reviewerRemarks': instance.reviewerRemarks,
+      'esignData': instance.esignData,
     };

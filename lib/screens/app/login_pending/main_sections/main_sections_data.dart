@@ -5,6 +5,7 @@ import 'package:origination/models/login_flow/sections/document_upload/document_
 import 'package:origination/models/login_flow/sections/loan_application_entity.dart';
 import 'package:origination/screens/app/bureau/screens/bureau_check_list.dart';
 import 'package:origination/screens/app/login_pending/main_sections/document_upload/document_upload_main.dart';
+import 'package:origination/screens/app/login_pending/main_sections/e_sign/esign_main.dart';
 import 'package:origination/screens/app/login_pending/main_sections/helper_widgets/confirm_delete_all_sections.dart';
 import 'package:origination/screens/app/login_pending/main_sections/helper_widgets/confirm_delete_sheet.dart';
 import 'package:origination/screens/app/login_pending/main_sections/helper_widgets/submit_dialog.dart';
@@ -197,6 +198,9 @@ class _MainSectionsDataState extends State<MainSectionsData> {
                                       }
                                       else if (section.sectionName == "PostSanction") {
                                         Navigator.push(context, MaterialPageRoute(builder: (context) => PostSanctionMainList(applicantId: widget.id)));  
+                                      }
+                                      else if (section.sectionName == "InitiateESignLoanDocuments") {
+                                        Navigator.push(context, MaterialPageRoute(builder: (context) => ESignMain(applicantId: widget.id,)));
                                       }
                                       else {
                                         Navigator.push(context, MaterialPageRoute(builder: (context) => SectionScreenEmpty(id: widget.id, title: title,)));

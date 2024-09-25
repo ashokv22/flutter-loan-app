@@ -1,5 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:json_annotation/json_annotation.dart';
+import 'package:origination/models/login_flow/sections/e_sign/e_sign_urls.dart';
 
 part 'entity_state_manager.g.dart';
 
@@ -19,6 +20,7 @@ class EntityStateManager {
   String? reasonForRejection;
   String? documentRejectionReason;
   String? reviewerRemarks;
+  String? esignData;
 
   EntityStateManager({
     required this.id,
@@ -35,6 +37,7 @@ class EntityStateManager {
     this.reasonForRejection,
     this.documentRejectionReason,
     this.reviewerRemarks,
+    this.esignData
   });
 
   factory EntityStateManager.fromJson(Map<String, dynamic> json) => _$EntityStateManagerFromJson(json);
