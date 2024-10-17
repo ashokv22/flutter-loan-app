@@ -230,17 +230,27 @@ class _MainSectionsDataState extends State<MainSectionsData> {
                                               color: Theme.of(context).textTheme.displayMedium!.color,
                                               fontSize: 16,
                                               fontFamily: 'Inter',
-                                              fontWeight: FontWeight.w500,
+                                              fontWeight: section.visible != null ? section.visible! == true ? FontWeight.w500: FontWeight.w200 : FontWeight.w500,
+                                              fontStyle: section.visible != null ? section.visible! == true ? FontStyle.normal : FontStyle.italic : FontStyle.normal
                                             ),
                                           ),
-                                          if (section.status == "COMPLETED")
+                                          if (section.status == "COMPLETED" || section.status == "UPDATED")
                                             Row(
                                               children: [
-                                                const Icon(
-                                                  CupertinoIcons.checkmark_alt_circle_fill,
-                                                  color: Color.fromARGB(255, 0, 152, 58),
-                                                  size: 22,  
-                                                ),
+                                                if (section.status == "COMPLETED") ...[
+                                                  const Icon(
+                                                    CupertinoIcons.checkmark_alt_circle_fill,
+                                                    color: Color.fromARGB(255, 0, 152, 58),
+                                                    size: 22,
+                                                  ),
+                                                ]
+                                                else if (section.status == "UPDATED") ...[
+                                                  const Icon(
+                                                    Icons.update_rounded,
+                                                    color: Color.fromARGB(255, 3, 71, 244),
+                                                    size: 22,
+                                                  ),
+                                                ],
                                                 const SizedBox(width: 10,),
                                                 InkWell(
                                                   onTap: () {
@@ -253,6 +263,7 @@ class _MainSectionsDataState extends State<MainSectionsData> {
                                                             refreshScreen();
                                                           },
                                                           loanApplicationId: widget.id,
+                                                          entitySubType: "All",
                                                           section: section
                                                         )),
                                                     );
@@ -272,11 +283,19 @@ class _MainSectionsDataState extends State<MainSectionsData> {
                                               size: 22,
                                             )
                                           else
-                                            Icon(
-                                              CupertinoIcons.chevron_right_circle,
-                                              color: Theme.of(context).iconTheme.color,
-                                              size: 22,
-                                            ),
+                                            if (section.visible != null && section.visible! == true) ...[
+                                              Icon(
+                                                CupertinoIcons.chevron_right_circle,
+                                                color: Theme.of(context).iconTheme.color,
+                                                size: 22,
+                                              )
+                                            ] else ...[
+                                              Icon(
+                                                CupertinoIcons.eye_slash,
+                                                color: Theme.of(context).iconTheme.color,
+                                                size: 22,
+                                              )
+                                            ]
                                         ],
                                       ),
                                     ),
