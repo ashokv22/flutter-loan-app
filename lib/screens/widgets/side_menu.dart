@@ -11,6 +11,7 @@ import 'package:origination/screens/app/lead/dedupe/dedupe_form.dart';
 import 'package:origination/screens/sign_in/sign_in.dart';
 import 'package:origination/service/auth_service.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
+import 'package:origination/service/implementation/sign_in_service_impl.dart';
 
 class SideMenu extends StatelessWidget {
   final int selectedItemIndex;
@@ -25,6 +26,7 @@ class SideMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AuthService authService = AuthService();
+    final SignInServiceImpl signInService = SignInServiceImpl();
     ServerType selectedServer = Environment.currentServerType;
 
     return Drawer(
@@ -212,12 +214,9 @@ class SideMenu extends StatelessWidget {
                 title: const Text('Sign out'),
                 selected: selectedItemIndex == 5,
                 onTap: () {
-                  AuthService.signOut().then((_) => 
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(builder: (context) => const SignIn()),
-                    )
-                  );
+                  signInService.signOut().then((_) =>{
+                    AuthService.signOut().then((_) => Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const SignIn())))
+                  });
                 },
               ),
             ],

@@ -7,6 +7,7 @@ import 'package:origination/screens/sign_in/sign_in.dart';
 import 'package:origination/screens/pages/profile/theme_selection_dialog.dart';
 import 'package:origination/screens/pages/profile/update_profile_screen.dart';
 import 'package:origination/service/auth_service.dart';
+import 'package:origination/service/implementation/sign_in_service_impl.dart';
 import 'package:provider/provider.dart';
 import 'package:marquee/marquee.dart';
 
@@ -19,6 +20,7 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   final AuthService authService = AuthService();
+  final SignInServiceImpl signInService = SignInServiceImpl();
   void _changeTheme(ThemeMode newThemeMode) {
     context.read<MyTheme>().changeTheme(newThemeMode);
   }
@@ -173,12 +175,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       textColor: Colors.red,
                       endIcon: false,
                       onPress: () {
-                        AuthService.signOut().then((_) => 
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(builder: (context) => const SignIn()),
-                          )
-                        );
+                        signInService.signOut().then((_) =>{
+                          AuthService.signOut().then((_) => Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const SignIn())))
+                        });
                         // Get.defaultDialog(
                         //   title: "LOGOUT",
                         //   titleStyle: const TextStyle(fontSize: 20),
