@@ -69,6 +69,7 @@ dependencies:
   badges: ^3.1.2
   open_filex: ^4.5.0
   path_provider: ^2.1.4
+  url_launcher: ^6.3.0
 
 # Fix for marquee dependency after Flutter 3.2.2 upgrade
   line_awesome_flutter: 3.0.1

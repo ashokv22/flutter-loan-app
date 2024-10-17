@@ -46,6 +46,7 @@ LoanSection _$LoanSectionFromJson(Map<String, dynamic> json) => LoanSection(
       dependencies: (json['dependencies'] as List<dynamic>?)
           ?.map((e) => e as String)
           .toList(),
+      visible: json['visible'] as bool?,
     );
 
 Map<String, dynamic> _$LoanSectionToJson(LoanSection instance) =>
@@ -56,5 +57,6 @@ Map<String, dynamic> _$LoanSectionToJson(LoanSection instance) =>
       'status': instance.status,
       'type': instance.type,
       'uiKey': instance.uiKey,
+      'visible': instance.visible,
       'dependencies': instance.dependencies,
     };

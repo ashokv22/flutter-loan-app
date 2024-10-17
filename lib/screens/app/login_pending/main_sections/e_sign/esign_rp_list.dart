@@ -3,10 +3,12 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:origination/models/applicant/entity_state_manager.dart';
-import 'package:origination/models/login_flow/sections/e_sign/e_sign_urls.dart';
 import 'package:origination/models/login_flow/sections/e_sign/invitee_urls.dart';
+import 'package:origination/screens/app/login_pending/main_sections/e_sign/e_sign_status_sheet.dart';
 import 'package:origination/service/entity_state_manager_service.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ESignRpList extends StatefulWidget {
   const ESignRpList({
@@ -184,15 +186,16 @@ class _ESignRpListState extends State<ESignRpList> {
                                       autofocus: false,
                                       onPressed: item.signed! == true ? null : () {
                                         // refreshStatus(index, applicant.id);
-                                        showModalBottomSheet(
-                                            context: context,
-                                            builder: (context) => ConstrainedBox(
-                                              constraints: const BoxConstraints(minHeight: 150),
-                                              child: SizedBox(
-                                                width: MediaQuery.of(context).size.width,
-                                              ),
-                                            )
-                                        );
+                                        _launchUrl(item.url!);
+                                        // showModalBottomSheet(
+                                        //     context: context,
+                                        //     builder: (context) => ConstrainedBox(
+                                        //       constraints: const BoxConstraints(minHeight: 150),
+                                        //       child: SizedBox(
+                                        //         width: MediaQuery.of(context).size.width,
+                                        //       ),
+                                        //     )
+                                        // );
                                       },
                                       color: const Color.fromARGB(255, 6, 139, 26),
                                       // textColor: Colors.white,
@@ -215,6 +218,32 @@ class _ESignRpListState extends State<ESignRpList> {
                 }
               }),
             ),
+            Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: SizedBox(
+                height: 50,
+                width: double.infinity,
+                child: MaterialButton(
+                  autofocus: false,
+                  onPressed: () {
+                    showModalBottomSheet(
+                        context: context,
+                        builder: (context) => ConstrainedBox(
+                          constraints: const BoxConstraints(minHeight: 150),
+                          child: ESignStatusSheet(applicantId: widget.applicantId,),
+                        )
+                    );
+                  },
+                  color: const Color.fromARGB(255, 6, 139, 26),
+                  // textColor: Colors.white,
+                  disabledColor: Colors.grey,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30.0),
+                  ),
+                  child: const Text('Check E-Sign Status', style: TextStyle(color: Colors.white)),
+                ),
+              ),
+            )
           ],
         ),
       ),
@@ -238,6 +267,13 @@ class _ESignRpListState extends State<ESignRpList> {
       } catch (e) {
         return [];
       }
+    }
+  }
+
+  void _launchUrl(String url) async {
+    final Uri uri = Uri.parse(url);
+    if (!await launchUrl(uri)) {
+      throw Exception('Could not launch $uri');
     }
   }
 }
