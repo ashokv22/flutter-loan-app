@@ -6,6 +6,7 @@ import 'package:origination/environments/environment.dart';
 import 'package:origination/models/applicant/entity_state_manager.dart';
 import 'package:origination/models/entity_configuration.dart';
 import 'package:origination/models/login_flow/login_pending_products_dto.dart';
+import 'package:origination/models/login_flow/sections/accounting_details/repayment_schedule_dto.dart';
 import 'package:origination/models/login_flow/sections/application_reject_reason_history.dart';
 import 'package:origination/models/login_flow/sections/document_upload/document_checklist_dto.dart';
 import 'package:origination/models/login_flow/sections/loan_application_entity.dart';
@@ -269,6 +270,22 @@ class LoginPendingService {
     try {
       final response = await authInterceptor.post(Uri.parse(endpoint));
       return response;
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  Future<List<RepaymentScheduleDTO>?> getRepaymentScheduleForLead(int applicantId) async {
+    String endpoint = "api/application/repaymentSchedules/lead/$applicantId";
+    try {
+      final response = await authInterceptor.get(Uri.parse(endpoint));
+      final jsonResponse = json.decode(response.body);
+      List<RepaymentScheduleDTO> list = [];
+      for (var data in jsonResponse) {
+        RepaymentScheduleDTO app = RepaymentScheduleDTO.fromJson(data);
+        list.add(app);
+      }
+      return list;
     } catch (e) {
       throw Exception(e);
     }

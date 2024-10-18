@@ -15,6 +15,7 @@ import 'package:origination/core/widgets/switcher_input.dart';
 import 'package:origination/core/widgets/type_ahead.dart';
 import 'package:origination/models/entity_configuration.dart';
 import 'package:origination/screens/app/lead/multi_select_rd.dart';
+import 'package:origination/screens/app/login_pending/main_sections/helper_widgets/repayment_schedule_sheet.dart';
 import 'package:origination/service/auth_service.dart';
 import 'package:origination/service/loan_application_service.dart';
 import 'package:origination/service/login_flow_service.dart';
@@ -126,19 +127,19 @@ class _SectionScreenEmptyState extends State<SectionScreenEmpty> {
   }
 
   void _showBottomSheet(BuildContext context, String message) {
-  showModalBottomSheet(
-    context: context,
-    builder: (BuildContext context) {
-      return Container(
-        padding: const EdgeInsets.all(16.0),
-        child: Text(
-          message,
-          style: const TextStyle(fontSize: 16.0),
-        ),
-      );
-    },
-  );
-}
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return Container(
+          padding: const EdgeInsets.all(16.0),
+          child: Text(
+            message,
+            style: const TextStyle(fontSize: 16.0),
+          ),
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -151,6 +152,17 @@ class _SectionScreenEmptyState extends State<SectionScreenEmpty> {
           },
           icon: const Icon(CupertinoIcons.arrow_left)),
         title: Text(widget.title),
+        actions: [
+          if (widget.title == "AccountingDetails") ...[
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: IconButton(
+                icon: const Icon(Icons.format_list_numbered), 
+                onPressed: _showRepayentScheduleSheet
+              ),
+            )
+          ]
+        ],
       ),
         body: loadError ? _buildErrorBody(isDarkTheme) : Container(
           decoration: BoxDecoration(
@@ -428,5 +440,19 @@ class _SectionScreenEmptyState extends State<SectionScreenEmpty> {
     if (userData.isNotEmpty && field.fieldMeta?.variable == 'state') {
       controller.text = userData['branchData']['state'];
     } 
+  }
+
+  void _showRepayentScheduleSheet() {
+    // _toggleBottomSheet();
+    showModalBottomSheet(
+      context: context,
+      isDismissible: true,
+      builder: (BuildContext context) {
+        return RepaymentScheduleSheet(
+          applicantId: widget.id,
+          loginPendingService: loginPendingService,
+        );
+      },
+    );
   }
 }
